@@ -1,0 +1,1 @@
+typedef MenuLabel = String;

@@ -1,0 +1,1 @@
+typedef UserRefreshToken = String;
