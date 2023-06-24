@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
+import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
 import 'package:voleep_carclean_frontend/modules/customers/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
 import 'package:voleep_carclean_frontend/modules/customers/presentation/customer-form/providers/customer_page_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
@@ -51,17 +54,6 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(customerPageControllerProvider(widget.customerId),
-        (previous, next) {
-      if (next.hasError) {
-        next.showSnackBarOnError(context);
-      }
-
-      if (next.hasValue) {
-        _setCustomerData(customer: next.value!);
-      }
-    });
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -71,82 +63,79 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
           title: Text(widget.customerId == "new" ? "Novo cliente" : "Cliente"),
         ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return SingleChildScrollView(
-          reverse: true,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: constraints.maxWidth,
-                minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      left: 24, top: 12, right: 24, bottom: 24),
+      body: ScrollableView(
+        child: Consumer(builder: (context, ref, child) {
+          ref.listen(customerPageControllerProvider(widget.customerId), (previous, next) {
+            if (next.isLoading) {
+              ref.read(isLoadingProvider.notifier).state = true;
+            } else {
+              ref.read(isLoadingProvider.notifier).state = false;
+            }
+
+            if (next.hasError) {
+              next.showSnackBarOnError(context);
+              context.pop();
+            }
+
+            if (next.hasValue) {
+              _setCustomerData(customer: next.value!);
+            }
+          });
+
+          return Container(
+            padding: const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            VoleepTextFormField(
-                              focusNode: _dsNameFocusNode,
-                              controller: _dsNameController,
-                              placeholder: "Nome",
-                              icon: Icons.person_outline_rounded,
-                              validator: (value) => Validators.listOf([
-                                () => Validators.required(value),
-                                () => Validators.maxLength(value, 100)
-                              ]),
-                            ),
-                            VoleepTextFormField(
-                              controller: _dsDocumentController,
-                              placeholder: "CPF ou CNPJ",
-                              icon: Icons.badge_outlined,
-                              validator: (value) =>
-                                  Validators.maxLength(value, 20),
-                            ),
-                            VoleepTextFormField(
-                              controller: _dsTelephoneController,
-                              placeholder: "Telefone",
-                              icon: Icons.phone_outlined,
-                              validator: (value) =>
-                                  Validators.maxLength(value, 20),
-                            ),
-                            VoleepTextFormField(
-                              controller: _dsEmailController,
-                              placeholder: "Email",
-                              icon: Icons.email_outlined,
-                              validator: (value) =>
-                                  Validators.maxLength(value, 100),
-                            ),
-                            VoleepTextFormField(
-                              controller: _dsNoteController,
-                              placeholder: "Observações",
-                              icon: Icons.description_outlined,
-                              validator: (value) =>
-                                  Validators.maxLength(value, 250),
-                            ),
-                          ],
-                        ),
+                      VoleepTextFormField(
+                        focusNode: _dsNameFocusNode,
+                        controller: _dsNameController,
+                        placeholder: "Nome",
+                        icon: Icons.person_outline_rounded,
+                        validator: (value) => Validators.listOf([() => Validators.required(value), () => Validators.maxLength(value, 100)]),
+                      ),
+                      VoleepTextFormField(
+                        controller: _dsDocumentController,
+                        placeholder: "CPF ou CNPJ",
+                        icon: Icons.badge_outlined,
+                        validator: (value) => Validators.maxLength(value, 20),
+                      ),
+                      VoleepTextFormField(
+                        controller: _dsTelephoneController,
+                        placeholder: "Telefone",
+                        icon: Icons.phone_outlined,
+                        validator: (value) => Validators.maxLength(value, 20),
+                      ),
+                      VoleepTextFormField(
+                        controller: _dsEmailController,
+                        placeholder: "Email",
+                        icon: Icons.email_outlined,
+                        validator: (value) => Validators.maxLength(value, 100),
+                      ),
+                      VoleepTextFormField(
+                        controller: _dsNoteController,
+                        placeholder: "Observações",
+                        icon: Icons.description_outlined,
+                        validator: (value) => Validators.maxLength(value, 250),
                       ),
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            ref
-                .read(
-                    customerPageControllerProvider(widget.customerId).notifier)
-                .saveOrUpdateCustomer(
+            ref.read(isLoadingProvider.notifier).state = true;
+            await ref.read(customerPageControllerProvider(widget.customerId).notifier).saveOrUpdateCustomer(
                   customerId: _idCustomer,
                   name: _dsNameController.text,
                   telephone: _dsTelephoneController.text,
@@ -155,6 +144,9 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
                   notes: _dsNoteController.text,
                   status: _stCustomer,
                 );
+            if (!ref.read(customerPageControllerProvider(widget.customerId)).hasError && context.mounted) {
+              context.pop();
+            }
           }
         },
         label: const Text("Salvar"),

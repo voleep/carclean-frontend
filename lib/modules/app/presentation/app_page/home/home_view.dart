@@ -23,10 +23,7 @@ class _HomeViewState extends State<HomeView> {
             isRepeatingAnimation: false,
             animatedTexts: [
               ColorizeAnimatedText(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.primaryContainer
-                ],
+                colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primaryContainer],
                 textStyle: const TextStyle(fontSize: 20),
                 'CarClean',
               ),
@@ -44,7 +41,7 @@ class _HomeViewState extends State<HomeView> {
       ],
       body: Container(
         color: Theme.of(context).colorScheme.onInverseSurface,
-        child: SingleChildScrollView(
+        child: const SingleChildScrollView(
           child: Column(
             children: [HomeMenuCard()],
           ),

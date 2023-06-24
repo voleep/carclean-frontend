@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/header_view/header_view.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer.dart';
 import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_controller_provider.dart';
 import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
@@ -12,84 +14,82 @@ class RootPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+    final isTablet = Responsive.isTablet(context);
+    final isDesktop = Responsive.isDesktop(context);
+
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
       body: Row(
         children: [
           Visibility(
-            visible: Responsive.isDesktop(context),
-            child: SizedBox(
-              width: 220,
-              child: Consumer(
-                builder: (context, ref, child) {
-                  return NavigationRail(
-                      unselectedLabelTextStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
+            visible: isTablet,
+            child: Consumer(
+              builder: (context, ref, child) {
+                return SizedBox(
+                  width: 80,
+                  height: double.infinity,
+                  child: NavigationRail(
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: IconButton(
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                        icon: const Icon(Icons.menu_rounded),
                       ),
-                      selectedLabelTextStyle: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 16,
-                      ),
-                      selectedIconTheme: IconThemeData(
-                          color: Theme.of(context).colorScheme.primary),
-                      leading: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'CarClean',
-                          style: Theme.of(context).appBarTheme.titleTextStyle,
-                        ),
-                      ),
-                      extended: true,
-                      selectedIndex: ref.watch(menuControllerProvider),
-                      onDestinationSelected: (index) => ref
-                          .read(menuControllerProvider.notifier)
-                          .onMenuSelected(selectedIndex: index),
-                      destinations: ref
-                          .watch(menuListProvider)
-                          .map(
-                            (menu) => NavigationRailDestination(
-                              icon: menu.icon,
-                              label: Text(
-                                menu.label,
-                              ),
+                    ),
+                    selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+                    selectedIndex: ref.watch(menuControllerProvider),
+                    onDestinationSelected: (index) => ref.read(menuControllerProvider.notifier).onMenuSelected(selectedIndex: index),
+                    destinations: ref
+                        .watch(menuListProvider)
+                        .asMap()
+                        .entries
+                        .map(
+                          (menuEntry) => NavigationRailDestination(
+                            icon: Hero(
+                              tag: 'menu${menuEntry.key}',
+                              child: Icon(menuEntry.value.icon),
                             ),
-                          )
-                          .toList());
-                },
-              ),
+                            label: Text(
+                              menuEntry.value.label,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                );
+              },
             ),
           ),
-          const VerticalDivider(
-            width: 1,
+          Visibility(
+            visible: isDesktop,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                border: Border(
+                  right: BorderSide(width: 1, color: Theme.of(context).colorScheme.outlineVariant),
+                ),
+              ),
+              child: const MenuDrawer(),
+            ),
           ),
-          Flexible(
-            flex: 5,
-            child: child,
-          ),
+          Expanded(
+            child: Responsive(
+              mobile: child,
+              desktop: Padding(padding: const EdgeInsets.all(12), child: child),
+            ),
+          )
         ],
       ),
+      drawer: Visibility(
+        visible: isTablet,
+        child: const MenuDrawer(),
+      ),
       endDrawer: Visibility(
-        visible: !Responsive.isDesktop(context),
+        visible: isMobile,
         child: Consumer(builder: (context, ref, child) {
           return Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-            NavigationDrawer(
-              selectedIndex: ref.watch(menuControllerProvider),
-              onDestinationSelected: (selectedIndex) {
-                ref
-                    .read(menuControllerProvider.notifier)
-                    .onMenuSelected(selectedIndex: selectedIndex);
-                Scaffold.of(context).closeEndDrawer();
-              },
-              children: ref
-                  .watch(menuListProvider)
-                  .map((menu) => NavigationDrawerDestination(
-                        label: Text(menu.label),
-                        icon: menu.icon,
-                      ))
-                  .toList(),
-            ),
+            const MenuDrawer(),
             Container(
               margin: const EdgeInsets.only(bottom: 10),
               width: 280,

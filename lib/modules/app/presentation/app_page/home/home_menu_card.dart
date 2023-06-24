@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_card/voleep_card.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_card_button/voleep_card_button.dart';
 
@@ -9,16 +8,15 @@ class HomeMenuCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       child: VoleepCard(
         child: Column(
-          children: const [
+          children: [
             VoleepCardButton(
               icon: Icons.widgets_rounded,
               title: "Customizar menús",
-              text:
-                  "Adicione menús e outros detalhes de acordo com a sua marca.",
+              text: "Adicione menús e outros detalhes de acordo com a sua marca.",
             ),
             SizedBox(
               height: 12,
@@ -27,8 +25,7 @@ class HomeMenuCard extends ConsumerWidget {
               icon: Icons.insights_rounded,
               iconColor: Colors.purple,
               title: "Customizar relatórios",
-              text:
-                  "Adicione gráficos e outros relatórios conforme a sua necessidade.",
+              text: "Adicione gráficos e outros relatórios conforme a sua necessidade.",
             )
           ],
         ),

@@ -12,7 +12,7 @@ abstract class Validators {
     if (value == null || value.isEmpty) return null;
 
     if (value.length > maxLength) {
-      return message ?? "Máximo de $maxLength caracteres excedido";
+      return message ?? "Máximo $maxLength caracteres";
     }
 
     return null;
@@ -23,7 +23,7 @@ abstract class Validators {
     if (value == null || value.isEmpty) return null;
 
     if (value.length < minLength) {
-      return message ?? "É necessário no mínimo $minLength caracteres";
+      return message ?? "Mínimo $minLength caracteres";
     }
 
     return null;
@@ -43,7 +43,8 @@ abstract class Validators {
     return null;
   }
 
-  static String? match(final String? value, final String expectedValue, [final String? message]) {
+  static String? match(final String? value, final String expectedValue,
+      [final String? message]) {
     if (value == null || value.isEmpty) return null;
 
     if (value != expectedValue) {

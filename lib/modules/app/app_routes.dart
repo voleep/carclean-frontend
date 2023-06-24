@@ -22,7 +22,7 @@ final appRoutesProvider = Provider<List<RouteBase>>((ref) => [
             parentNavigatorKey: _rootNavigationkey,
             path: "/app/customer/:id",
             pageBuilder: (context, state) {
-              final CustomerId? customerId = state.params['id'];
+              final CustomerId? customerId = state.queryParameters['id'];
 
               return NoTransitionPage(
                 child: CustomersPage(
