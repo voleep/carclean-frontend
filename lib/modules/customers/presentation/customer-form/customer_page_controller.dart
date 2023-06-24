@@ -5,14 +5,15 @@ import 'package:voleep_carclean_frontend/modules/customers/data/repositories/pro
 import 'package:voleep_carclean_frontend/modules/customers/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
 
-class CustomerPageController
-    extends AutoDisposeFamilyAsyncNotifier<CustomerModel?, CustomerId?> {
+class CustomerPageController extends AutoDisposeFamilyAsyncNotifier<CustomerModel?, CustomerId?> {
   @override
-  FutureOr<CustomerModel?> build(CustomerId? customerId) async {
-    if (customerId != null) {
-      final CustomerModel? customerModel = await ref
-          .read(customerRepositoryProvider)
-          .findById(customerId: customerId);
+  FutureOr<CustomerModel?> build(CustomerId? arg) async {
+    if (arg != null) {
+      if (arg == "new") {
+        return null;
+      }
+
+      final CustomerModel? customerModel = await ref.read(customerRepositoryProvider).findById(customerId: arg);
 
       return customerModel;
     }

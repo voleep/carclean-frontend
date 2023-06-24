@@ -7,6 +7,6 @@ import 'package:voleep_carclean_frontend/shared/voleep-search/presentation/volee
 final customerSearchProvider = AutoDisposeAsyncNotifierProviderFamily<
     VoleepSearchController<CustomerModel>,
     VoleepSearchModel<CustomerModel>,
-    VoleepSearchFamilyModel>(
+    VoleepSearchOptionsModel>(
   () => VoleepSearchController(converter: CustomerModel.fromJson),
 );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class VoleepAppBar extends StatefulWidget {
+class VoleepAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget title;
   final Color backgroundColor;
   final Color shadowColor;
@@ -28,6 +28,9 @@ class VoleepAppBar extends StatefulWidget {
     ),
     this.showProgressBar = false,
   }) : super(key: key);
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   State<VoleepAppBar> createState() => _VoleepAppBarState();

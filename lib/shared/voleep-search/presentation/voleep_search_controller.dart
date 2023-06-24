@@ -8,13 +8,13 @@ import 'package:voleep_carclean_frontend/shared/voleep-search/domain/models/vole
 import 'package:voleep_carclean_frontend/shared/voleep-search/domain/models/voleep_search_model.dart';
 
 class VoleepSearchController<T> extends AutoDisposeFamilyAsyncNotifier<
-    VoleepSearchModel<T>, VoleepSearchFamilyModel> {
+    VoleepSearchModel<T>, VoleepSearchOptionsModel> {
   final T Function(Map<String, dynamic> json) converter;
 
   VoleepSearchController({required this.converter});
 
   @override
-  FutureOr<VoleepSearchModel<T>> build(VoleepSearchFamilyModel arg) async {
+  FutureOr<VoleepSearchModel<T>> build(VoleepSearchOptionsModel arg) async {
     final pagination = await _fetch(page: 1, orderField: arg.orderField);
     final customerList =
         pagination.pageData.map((json) => converter(json)).toList();

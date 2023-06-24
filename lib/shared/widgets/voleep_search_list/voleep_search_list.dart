@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../utils/debounce_time.dart';
 import '../voleep_silver_appbar.dart';
@@ -48,18 +48,12 @@ class VoleepSearchList<T> extends ConsumerWidget {
                       hintText: 'Pesquisar',
                       prefixIcon: Icon(Icons.search),
                     ),
-                    onChanged: (value) => _debounceTime.run(() => ref
-                        .read(voleepSearchPageControllerProvider(endpoint)
-                            .notifier)
-                        .search(value: value, searchField: searchField)),
-                    onSubmitted: (value) => ref
-                        .read(voleepSearchPageControllerProvider(endpoint)
-                            .notifier)
-                        .search(value: value, searchField: searchField),
-                    onTapOutside: (event) =>
-                        FocusManager.instance.primaryFocus?.unfocus(),
-                    onEditingComplete: () =>
-                        FocusManager.instance.primaryFocus?.unfocus(),
+                    onChanged: (value) => _debounceTime
+                        .run(() => ref.read(voleepSearchPageControllerProvider(endpoint).notifier).search(value: value, searchField: searchField)),
+                    onSubmitted: (value) =>
+                        ref.read(voleepSearchPageControllerProvider(endpoint).notifier).search(value: value, searchField: searchField),
+                    onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                    onEditingComplete: () => FocusManager.instance.primaryFocus?.unfocus(),
                   ),
                 ),
               ),
@@ -79,13 +73,11 @@ class VoleepSearchList<T> extends ConsumerWidget {
       ],
       body: NotificationListener<ScrollNotification>(
         onNotification: (scroll) {
-          final controller =
-              ref.read(voleepSearchPageControllerProvider(endpoint).notifier);
+          final controller = ref.read(voleepSearchPageControllerProvider(endpoint).notifier);
 
           final metrics = scroll.metrics;
           if (metrics.pixels > metrics.maxScrollExtent - 100) {
-            final bool hasMorePages =
-                controller.currentPage < controller.numberOfPages;
+            final bool hasMorePages = controller.currentPage < controller.numberOfPages;
             if (!controller.isLoadingMore && hasMorePages) {
               controller.fetchNextPage();
             }
@@ -93,14 +85,9 @@ class VoleepSearchList<T> extends ConsumerWidget {
           return true;
         },
         child: RefreshIndicator(
-          onRefresh: () async => {
-            await ref
-                .read(voleepSearchPageControllerProvider(endpoint).notifier)
-                .fetchFirstPage()
-          },
+          onRefresh: () async => {await ref.read(voleepSearchPageControllerProvider(endpoint).notifier).fetchFirstPage()},
           child: Consumer(builder: (context, ref, widget) {
-            final controller =
-                ref.watch(voleepSearchPageControllerProvider(endpoint));
+            final controller = ref.watch(voleepSearchPageControllerProvider(endpoint));
 
             return controller.map(
               error: (error) {
@@ -112,12 +99,7 @@ class VoleepSearchList<T> extends ConsumerWidget {
                 final itemCount = data.value.length;
 
                 return ListView.separated(
-                  itemCount: ref
-                          .read(voleepSearchPageControllerProvider(endpoint)
-                              .notifier)
-                          .isLoadingMore
-                      ? itemCount + 1
-                      : itemCount,
+                  itemCount: ref.read(voleepSearchPageControllerProvider(endpoint).notifier).isLoadingMore ? itemCount + 1 : itemCount,
                   itemBuilder: (context, index) {
                     if (index == itemCount) {
                       return const Center(

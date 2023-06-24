@@ -43,51 +43,50 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
   Widget build(BuildContext context) {
     final Color outlineColor = Theme.of(context).colorScheme.outline;
 
-    return SizedBox(
-      height: 75,
-      child: TextFormField(
-        focusNode: widget.focusNode,
-        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(bottom: 10),
-          enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.outlineVariant)),
-          icon: widget.icon != null
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Icon(
-                    widget.icon,
-                    size: 25,
-                    color: outlineColor,
-                  ),
-                )
-              : null,
-          suffixIcon: Visibility(
-            visible: widget.obscureText,
-            child: IconButton(
-              icon:
-                  Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
-              onPressed: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: SizedBox(
+        height: 75,
+        child: TextFormField(
+          textAlignVertical: TextAlignVertical.bottom,
+          focusNode: widget.focusNode,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, height: 1),
+          decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+            icon: widget.icon != null
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Icon(
+                      widget.icon,
+                      size: 25,
+                      color: outlineColor,
+                    ),
+                  )
+                : null,
+            suffixIcon: widget.obscureText
+                ? IconButton(
+                    icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  )
+                : null,
+            suffixIconColor: outlineColor,
+            alignLabelWithHint: true,
+            labelText: widget.placeholder,
+            labelStyle: TextStyle(color: outlineColor, fontWeight: FontWeight.w500, height: -.1),
+            isDense: true,
+            errorStyle: const TextStyle(fontSize: 12, height: 0.6),
           ),
-          suffixIconColor: outlineColor,
-          alignLabelWithHint: true,
-          labelText: widget.placeholder,
-          labelStyle:
-              TextStyle(color: outlineColor, fontWeight: FontWeight.w500),
-          isDense: true,
-          errorStyle: const TextStyle(fontSize: 12, height: 0.6),
+          cursorHeight: 18,
+          obscureText: _obscureText,
+          enableSuggestions: widget.enableSuggestions,
+          validator: widget.validator,
+          controller: widget.controller,
+          inputFormatters: widget.inputFormatters,
         ),
-        obscureText: _obscureText,
-        enableSuggestions: widget.enableSuggestions,
-        validator: widget.validator,
-        controller: widget.controller,
-        inputFormatters: widget.inputFormatters,
       ),
     );
   }
