@@ -7,6 +7,8 @@ import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_query.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter_chips_view/filter_chips_view.dart';
+import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 class FilterDateView extends ConsumerWidget {
   FilterDateView({super.key, required this.config, required this.filterOption});
@@ -22,57 +24,66 @@ class FilterDateView extends ConsumerWidget {
     FilterDateEnum.lastMonth
   ];
 
-  String _getValueByDate(FilterDateEnum filterDate) {
+  DateTime _getValueByDate(FilterDateEnum filterDate) {
     final DateTime now = DateTime.now();
     if (filterDate == FilterDateEnum.yesterday) {
       final DateTime yesterday = now.subtract(const Duration(days: 1));
 
-      return DateTime(yesterday.year, yesterday.month, yesterday.day).toString();
+      return DateTime(yesterday.year, yesterday.month, yesterday.day);
     }
 
     if (filterDate == FilterDateEnum.thisWeek) {
       final DateTime firstDayOfWeek = now.subtract(Duration(days: now.weekday));
-      return DateTime(firstDayOfWeek.year, firstDayOfWeek.month, firstDayOfWeek.day).toString();
+      return DateTime(firstDayOfWeek.year, firstDayOfWeek.month, firstDayOfWeek.day);
     }
 
     if (filterDate == FilterDateEnum.thisMonth) {
       final DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
-      return DateTime(firstDayOfMonth.year, firstDayOfMonth.month, firstDayOfMonth.day).toString();
+      return DateTime(firstDayOfMonth.year, firstDayOfMonth.month, firstDayOfMonth.day);
     }
 
     if (filterDate == FilterDateEnum.lastMonth) {
       final DateTime firstDayOfLastMonth = DateTime(now.year, now.month - 1, 1);
-      return DateTime(firstDayOfLastMonth.year, firstDayOfLastMonth.month, firstDayOfLastMonth.day).toString();
+      return DateTime(firstDayOfLastMonth.year, firstDayOfLastMonth.month, firstDayOfLastMonth.day);
     }
 
     final DateTime today = DateTime(now.year, now.month, now.day);
-    return today.toString();
+    return today;
   }
 
-  String _getFinalValueByDate(FilterDateEnum filterDate) {
+  DateTime _getFinalValueByDate(FilterDateEnum filterDate) {
     final DateTime now = DateTime.now();
     if (filterDate == FilterDateEnum.yesterday) {
       final DateTime today = DateTime(now.year, now.month, now.day);
-      return today.toString();
+      return today;
     }
 
     if (filterDate == FilterDateEnum.thisWeek) {
       final DateTime lastDayOfWeek = now.add(Duration(days: DateTime.daysPerWeek - now.weekday));
-      return DateTime(lastDayOfWeek.year, lastDayOfWeek.month, lastDayOfWeek.day).toString();
+      return DateTime(lastDayOfWeek.year, lastDayOfWeek.month, lastDayOfWeek.day);
     }
 
     if (filterDate == FilterDateEnum.thisMonth) {
       final DateTime lastDayOfMonth = DateTime(now.year, now.month + 1, 1);
-      return DateTime(lastDayOfMonth.year, lastDayOfMonth.month, lastDayOfMonth.day).toString();
+      return DateTime(lastDayOfMonth.year, lastDayOfMonth.month, lastDayOfMonth.day);
     }
 
     if (filterDate == FilterDateEnum.lastMonth) {
       final DateTime lastDayOfLastMonth = DateTime(now.year, now.month, 1);
-      return DateTime(lastDayOfLastMonth.year, lastDayOfLastMonth.month, lastDayOfLastMonth.day).toString();
+      return DateTime(lastDayOfLastMonth.year, lastDayOfLastMonth.month, lastDayOfLastMonth.day);
     }
 
     final DateTime tomorrow = now.add(const Duration(days: 1));
-    return DateTime(tomorrow.year, tomorrow.month, tomorrow.day).toString();
+    return DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
+  }
+
+  String _getDateLabelByValue({required DateTime value, DateTime? finalValue}) {
+    final dateFormat = DateFormat("dd/MM/yyyy");
+    final formattedValue = dateFormat.format(value);
+    if (finalValue == null || value.add(const Duration(days: 1)) == finalValue) {
+      return formattedValue;
+    }
+    return "$formattedValue a ${dateFormat.format(finalValue)}";
   }
 
   @override
@@ -82,35 +93,46 @@ class FilterDateView extends ConsumerWidget {
 
     return Column(
       children: [
-        ListView.builder(
-            shrinkWrap: true,
-            itemCount: _checkboxDateList.length,
-            itemBuilder: (context, index) {
-              final filterDate = _checkboxDateList[index];
-              final isChecked = queryDateList.any((element) => element.valueLabel.startsWith(filterDate.label()));
+        ..._checkboxDateList.asMap().entries.map((entry) {
+          final filterDate = _checkboxDateList[entry.key];
+          final currentQuery = queryDateList.firstWhereOrNull(
+            (element) => element.valueLabel == _getDateLabelByValue(value: _getValueByDate(filterDate), finalValue: _getFinalValueByDate(filterDate)),
+          );
 
-              return CheckboxListTile(
-                value: isChecked,
-                title: Text(filterDate.label()),
-                onChanged: (value) {
-                  if (value == true) {
-                    ref.read(filterQueryProvider(config).notifier).add(
-                          FilterQueryState(
-                            title: filterOption.title,
-                            field: filterOption.field,
-                            operator: FilterCondition.equals,
-                            valueLabel: filterDate.label(),
-                            value: _getValueByDate(filterDate),
-                            finalValue: _getFinalValueByDate(filterDate),
-                          ),
-                        );
-                  } else {
-                    final query = queryDateList.firstWhere((element) => element.valueLabel.startsWith(filterDate.label()));
-                    ref.read(filterQueryProvider(config).notifier).remove(query);
-                  }
-                },
-              );
+          return CheckboxListTile(
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: const EdgeInsets.only(left: 8),
+            fillColor: MaterialStateProperty.resolveWith((states) {
+              if (states.contains(MaterialState.selected)) {
+                return Theme.of(context).colorScheme.primary;
+              }
+
+              return Theme.of(context).colorScheme.outline;
             }),
+            value: currentQuery != null,
+            title: Text(
+              filterDate.label(),
+              style:
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+            onChanged: (value) {
+              if (value == true) {
+                ref.read(filterQueryProvider(config).notifier).add(
+                      FilterQueryState(
+                        title: filterOption.title,
+                        field: filterOption.field,
+                        operator: FilterCondition.equals,
+                        valueLabel: _getDateLabelByValue(value: _getValueByDate(filterDate), finalValue: _getFinalValueByDate(filterDate)),
+                        value: _getValueByDate(filterDate),
+                        finalValue: _getFinalValueByDate(filterDate),
+                      ),
+                    );
+              } else if (currentQuery != null) {
+                ref.read(filterQueryProvider(config).notifier).remove(currentQuery);
+              }
+            },
+          );
+        }).toList(),
         const SizedBox(
           height: 12,
         ),
@@ -137,7 +159,7 @@ class FilterDateView extends ConsumerWidget {
                           title: filterOption.title,
                           field: filterOption.field,
                           operator: FilterCondition.equals,
-                          valueLabel: "", // "${FilterDateEnum.specificDay.label().toLowerCase()} (${DateFormat("dd/MM/yyyy").format(selectedDate)})",
+                          valueLabel: _getDateLabelByValue(value: selectedDate),
                           value: DateTime(selectedDate.year, selectedDate.month, selectedDate.day).toString(),
                           finalValue: DateTime(dayAfterSelected.year, dayAfterSelected.month, dayAfterSelected.day).toString(),
                         ),
@@ -159,14 +181,13 @@ class FilterDateView extends ConsumerWidget {
 
                 if (selectedDate != null) {
                   final finalDate = selectedDate.end.add(const Duration(days: 1));
-                  // final format = DateFormat("dd/MM/yyyy");
 
                   ref.read(filterQueryProvider(config).notifier).add(
                         FilterQueryState(
                           title: filterOption.title,
                           field: filterOption.field,
                           operator: FilterCondition.equals,
-                          valueLabel: "${FilterDateEnum.specificPeriod.label().toLowerCase()} ()",
+                          valueLabel: _getDateLabelByValue(value: selectedDate.start, finalValue: selectedDate.end),
                           value: DateTime(selectedDate.start.year, selectedDate.start.month, selectedDate.start.day).toString(),
                           finalValue: DateTime(finalDate.year, finalDate.month, finalDate.day).toString(),
                         ),
@@ -176,13 +197,13 @@ class FilterDateView extends ConsumerWidget {
             )
           ],
         ),
-        const SizedBox(
-          height: 12,
-        ),
-        FilterChipsView(
-          config: config,
-          field: filterOption.field,
-          onPressed: (state) {},
+        Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: FilterChipsView(
+            config: config,
+            field: filterOption.field,
+            onPressed: (state) {},
+          ),
         )
       ],
     );

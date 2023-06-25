@@ -38,6 +38,16 @@ class _CustomerSearchPageState extends State<CustomerSearchPage> {
             field: "dsName",
             type: FilterType.text,
           ),
+          FilterOption(
+            title: "Documento",
+            field: "dsDocument",
+            type: FilterType.text,
+          ),
+          FilterOption(
+            title: "E-mail",
+            field: "dsEmail",
+            type: FilterType.text,
+          ),
           FilterOption(title: "Situação", field: "stCustomer", type: FilterType.enumeration, enumOptions: [
             EnumOption(title: "Ativo", value: 1),
             EnumOption(title: "Inativo", value: 0),

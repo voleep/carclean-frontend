@@ -15,9 +15,11 @@ class FilterChipsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final queryList = ref.watch(filterQueryProvider(config));
 
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      padding: const EdgeInsets.only(bottom: 5),
       child: Wrap(
+          runAlignment: WrapAlignment.start,
           spacing: 4,
           runSpacing: 4,
           alignment: WrapAlignment.start,
@@ -25,7 +27,13 @@ class FilterChipsView extends ConsumerWidget {
                   ?.where((query) => query.field == field)
                   .map(
                     (query) => InputChip(
-                      label: Text("${query.operator.label()} ${query.valueLabel}"),
+                      visualDensity: VisualDensity.compact,
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      label: Text(query.valueLabel),
                       onPressed: () => onPressed(query),
                       onDeleted: () => ref.read(filterQueryProvider(config).notifier).remove(query),
                     ),
