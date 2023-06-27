@@ -12,7 +12,7 @@ class VehicleRoutes {
 
   get create => "$root/new";
 
-  update(CustomerId id) => "$root/update/$id";
+  update(CustomerId id) => "$root/$id";
 
   VehicleRoutes.forChild({
     required String parentPath,
@@ -23,7 +23,7 @@ class VehicleRoutes {
           parentNavigatorKey: Routes.i.navigationkey,
           path: "$root/:id",
           builder: (context, state) {
-            final VehicleId? vehicleId = state.queryParameters['id'];
+            final VehicleId? vehicleId = state.pathParameters['id'];
 
             return vehicleId != null
                 ? VehicleFormPage(

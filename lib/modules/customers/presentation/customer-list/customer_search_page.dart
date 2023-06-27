@@ -11,7 +11,6 @@ import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
 class CustomerSearchPage extends StatefulWidget {
   const CustomerSearchPage({Key? key}) : super(key: key);

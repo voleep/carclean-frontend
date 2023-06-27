@@ -27,18 +27,16 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             }),
           ),
           MenuModel(
-              location: Routes.app.vehicle.root,
-              label: 'Veículos',
-              icon: Icons.directions_car_rounded,
-              child: VehicleListPage(),
-              fabOptions: MenuFabOptionsModel(onPressed: (ref) {
-                ref.read(goRouterProvider).push(Routes.app.vehicle.create);
-              })),
-          MenuModel(
-            location: '/app/vehicle',
-            label: 'veículos',
-            icon: Icons.commute_outlined,
+            location: Routes.app.vehicle.root,
+            label: 'Veículos',
+            icon: Icons.directions_car_rounded,
             child: VehicleListPage(),
+          ),
+          const MenuModel(
+            location: '/app/vehicle',
+            label: 'Produtos',
+            icon: Icons.store_rounded,
+            child: Placeholder(),
           ),
         ]);
 }
