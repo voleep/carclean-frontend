@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
 import 'package:voleep_carclean_frontend/modules/customers/presentation/customer-list/customer_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_fab_options_model.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
@@ -32,11 +33,11 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             icon: Icons.directions_car_rounded,
             child: VehicleListPage(),
           ),
-          const MenuModel(
-            location: '/app/vehicle',
+          MenuModel(
+            location: '/app/product',
             label: 'Produtos',
             icon: Icons.store_rounded,
-            child: Placeholder(),
+            child: ProductSearchPage(),
           ),
         ]);
 }
