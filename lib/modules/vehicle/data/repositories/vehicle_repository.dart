@@ -1,7 +1,5 @@
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/create_vehicle_dto.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/update_vehicle_dto.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 
@@ -22,8 +20,8 @@ class VehicleRepository {
     return VehicleModel.fromJson(response.data!);
   }
 
-  Future<VehicleModel?> save(CreateVehicleDTO createVehicleDTO) async {
-    final response = await http.post(endpoint, data: createVehicleDTO.toJson());
+  Future<VehicleModel?> save(VehicleModel vehicleDTO) async {
+    final response = await http.post(endpoint, data: vehicleDTO.toJson());
 
     if (response.data == null) {
       return null;
@@ -32,13 +30,22 @@ class VehicleRepository {
     return VehicleModel.fromJson(response.data!);
   }
 
-  Future<VehicleModel?> update(UpdateVehicleDTO updateVehicleDTO) async {
-    final response = await http.put(endpoint, data: updateVehicleDTO.toJson());
+  Future<VehicleModel?> update(VehicleModel vehicleDTO) async {
+    final response = await http.put(endpoint, data: vehicleDTO.toJson());
 
     if (response.data == null) {
       return null;
     }
 
     return VehicleModel.fromJson(response.data!);
+  }
+
+  Future<bool> existsByLicensePlate({required String licensePlate, String? updatingVehicleId}) async {
+    final response = await http.post("$endpoint/exists-by-licenseplate/$licensePlate", data: updatingVehicleId);
+    if (response.data == null) {
+      return false;
+    }
+
+    return response.data as bool;
   }
 }

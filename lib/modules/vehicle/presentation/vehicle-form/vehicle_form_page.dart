@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
@@ -13,8 +14,9 @@ class VehicleFormPage extends ConsumerWidget {
   VehicleFormPage({super.key, required this.vehicleId});
 
   final VehicleId vehicleId;
-  final TextEditingController _descriptionControl = TextEditingController();
-  final TextEditingController _licensePlateControl = TextEditingController();
+  final _descriptionControl = TextEditingController();
+  final _licensePlateControl = TextEditingController();
+  final _modelYearControl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -26,72 +28,107 @@ class VehicleFormPage extends ConsumerWidget {
       if (next.hasError) {
         next.showSnackBarOnError(context);
       }
+
+      if (next.hasValue) {
+        _descriptionControl.text = next.value?.description ?? "";
+        _licensePlateControl.text = next.value?.licensePlate ?? "";
+        _modelYearControl.text = next.value?.modelYear ?? "";
+      }
     });
 
     return Scaffold(
       appBar: const VoleepAppBar(
-        title: Text("Cadastro de veículos"),
+        title: Text("Veículo"),
       ),
       body: ScrollableView(
-        child: controller.when(
-          error: (error, stackTrace) => Center(
-            child: Text("$error"),
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          data: (data) {
-            _descriptionControl.text = data?.description ?? "";
-            _licensePlateControl.text = data?.licensePlate ?? "";
-
-            return Padding(
-              padding: const EdgeInsets.all(24),
-              child: Form(
-                key: _formKey,
-                child: Flex(
-                  direction: isMobile ? Axis.vertical : Axis.horizontal,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: VoleepTextFormField(
-                          controller: _descriptionControl,
-                          placeholder: "Descrição",
-                          icon: isMobile ? Icons.description_outlined : null,
-                          validator: (value) => Validators.maxLength(value, 200)),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: VoleepTextFormField(
-                          controller: _licensePlateControl,
-                          placeholder: "Placa",
-                          icon: isMobile ? Icons.money_rounded : null,
-                          validator: (value) => Validators.maxLength(value, 7)),
-                    ),
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: VoleepTextFormField(
+                      controller: _descriptionControl,
+                      placeholder: "Descrição",
+                      icon: isMobile ? Icons.description_outlined : null,
+                      validator: (value) => Validators.listOf([
+                            () => Validators.required(value),
+                            () => Validators.maxLength(value, 100),
+                          ])),
                 ),
-              ),
-            );
-          },
+                Flexible(
+                  flex: 1,
+                  child: VoleepTextFormField(
+                    controller: _licensePlateControl,
+                    placeholder: "Placa",
+                    icon: isMobile ? Icons.money_rounded : null,
+                    validator: (value) => Validators.listOf([
+                      () => Validators.required(value),
+                      () => Validators.maxLength(value, 7),
+                    ]),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: VoleepTextFormField(
+                      controller: _modelYearControl,
+                      placeholder: "Ano",
+                      icon: isMobile ? Icons.event_rounded : null,
+                      validator: (value) => Validators.maxLength(value, 20)),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
       floatingActionButton: controller.whenOrNull(
         data: (value) => FloatingActionButton.extended(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              ref
-                  .read(vehicleFormPageControllerProvider(vehicleId).notifier)
-                  .saveOrUpdate(
-                    description: _descriptionControl.text,
-                    licensePlate: _licensePlateControl.text,
-                  )
-                  .then((value) {
-                if (!controller.hasError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Salvo com sucesso!"),
-                      behavior: SnackBarBehavior.floating,
-                      width: 250,
+              final notifier = ref.read(vehicleFormPageControllerProvider(vehicleId).notifier);
+              final existsByLicensePlate = await notifier.existsByLicensePlate(_licensePlateControl.text);
+
+              if (existsByLicensePlate) {
+                if (context.mounted) {
+                  final shouldProceed = await showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Placa duplicada"),
+                      content: const Text("Já existe um veículo cadastrado com a mesma placa. Deseja continuar mesmo assim?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () => context.pop(false),
+                          child: const Text("CANCELAR"),
+                        ),
+                        TextButton(
+                          onPressed: () => context.pop(true),
+                          child: const Text("CONTINUAR"),
+                        ),
+                      ],
                     ),
                   );
+
+                  if (!shouldProceed) {
+                    return;
+                  }
+                } else {
+                  return;
+                }
+              }
+
+              await notifier
+                  .saveOrUpdate(
+                description: _descriptionControl.text,
+                licensePlate: _licensePlateControl.text,
+                modelYear: _modelYearControl.text,
+              )
+                  .then((value) {
+                if (!controller.hasError) {
+                  context.pop(true);
                 }
               });
             }

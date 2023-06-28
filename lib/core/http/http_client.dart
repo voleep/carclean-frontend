@@ -10,17 +10,14 @@ class HttpClient {
 
   HttpClient({required this.dio});
 
-  Future<RequestResponseModel<Map<String, dynamic>?>> get(String url) async {
+  Future<RequestResponseModel<dynamic>> get(String url) async {
     try {
       final response = await dio.get(url);
-      RequestResponseModel<Map<String, dynamic>?> apiResponse =
-          RequestResponseModel.fromJson(
-              response.data, (data) => data as Map<String, dynamic>?);
+      RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioError catch (error) {
-      final String errorMessage =
-          DioExceptions.fromDioError(dioError: error).toString();
+    } on DioException catch (error) {
+      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
       if (kDebugMode) {
         print(error.message);
       }
@@ -29,18 +26,14 @@ class HttpClient {
     }
   }
 
-  Future<RequestResponseModel<Map<String, dynamic>?>> post(String url,
-      {Map<String, dynamic>? headers, required data, encoding}) async {
+  Future<RequestResponseModel<dynamic>> post(String url, {Map<String, dynamic>? headers, required data, encoding}) async {
     try {
       final response = await dio.post(url, data: json.encode(data));
-      RequestResponseModel<Map<String, dynamic>?> apiResponse =
-          RequestResponseModel.fromJson(
-              response.data, (data) => data as Map<String, dynamic>?);
+      RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioError catch (error) {
-      final String errorMessage =
-          DioExceptions.fromDioError(dioError: error).toString();
+    } on DioException catch (error) {
+      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
       if (kDebugMode) {
         print(error.message);
       }
@@ -49,18 +42,14 @@ class HttpClient {
     }
   }
 
-  Future<RequestResponseModel<Map<String, dynamic>?>> put(String url,
-      {Map<String, dynamic>? headers, required data, encoding}) async {
+  Future<RequestResponseModel<dynamic>> put(String url, {Map<String, dynamic>? headers, required data, encoding}) async {
     try {
       final response = await dio.put(url, data: json.encode(data));
-      RequestResponseModel<Map<String, dynamic>?> apiResponse =
-          RequestResponseModel.fromJson(
-              response.data, (data) => data as Map<String, dynamic>?);
+      RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioError catch (error) {
-      final String errorMessage =
-          DioExceptions.fromDioError(dioError: error).toString();
+    } on DioException catch (error) {
+      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
       if (kDebugMode) {
         print(error.message);
       }

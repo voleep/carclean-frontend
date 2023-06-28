@@ -3,13 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_query_state.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_query.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_date_view.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_text_view.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_enum_view.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter_card/filter_card.dart';
+import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/providers/opened_expansion_panel_index_providier.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter_header/filter_header.dart';
 
 class FilterView extends ConsumerWidget {
@@ -20,6 +18,8 @@ class FilterView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final openedIndex = ref.watch(openedExpansionPanelIndexProvider);
+
     return Consumer(
       builder: (context, ref, child) {
         return ClipRRect(
@@ -31,68 +31,90 @@ class FilterView extends ConsumerWidget {
               color: Theme.of(context).colorScheme.background,
               child: Column(
                 children: [
-                  const FilterHeader(),
+                  FilterHeader(config: config),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: filterOptions.map((filter) {
-                          if (filter.type == FilterType.text) {
-                            return FilterCard(
-                              title: Row(
-                                children: [
-                                  Expanded(child: Text(filter.title)),
-                                  const SizedBox(
-                                    width: 220,
-                                    child: Text("Condição"),
-                                  )
-                                ],
-                              ),
-                              child: FilterTextView(
-                                config: config,
-                                filterOption: filter,
-                              ),
-                            );
-                          }
+                      child: ExpansionPanelList(
+                        dividerColor: Colors.transparent,
+                        elevation: 0,
+                        animationDuration: const Duration(milliseconds: 400),
+                        expansionCallback: (panelIndex, isExpanded) =>
+                            ref.read(openedExpansionPanelIndexProvider.notifier).state = !isExpanded ? panelIndex : -1,
+                        children: filterOptions.asMap().entries.map((filterEntry) {
+                          final isExpanded = filterEntry.key == openedIndex;
+                          return ExpansionPanel(
+                              canTapOnHeader: true,
+                              isExpanded: isExpanded,
+                              backgroundColor: isExpanded ? Theme.of(context).colorScheme.primaryContainer.withAlpha(100) : null,
+                              headerBuilder: (context, isExpanded) {
+                                return Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.only(left: 18),
+                                  child: Text(
+                                    filterEntry.value.title,
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                                  ),
+                                );
+                              },
+                              body: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  if (filterEntry.value.type == FilterType.text) {
+                                    return FilterTextView(
+                                      config: config,
+                                      filterOption: filterEntry.value,
+                                    );
+                                  }
 
-                          if (filter.type == FilterType.enumeration) {
-                            return FilterCard(title: Text(filter.title), child: FilterEnumView(config: config, filterOption: filter));
-                          }
+                                  if (filterEntry.value.type == FilterType.enumeration) {
+                                    return FilterEnumView(
+                                      config: config,
+                                      filterOption: filterEntry.value,
+                                    );
+                                  }
 
-                          if (filter.type == FilterType.date) {
-                            return FilterCard(
-                                title: Text(filter.title),
-                                child: FilterDateView(
-                                  config: config,
-                                  filterOption: filter,
-                                ));
-                          }
+                                  if (filterEntry.value.type == FilterType.date) {
+                                    return FilterDateView(
+                                      config: config,
+                                      filterOption: filterEntry.value,
+                                    );
+                                  }
 
-                          return const SizedBox.shrink();
+                                  return const SizedBox.shrink();
+                                },
+                              ));
                         }).toList(),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.only(top: 24, right: 24, bottom: 12, left: 24),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        FilledButton(
-                          onPressed: () => context.pop(true),
-                          child: const Text("Filtrar"),
-                        ),
                         const SizedBox(
                           width: 12,
                         ),
-                        FilledButton.tonal(
+                        TextButton(
                           onPressed: () => context.pop(),
-                          child: const Text("Fechar"),
+                          child: Text(
+                            "FECHAR",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                          ),
                         ),
-                        const Spacer(),
-                        FilledButton(
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).colorScheme.error.withOpacity(0.8))),
-                            onPressed: () => ref.read(filterQueryProvider(config).notifier).clear(),
-                            child: const Text("Limpar")),
+                        const SizedBox(width: 12),
+                        TextButton(
+                          onPressed: () => context.pop(true),
+                          child: Text(
+                            "FILTRAR",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+                          ),
+                        ),
                       ],
                     ),
                   )

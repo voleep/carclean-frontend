@@ -11,7 +11,6 @@ import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
 class CustomerSearchPage extends StatefulWidget {
   const CustomerSearchPage({Key? key}) : super(key: key);
@@ -36,6 +35,16 @@ class _CustomerSearchPageState extends State<CustomerSearchPage> {
           FilterOption(
             title: "Nome",
             field: "dsName",
+            type: FilterType.text,
+          ),
+          FilterOption(
+            title: "Documento",
+            field: "dsDocument",
+            type: FilterType.text,
+          ),
+          FilterOption(
+            title: "E-mail",
+            field: "dsEmail",
             type: FilterType.text,
           ),
           FilterOption(title: "Situação", field: "stCustomer", type: FilterType.enumeration, enumOptions: [

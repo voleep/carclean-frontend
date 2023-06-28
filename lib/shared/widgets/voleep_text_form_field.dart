@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class VoleepTextFormField extends StatefulWidget {
+  final bool? enabled;
   final FocusNode? focusNode;
   final String placeholder;
   final IconData? icon;
@@ -11,19 +12,22 @@ class VoleepTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
 
-  const VoleepTextFormField(
-      {Key? key,
-      required this.placeholder,
-      this.focusNode,
-      this.icon,
-      this.suffixIcon,
-      this.obscureText = false,
-      this.enableSuggestions = true,
-      this.validator,
-      this.controller,
-      this.inputFormatters})
-      : super(key: key);
+  const VoleepTextFormField({
+    Key? key,
+    required this.placeholder,
+    this.enabled,
+    this.focusNode,
+    this.icon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.enableSuggestions = true,
+    this.validator,
+    this.controller,
+    this.inputFormatters,
+    this.keyboardType,
+  }) : super(key: key);
 
   @override
   State<VoleepTextFormField> createState() => _VoleepTextFormFieldState();
@@ -48,6 +52,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
       child: SizedBox(
         height: 75,
         child: TextFormField(
+          enabled: widget.enabled,
           textAlignVertical: TextAlignVertical.bottom,
           focusNode: widget.focusNode,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, height: 1),
@@ -86,6 +91,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
           validator: widget.validator,
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
+          keyboardType: widget.keyboardType,
         ),
       ),
     );
