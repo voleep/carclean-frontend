@@ -8,8 +8,6 @@ part of 'product_request_dto.dart';
 
 Map<String, dynamic> _$ProductRequestDTOToJson(ProductRequestDTO instance) =>
     <String, dynamic>{
-      'stringify': instance.stringify,
-      'hashCode': instance.hashCode,
       'productId': instance.productId,
       'description': instance.description,
       'price': instance.price,

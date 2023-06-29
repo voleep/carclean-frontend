@@ -1,52 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
-import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
 
-class ProductSearchPage extends ConsumerWidget {
-  ProductSearchPage({super.key});
+class EmployeeSearchPage extends ConsumerWidget {
+  EmployeeSearchPage({super.key});
 
-  final _searchConfig = SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/product", orderField: "code", filterOnInit: true);
-
+  final _searchConfig = SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee", orderField: "name", filterOnInit: true);
+  final _searchFilter = const FilterOption(title: "Nome", field: "name", type: FilterType.text);
+  final _dateFormat = DateFormat("dd/MM/yyyy");
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
-        child: CarCleanSearch<ProductModel>(
+        child: CarCleanSearch<EmployeeModel>(
           config: _searchConfig,
-          searchBarFilter: const FilterOption(
-            title: "Produto",
-            field: "description",
-            type: FilterType.text,
-          ),
-          filterOptions: const [
-            FilterOption(
-              title: "Código",
-              field: "code",
-              type: FilterType.number,
+          searchBarFilter: _searchFilter,
+          filterOptions: [
+            _searchFilter,
+            const FilterOption(
+              title: "Data de cadastro",
+              field: "registrationDate",
+              type: FilterType.date,
             ),
-            FilterOption(
-              title: "Produto",
-              field: "description",
+            const FilterOption(
+              title: "Telefone",
+              field: "telephone",
               type: FilterType.text,
             ),
-            FilterOption(
-              title: "Valor",
-              field: "price",
-              type: FilterType.number,
-            ),
-            FilterOption(
+            const FilterOption(
               title: "Situação",
               field: "situation",
               type: FilterType.enumeration,
@@ -57,48 +49,21 @@ class ProductSearchPage extends ConsumerWidget {
             ),
           ],
           columns: const [
-            ColumnOption(title: "Código", width: 50),
-            ColumnOption(title: "Descrição", width: 700),
-            ColumnOption(title: "Valor", width: 50),
+            ColumnOption(title: "Nome", width: 40),
+            ColumnOption(title: "Telefone", width: 300),
+            ColumnOption(title: "Data de cadastro", width: 100),
           ],
           cellsBuilder: (context, index, item) {
             return [
-              Text(item.code.toString()),
-              Text(item.description),
-              Text(item.price?.toString() ?? ""),
+              Text(item.name),
+              Text(item.telephone ?? ""),
+              Text(item.registrationDate.toString()),
             ];
           },
-          actionsBuilder: (_, index, item) => [
-            ActionOption(
-              title: "Editar",
-              icon: Icons.edit_rounded,
-              backgroundColor: Colors.greenAccent,
-              foregroundColor: const Color.fromARGB(255, 11, 88, 13),
-              onTap: () async {
-                final shouldReload = await context.push(
-                  Routes.app.product.update(item.productId),
-                );
-                if (shouldReload == true) {
-                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
-                }
-              },
-            ),
-            ActionOption(
-              title: "Excluir",
-              icon: Icons.delete_rounded,
-              backgroundColor: Colors.redAccent,
-              onTap: () async {
-                final value = await showModalBottomSheet(
-                  useRootNavigator: true,
-                  context: context,
-                  builder: (context) => const DeleteBottomSheet(),
-                );
-              },
-            ),
-          ],
+          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
-            title: Text(item.description),
-            subtitle: Text("${item.price ?? "Sem preço"} - ${item.availableStock ?? "Estoque não definido"}"),
+            title: Text(item.name),
+            subtitle: Text("${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,27 +75,27 @@ class ProductSearchPage extends ConsumerWidget {
                       height: 40,
                       alignment: AlignmentDirectional.center,
                       color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
-                      child: Text(item.code.toString()),
+                      child: Text(item.name.substring(0, 1).toUpperCase()),
                     )),
               ],
             ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
               final shouldReload = await context.push(
-                Routes.app.product.update(item.productId),
+                Routes.app.employee.update(item.employeeId),
               );
               if (shouldReload == true) {
                 ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
               }
             },
           ),
-          fromJsonT: ProductModel.fromJson,
+          fromJsonT: EmployeeModel.fromJson,
         ),
       ),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add_rounded),
           onPressed: () async {
-            final shouldReload = await context.push(Routes.app.product.create);
+            final shouldReload = await context.push(Routes.app.employee.create);
             if (shouldReload == true) {
               ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
             }

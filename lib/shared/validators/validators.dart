@@ -1,14 +1,13 @@
 abstract class Validators {
   static String? required(final String? value, [final String? message]) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return message ?? "Campo obrigatório";
     }
 
     return null;
   }
 
-  static String? maxLength(final String? value, final int maxLength,
-      [final String? message]) {
+  static String? maxLength(final String? value, final int maxLength, [final String? message]) {
     if (value == null || value.isEmpty) return null;
 
     if (value.length > maxLength) {
@@ -18,8 +17,7 @@ abstract class Validators {
     return null;
   }
 
-  static String? minLength(final String? value, final int minLength,
-      [final String? message]) {
+  static String? minLength(final String? value, final int minLength, [final String? message]) {
     if (value == null || value.isEmpty) return null;
 
     if (value.length < minLength) {
@@ -43,8 +41,7 @@ abstract class Validators {
     return null;
   }
 
-  static String? match(final String? value, final String expectedValue,
-      [final String? message]) {
+  static String? match(final String? value, final String expectedValue, [final String? message]) {
     if (value == null || value.isEmpty) return null;
 
     if (value != expectedValue) {

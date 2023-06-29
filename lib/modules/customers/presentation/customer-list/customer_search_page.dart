@@ -51,7 +51,6 @@ class _CustomerSearchPageState extends State<CustomerSearchPage> {
             EnumOption(title: "Ativo", value: 1),
             EnumOption(title: "Inativo", value: 0),
           ]),
-          FilterOption(title: "Data de cadastro", field: "dh", type: FilterType.date),
         ],
         columns: const [
           ColumnOption(title: "Nome", width: 200),

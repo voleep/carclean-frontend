@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
 import 'package:voleep_carclean_frontend/modules/customers/presentation/customer-list/customer_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_search/employee_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_fab_options_model.dart';
@@ -19,13 +20,10 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             child: const HomeView(),
           ),
           MenuModel(
-            location: Routes.app.customer.root,
-            label: 'Clientes',
-            icon: Icons.group_outlined,
-            child: const CustomerSearchPage(),
-            fabOptions: MenuFabOptionsModel(onPressed: (ref) {
-              ref.read(goRouterProvider).push(Routes.app.customer.create);
-            }),
+            location: '/app/employee',
+            label: 'Colaboradores',
+            icon: Icons.diversity_3_rounded,
+            child: EmployeeSearchPage(),
           ),
           MenuModel(
             location: Routes.app.vehicle.root,
@@ -38,6 +36,15 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             label: 'Produtos',
             icon: Icons.store_rounded,
             child: ProductSearchPage(),
+          ),
+          MenuModel(
+            location: Routes.app.customer.root,
+            label: 'Clientes',
+            icon: Icons.group_outlined,
+            child: const CustomerSearchPage(),
+            fabOptions: MenuFabOptionsModel(onPressed: (ref) {
+              ref.read(goRouterProvider).push(Routes.app.customer.create);
+            }),
           ),
         ]);
 }
