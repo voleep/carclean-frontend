@@ -88,9 +88,10 @@ class EmployeeFormPage extends ConsumerWidget {
                   child: Flex(
                     direction: Axis.horizontal,
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
+                        flex: 3,
                         child: Visibility(
                           visible: mode == FormMode.update,
                           child: VoleepTextFormField(
@@ -101,27 +102,30 @@ class EmployeeFormPage extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      Consumer(
-                        builder: (context, ref, widget) {
-                          final situation = ref.watch(situationSwitchState);
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 18, left: 18),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Situação ",
-                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-                                ),
-                                Switch(
-                                  value: situation.boolean,
-                                  onChanged: (value) => ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                      Flexible(
+                        flex: 2,
+                        child: Consumer(
+                          builder: (context, ref, widget) {
+                            final situation = ref.watch(situationSwitchState);
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 18),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Situação ",
+                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                                  ),
+                                  Switch(
+                                    value: situation.boolean,
+                                    onChanged: (value) => ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
