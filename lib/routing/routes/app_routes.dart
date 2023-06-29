@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_page.dart';
 import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
 import 'package:voleep_carclean_frontend/routing/routes/customer/customer_routes.dart';
+import 'package:voleep_carclean_frontend/routing/routes/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/product/product_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/vehicle/vehicle_routes.dart';
 
@@ -13,11 +14,12 @@ class AppRoutes {
   static String name = "app";
   final String root;
 
-  get home => "$root/home";
+  String get home => "$root/home";
 
-  get customer => CustomerRoutes.forChild(parentPath: root);
-  get vehicle => VehicleRoutes.forChild(parentPath: root);
-  get product => ProductRoutes.forChild(parentPath: root);
+  CustomerRoutes get customer => CustomerRoutes.forChild(parentPath: root);
+  VehicleRoutes get vehicle => VehicleRoutes.forChild(parentPath: root);
+  ProductRoutes get product => ProductRoutes.forChild(parentPath: root);
+  EmployeeRoutes get employee => EmployeeRoutes.forChild(parentPath: root);
 
   AppRoutes.forChild({
     required String parentPath,
@@ -27,6 +29,7 @@ class AppRoutes {
         ...customer.routes,
         ...vehicle.routes,
         ...product.routes,
+        ...employee.routes,
         ShellRoute(
           navigatorKey: navigatorKey,
           builder: (context, state, child) => AppPage(

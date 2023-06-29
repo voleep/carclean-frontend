@@ -1,12 +1,9 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
 import 'package:json_annotation/json_annotation.dart';
 
 part 'product_request_dto.g.dart';
 
-@immutable
 @JsonSerializable(createFactory: false)
-class ProductRequestDTO extends Equatable {
+class ProductRequestDTO {
   final String? productId;
   final String description;
   final double? price;
