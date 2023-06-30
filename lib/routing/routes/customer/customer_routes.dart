@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
-import 'package:voleep_carclean_frontend/modules/customers/presentation/customer-form/customer_page.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/modules/customer/presentation/customer-form/customer_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 class CustomerRoutes {

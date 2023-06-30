@@ -1,0 +1,1 @@
+typedef ServiceOrderId = String;

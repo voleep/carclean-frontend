@@ -13,12 +13,17 @@ import 'package:number_text_input_formatter/number_text_input_formatter.dart';
 
 final situationSwitchState = AutoDisposeStateProvider<bool>((ref) => true);
 
-class ProductFormPage extends ConsumerWidget {
-  ProductFormPage({super.key, this.productId, required this.mode});
+class ProductFormPage extends ConsumerStatefulWidget {
+  const ProductFormPage({super.key, this.productId, required this.mode});
 
   final String? productId;
   final FormMode mode;
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductFormPageState();
+}
+
+class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _codeControl = TextEditingController();
@@ -28,9 +33,9 @@ class ProductFormPage extends ConsumerWidget {
   final _pcComissionControl = TextEditingController();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isMobile = Responsive.isMobile(context);
-    ref.listen(productFormControllerProvider(productId, mode), (_, value) {
+  void initState() {
+    super.initState();
+    ref.listenManual(productFormControllerProvider(widget.productId, widget.mode), (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -43,11 +48,16 @@ class ProductFormPage extends ConsumerWidget {
         _availableStockControl.text = value.value!.availableStock?.toString() ?? "";
         _pcComissionControl.text = value.value!.pcCommission != null ? "${value.value!.pcCommission} %" : "";
       }
-    });
+    }, fireImmediately: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title: Text(mode == FormMode.create ? "Novo produto" : "Produto"),
+        title: Text(widget.mode == FormMode.create ? "Novo produto" : "Produto"),
       ),
       body: ScrollableView(
         child: Padding(
@@ -67,16 +77,12 @@ class ProductFormPage extends ConsumerWidget {
                     children: [
                       Flexible(
                         child: Visibility(
-                          visible: productId != null,
+                          visible: widget.mode == FormMode.update,
                           child: VoleepTextFormField(
                             controller: _codeControl,
                             enabled: false,
                             placeholder: "Código",
                             icon: isMobile ? Icons.qr_code_rounded : null,
-                            validator: (value) => Validators.listOf([
-                              () => Validators.required(value),
-                              () => Validators.maxLength(value, 250),
-                            ]),
                           ),
                         ),
                       ),
@@ -187,7 +193,7 @@ class ProductFormPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(productFormControllerProvider(productId, mode).notifier);
+            final notifier = ref.read(productFormControllerProvider(widget.productId, widget.mode).notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
@@ -205,7 +211,7 @@ class ProductFormPage extends ConsumerWidget {
               situation: ref.read(situationSwitchState) ? 1 : 0,
             )
                 .then((value) {
-              if (!ref.read(productFormControllerProvider(productId, mode)).hasError) {
+              if (!ref.read(productFormControllerProvider(widget.productId, widget.mode)).hasError) {
                 context.pop(true);
               }
             });

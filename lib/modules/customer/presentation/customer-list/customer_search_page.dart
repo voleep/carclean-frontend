@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';

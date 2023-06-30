@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/modules/customers/data/repositories/providers/customer_repository_provider.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/models/customer_model.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/modules/customer/data/repositories/providers/customer_repository_provider.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 
 class CustomerPageController extends AutoDisposeFamilyAsyncNotifier<CustomerModel?, CustomerId?> {
   @override
