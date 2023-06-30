@@ -1,15 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service_order_request_dto.dart';
+part of 'service_request_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$ServiceOrderRequestDTOToJson(
-        ServiceOrderRequestDTO instance) =>
+Map<String, dynamic> _$ServiceRequestDTOToJson(ServiceRequestDTO instance) =>
     <String, dynamic>{
-      'serviceOrderId': instance.serviceOrderId,
+      'serviceId': instance.serviceId,
       'description': instance.description,
       'fullDescription': instance.fullDescription,
       'price': instance.price,

@@ -1,32 +1,32 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voleep_carclean_frontend/modules/serviceorder/domain/typedefs/service_order_types.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
-part 'service_order_model.g.dart';
+part 'service_model.g.dart';
 
 @immutable
 @JsonSerializable(createToJson: false)
-class ServiceOrderModel extends Equatable {
-  final ServiceOrderId serviceOrderId;
+class ServiceModel extends Equatable {
+  final ServiceId serviceId;
   final int code;
   final String description;
   final String fullDescription;
   final double price;
 
-  const ServiceOrderModel({
-    required this.serviceOrderId,
+  const ServiceModel({
+    required this.serviceId,
     required this.code,
     required this.description,
     required this.fullDescription,
     required this.price,
   });
 
-  factory ServiceOrderModel.fromJson(Map<String, dynamic> json) => _$ServiceOrderModelFromJson(json);
+  factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);
 
   @override
   List<Object?> get props => [
-        serviceOrderId,
+        serviceId,
         code,
         description,
         fullDescription,

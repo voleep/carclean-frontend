@@ -1,14 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service_order_model.dart';
+part of 'service_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ServiceOrderModel _$ServiceOrderModelFromJson(Map<String, dynamic> json) =>
-    ServiceOrderModel(
-      serviceOrderId: json['serviceOrderId'] as String,
+ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) => ServiceModel(
+      serviceId: json['serviceId'] as String,
       code: json['code'] as int,
       description: json['description'] as String,
       fullDescription: json['fullDescription'] as String,

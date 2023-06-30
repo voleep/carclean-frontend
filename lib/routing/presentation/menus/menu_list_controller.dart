@@ -4,7 +4,7 @@ import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer-list/customer_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_search/employee_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
-import 'package:voleep_carclean_frontend/modules/serviceorder/presentation/service_order_search/service_order_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_fab_options_model.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
@@ -27,10 +27,10 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             child: ProductSearchPage(),
           ),
           MenuModel(
-            location: Routes.app.serviceOrder.root,
-            label: 'OS',
-            icon: Icons.assignment_rounded,
-            child: ServiceOrderSearchPage(),
+            location: Routes.app.service.root,
+            label: 'Serviços',
+            icon: Icons.settings_suggest_rounded,
+            child: const ServiceSearchPage(),
           ),
           MenuModel(
             location: Routes.app.vehicle.root,
