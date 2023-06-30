@@ -1,8 +1,8 @@
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
-import 'package:voleep_carclean_frontend/modules/customers/data/dtos/create_customer_dto.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/models/customer_model.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/modules/customer/data/dtos/create_customer_dto.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 
 class CustomerRepository {
   final HttpClient http;
@@ -49,10 +49,8 @@ class CustomerRepository {
     return update(createCustomerDTO: createCustomerDTO);
   }
 
-  Future<CustomerModel?> save(
-      {required CreateCustomerDTO createCustomerDTO}) async {
-    final response =
-        await http.post(endpoint, data: createCustomerDTO.toJson());
+  Future<CustomerModel?> save({required CreateCustomerDTO createCustomerDTO}) async {
+    final response = await http.post(endpoint, data: createCustomerDTO.toJson());
 
     if (response.data == null) {
       return null;
@@ -61,8 +59,7 @@ class CustomerRepository {
     return CustomerModel.fromJson(response.data!);
   }
 
-  Future<CustomerModel?> update(
-      {required CreateCustomerDTO createCustomerDTO}) async {
+  Future<CustomerModel?> update({required CreateCustomerDTO createCustomerDTO}) async {
     final response = await http.put(endpoint, data: createCustomerDTO.toJson());
 
     if (response.data == null) {
@@ -73,8 +70,7 @@ class CustomerRepository {
   }
 
   Future<CustomerModel?> enable({required CustomerId customerId}) async {
-    final response =
-        await http.post("$endpoint/$customerId/enable", data: null);
+    final response = await http.post("$endpoint/$customerId/enable", data: null);
 
     if (response.data == null) {
       return null;
@@ -84,8 +80,7 @@ class CustomerRepository {
   }
 
   Future<CustomerModel?> disable({required CustomerId customerId}) async {
-    final response =
-        await http.post("$endpoint/$customerId/disable", data: null);
+    final response = await http.post("$endpoint/$customerId/disable", data: null);
 
     if (response.data == null) {
       return null;

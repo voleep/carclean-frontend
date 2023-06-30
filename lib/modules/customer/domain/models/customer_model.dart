@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 part 'customer_model.g.dart';
 
 @JsonSerializable()
@@ -25,8 +25,7 @@ class CustomerModel extends Equatable {
     required this.stCustomer,
   });
 
-  factory CustomerModel.fromJson(Map<String, dynamic> json) =>
-      _$CustomerModelFromJson(json);
+  factory CustomerModel.fromJson(Map<String, dynamic> json) => _$CustomerModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$CustomerModelToJson(this);
 

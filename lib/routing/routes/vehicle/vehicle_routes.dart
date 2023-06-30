@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:voleep_carclean_frontend/modules/customers/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle-form/vehicle_form_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';

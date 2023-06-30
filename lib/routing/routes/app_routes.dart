@@ -6,6 +6,7 @@ import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/me
 import 'package:voleep_carclean_frontend/routing/routes/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/product/product_routes.dart';
+import 'package:voleep_carclean_frontend/routing/routes/serviceorder/service_order_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/vehicle/vehicle_routes.dart';
 
 class AppRoutes {
@@ -20,6 +21,7 @@ class AppRoutes {
   VehicleRoutes get vehicle => VehicleRoutes.forChild(parentPath: root);
   ProductRoutes get product => ProductRoutes.forChild(parentPath: root);
   EmployeeRoutes get employee => EmployeeRoutes.forChild(parentPath: root);
+  ServiceOrderRoutes get serviceOrder => ServiceOrderRoutes.forChild(parentPath: root);
 
   AppRoutes.forChild({
     required String parentPath,
@@ -30,6 +32,7 @@ class AppRoutes {
         ...vehicle.routes,
         ...product.routes,
         ...employee.routes,
+        ...serviceOrder.routes,
         ShellRoute(
           navigatorKey: navigatorKey,
           builder: (context, state, child) => AppPage(
