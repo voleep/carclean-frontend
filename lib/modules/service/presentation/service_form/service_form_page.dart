@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:number_text_input_formatter/number_text_input_formatter.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
-import 'package:voleep_carclean_frontend/modules/serviceorder/domain/typedefs/service_order_types.dart';
-import 'package:voleep_carclean_frontend/modules/serviceorder/presentation/service_order_form/service_order_form_controller.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
+import 'package:voleep_carclean_frontend/modules/service/presentation/service_form/service_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
@@ -12,17 +12,17 @@ import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollab
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
-class ServiceOrderFormPage extends ConsumerStatefulWidget {
-  const ServiceOrderFormPage({super.key, this.serviceOrderId, required this.mode});
+class ServiceFormPage extends ConsumerStatefulWidget {
+  const ServiceFormPage({super.key, this.serviceId, required this.mode});
 
-  final ServiceOrderId? serviceOrderId;
+  final ServiceId? serviceId;
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceOrderFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceFormPageState();
 }
 
-class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
+class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _codeControl = TextEditingController();
@@ -33,7 +33,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(serviceOrderFormControllerProvider(widget.serviceOrderId, widget.mode), (_, value) {
+    ref.listenManual(ServiceFormControllerProvider(widget.serviceId, widget.mode), (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -52,8 +52,8 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
     final isMobile = Responsive.isMobile(context);
 
     return Scaffold(
-      appBar: const VoleepAppBar(
-        title: Text("Ordem de Serviço"),
+      appBar: VoleepAppBar(
+        title: Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
       ),
       body: ScrollableView(
         child: Padding(
@@ -136,7 +136,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(serviceOrderFormControllerProvider(widget.serviceOrderId, widget.mode).notifier);
+            final notifier = ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode).notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
@@ -149,7 +149,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
               price: price,
             )
                 .then((value) {
-              if (!ref.read(serviceOrderFormControllerProvider(widget.serviceOrderId, widget.mode)).hasError) {
+              if (!ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode)).hasError) {
                 context.pop(true);
               }
             });

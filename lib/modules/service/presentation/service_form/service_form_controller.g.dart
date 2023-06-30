@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service_order_form_controller.dart';
+part of 'service_form_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$serviceOrderFormControllerHash() =>
-    r'6b579ca8b417c1d16636f8c1997192e3f00d57fe';
+String _$serviceFormControllerHash() =>
+    r'f27563defc36021c4ee81d2b04e6ff8cbbed2ef7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,41 +30,40 @@ class _SystemHash {
   }
 }
 
-abstract class _$ServiceOrderFormController
-    extends BuildlessAutoDisposeAsyncNotifier<ServiceOrderModel?> {
+abstract class _$ServiceFormController
+    extends BuildlessAutoDisposeAsyncNotifier<ServiceModel?> {
   late final String? arg;
   late final FormMode mode;
 
-  FutureOr<ServiceOrderModel?> build(
+  FutureOr<ServiceModel?> build(
     String? arg,
     FormMode mode,
   );
 }
 
-/// See also [ServiceOrderFormController].
-@ProviderFor(ServiceOrderFormController)
-const serviceOrderFormControllerProvider = ServiceOrderFormControllerFamily();
+/// See also [ServiceFormController].
+@ProviderFor(ServiceFormController)
+const serviceFormControllerProvider = ServiceFormControllerFamily();
 
-/// See also [ServiceOrderFormController].
-class ServiceOrderFormControllerFamily
-    extends Family<AsyncValue<ServiceOrderModel?>> {
-  /// See also [ServiceOrderFormController].
-  const ServiceOrderFormControllerFamily();
+/// See also [ServiceFormController].
+class ServiceFormControllerFamily extends Family<AsyncValue<ServiceModel?>> {
+  /// See also [ServiceFormController].
+  const ServiceFormControllerFamily();
 
-  /// See also [ServiceOrderFormController].
-  ServiceOrderFormControllerProvider call(
+  /// See also [ServiceFormController].
+  ServiceFormControllerProvider call(
     String? arg,
     FormMode mode,
   ) {
-    return ServiceOrderFormControllerProvider(
+    return ServiceFormControllerProvider(
       arg,
       mode,
     );
   }
 
   @override
-  ServiceOrderFormControllerProvider getProviderOverride(
-    covariant ServiceOrderFormControllerProvider provider,
+  ServiceFormControllerProvider getProviderOverride(
+    covariant ServiceFormControllerProvider provider,
   ) {
     return call(
       provider.arg,
@@ -84,30 +83,30 @@ class ServiceOrderFormControllerFamily
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'serviceOrderFormControllerProvider';
+  String? get name => r'serviceFormControllerProvider';
 }
 
-/// See also [ServiceOrderFormController].
-class ServiceOrderFormControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<ServiceOrderFormController,
-        ServiceOrderModel?> {
-  /// See also [ServiceOrderFormController].
-  ServiceOrderFormControllerProvider(
+/// See also [ServiceFormController].
+class ServiceFormControllerProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<ServiceFormController,
+        ServiceModel?> {
+  /// See also [ServiceFormController].
+  ServiceFormControllerProvider(
     this.arg,
     this.mode,
   ) : super.internal(
-          () => ServiceOrderFormController()
+          () => ServiceFormController()
             ..arg = arg
             ..mode = mode,
-          from: serviceOrderFormControllerProvider,
-          name: r'serviceOrderFormControllerProvider',
+          from: serviceFormControllerProvider,
+          name: r'serviceFormControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$serviceOrderFormControllerHash,
-          dependencies: ServiceOrderFormControllerFamily._dependencies,
+                  : _$serviceFormControllerHash,
+          dependencies: ServiceFormControllerFamily._dependencies,
           allTransitiveDependencies:
-              ServiceOrderFormControllerFamily._allTransitiveDependencies,
+              ServiceFormControllerFamily._allTransitiveDependencies,
         );
 
   final String? arg;
@@ -115,7 +114,7 @@ class ServiceOrderFormControllerProvider
 
   @override
   bool operator ==(Object other) {
-    return other is ServiceOrderFormControllerProvider &&
+    return other is ServiceFormControllerProvider &&
         other.arg == arg &&
         other.mode == mode;
   }
@@ -130,8 +129,8 @@ class ServiceOrderFormControllerProvider
   }
 
   @override
-  FutureOr<ServiceOrderModel?> runNotifierBuild(
-    covariant ServiceOrderFormController notifier,
+  FutureOr<ServiceModel?> runNotifierBuild(
+    covariant ServiceFormController notifier,
   ) {
     return notifier.build(
       arg,
