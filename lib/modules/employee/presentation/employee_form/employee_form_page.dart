@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
+import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_form/employee_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
@@ -147,7 +148,7 @@ class EmployeeFormPage extends ConsumerWidget {
             await notifier
                 .saveOrUpdate(
               name: _nameControl.text,
-              telephone: _telephoneControl.text.isNotEmpty ? _telephoneControl.text : null,
+              telephone: _telephoneControl.text.notEmptyOrNull,
               situation: ref.read(situationSwitchState),
             )
                 .then((value) {
