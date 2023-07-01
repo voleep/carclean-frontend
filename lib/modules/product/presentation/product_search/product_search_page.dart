@@ -68,37 +68,11 @@ class ProductSearchPage extends ConsumerWidget {
               Text(item.price?.toString() ?? ""),
             ];
           },
-          actionsBuilder: (_, index, item) => [
-            ActionOption(
-              title: "Editar",
-              icon: Icons.edit_rounded,
-              backgroundColor: Colors.greenAccent,
-              foregroundColor: const Color.fromARGB(255, 11, 88, 13),
-              onTap: () async {
-                final shouldReload = await context.push(
-                  Routes.app.product.update(item.productId),
-                );
-                if (shouldReload == true) {
-                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
-                }
-              },
-            ),
-            ActionOption(
-              title: "Excluir",
-              icon: Icons.delete_rounded,
-              backgroundColor: Colors.redAccent,
-              onTap: () async {
-                final value = await showModalBottomSheet(
-                  useRootNavigator: true,
-                  context: context,
-                  builder: (context) => const DeleteBottomSheet(),
-                );
-              },
-            ),
-          ],
+          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text("${item.price ?? "Sem preço"} - ${item.availableStock ?? "Estoque não definido"}"),
+            subtitle: Text(
+                "${item.price != null ? "R\$ ${item.price!.toStringAsFixed(2)}" : "Sem preço"} - ${item.availableStock != null ? "Estoque: ${item.availableStock}" : "Estoque não definido"}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

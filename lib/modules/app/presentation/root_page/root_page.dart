@@ -46,10 +46,7 @@ class RootPage extends StatelessWidget {
                         .entries
                         .map(
                           (menuEntry) => NavigationRailDestination(
-                            icon: Hero(
-                              tag: 'menu${menuEntry.key}',
-                              child: Icon(menuEntry.value.icon),
-                            ),
+                            icon: Icon(menuEntry.value.icon),
                             label: Text(
                               menuEntry.value.label,
                             ),
@@ -81,30 +78,26 @@ class RootPage extends StatelessWidget {
           )
         ],
       ),
-      drawer: Visibility(
-        visible: isTablet,
-        child: const MenuDrawer(),
-      ),
-      endDrawer: Visibility(
-        visible: isMobile,
-        child: Consumer(builder: (context, ref, child) {
-          return Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-            const MenuDrawer(),
-            Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              width: 280,
-              height: 50,
-              child: TextButton.icon(
-                icon: const Icon(Icons.logout_rounded),
-                onPressed: () {
-                  ref.read(oAuthStateProvider.notifier).logout();
-                },
-                label: const Text("Fazer logout"),
-              ),
-            )
-          ]);
-        }),
-      ),
+      drawer: isTablet ? const MenuDrawer() : null,
+      endDrawer: isMobile
+          ? Consumer(builder: (context, ref, child) {
+              return Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+                const MenuDrawer(),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  width: 280,
+                  height: 50,
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.logout_rounded),
+                    onPressed: () {
+                      ref.read(oAuthStateProvider.notifier).logout();
+                    },
+                    label: const Text("Fazer logout"),
+                  ),
+                )
+              ]);
+            })
+          : null,
     );
   }
 }

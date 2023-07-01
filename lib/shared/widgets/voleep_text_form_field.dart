@@ -2,18 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class VoleepTextFormField extends StatefulWidget {
-  final bool? enabled;
-  final FocusNode? focusNode;
-  final String placeholder;
-  final IconData? icon;
-  final IconData? suffixIcon;
-  final bool obscureText;
-  final bool enableSuggestions;
-  final String? Function(String?)? validator;
-  final TextEditingController? controller;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextInputType? keyboardType;
-
   const VoleepTextFormField({
     Key? key,
     required this.placeholder,
@@ -27,7 +15,23 @@ class VoleepTextFormField extends StatefulWidget {
     this.controller,
     this.inputFormatters,
     this.keyboardType,
+    this.autofillHints,
+    this.autofocus = false,
   }) : super(key: key);
+
+  final bool? enabled;
+  final FocusNode? focusNode;
+  final String placeholder;
+  final IconData? icon;
+  final IconData? suffixIcon;
+  final bool obscureText;
+  final bool enableSuggestions;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType? keyboardType;
+  final Iterable<String>? autofillHints;
+  final bool autofocus;
 
   @override
   State<VoleepTextFormField> createState() => _VoleepTextFormFieldState();
@@ -52,6 +56,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
       child: SizedBox(
         height: 75,
         child: TextFormField(
+          autofocus: widget.autofocus,
           enabled: widget.enabled,
           textAlignVertical: TextAlignVertical.bottom,
           focusNode: widget.focusNode,
@@ -92,6 +97,8 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
           controller: widget.controller,
           inputFormatters: widget.inputFormatters,
           keyboardType: widget.keyboardType,
+          autofillHints: widget.autofillHints,
+          scrollPadding: const EdgeInsets.only(bottom: 95),
         ),
       ),
     );

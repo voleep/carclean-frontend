@@ -6,9 +6,7 @@ import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/list/vehicle_list_page.dart';
-import 'package:voleep_carclean_frontend/routing/domain/models/menu_fab_options_model.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
-import 'package:voleep_carclean_frontend/routing/routes/go_router_provider.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 class MenuListController extends StateNotifier<List<MenuModel>> {
@@ -43,9 +41,6 @@ class MenuListController extends StateNotifier<List<MenuModel>> {
             label: 'Clientes',
             icon: Icons.group_outlined,
             child: const CustomerSearchPage(),
-            fabOptions: MenuFabOptionsModel(onPressed: (ref) {
-              ref.read(goRouterProvider).push(Routes.app.customer.create);
-            }),
           ),
           MenuModel(
             location: Routes.app.employee.root,

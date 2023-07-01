@@ -16,13 +16,9 @@ class HttpClient {
       RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioException catch (error) {
-      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
-      if (kDebugMode) {
-        print(error.message);
-      }
-
-      throw Exception(errorMessage);
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
     }
   }
 
@@ -32,13 +28,9 @@ class HttpClient {
       RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioException catch (error) {
-      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
-      if (kDebugMode) {
-        print(error.message);
-      }
-
-      throw Exception(errorMessage);
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
     }
   }
 
@@ -48,13 +40,9 @@ class HttpClient {
       RequestResponseModel<dynamic> apiResponse = RequestResponseModel.fromJson(response.data, (data) => data as dynamic);
 
       return apiResponse;
-    } on DioException catch (error) {
-      final String errorMessage = DioExceptions.fromDioError(dioError: error).toString();
-      if (kDebugMode) {
-        print(error.message);
-      }
-
-      throw Exception(errorMessage);
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
     }
   }
 }

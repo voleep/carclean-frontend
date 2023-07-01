@@ -44,9 +44,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         ref.read(situationSwitchState.notifier).state = value.value!.situation == 1 ? true : false;
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
-        _priceControl.text = value.value!.price != null ? "R\$ ${value.value!.price}" : "";
+        _priceControl.text = value.value!.price != null ? "R\$ ${value.value!.price!.toStringAsFixed(2)}" : "";
         _availableStockControl.text = value.value!.availableStock?.toString() ?? "";
-        _pcComissionControl.text = value.value!.pcCommission != null ? "${value.value!.pcCommission} %" : "";
+        _pcComissionControl.text = value.value!.pcCommission != null ? "${value.value!.pcCommission!.toStringAsFixed(2)} %" : "";
       }
     }, fireImmediately: true);
   }
@@ -67,6 +67,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
             child: Flex(
               direction: isMobile ? Axis.vertical : Axis.horizontal,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
                   flex: 3,
@@ -111,6 +112,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                 Flexible(
                   flex: 3,
                   child: VoleepTextFormField(
+                    autofocus: widget.mode == FormMode.create ? true : false,
                     controller: _descriptionControl,
                     placeholder: "Produto",
                     icon: isMobile ? Icons.description_rounded : null,

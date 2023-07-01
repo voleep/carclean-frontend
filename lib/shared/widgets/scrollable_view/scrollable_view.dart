@@ -7,21 +7,9 @@ class ScrollableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return SingleChildScrollView(
-        reverse: true,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: constraints.maxWidth,
-            minHeight: constraints.maxHeight,
-          ),
-          child: IntrinsicHeight(
-            child: SafeArea(
-              child: child,
-            ),
-          ),
-        ),
-      );
-    });
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 60),
+      child: child,
+    );
   }
 }

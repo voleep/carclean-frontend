@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/exceptions/dio_exceptions.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_login_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_user_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
@@ -20,44 +22,53 @@ class UserRepository {
     });
   }
 
-  Future<AuthModel> signIn(
-      {required String email, required String password}) async {
-    final response = await dio.post(
-      "$endpoint/login",
-      data: CreateLoginDTO(
-        dsEmail: email,
-        dsPassword: password,
-      ).toJson(),
-    );
+  Future<AuthModel> signIn({required String email, required String password}) async {
+    try {
+      final response = await dio.post(
+        "$endpoint/login",
+        data: CreateLoginDTO(
+          dsEmail: email,
+          dsPassword: password,
+        ).toJson(),
+      );
 
-    if (response.data == null) {
-      throw Exception("Ocorreu um erro.");
+      if (response.data == null) {
+        throw Exception("Ocorreu um erro.");
+      }
+
+      final AuthModel authModel = RequestResponseModel<AuthModel>.fromJson(
+        response.data,
+        (data) => AuthModel.fromJson(data as Map<String, dynamic>),
+      ).data!;
+
+      return authModel;
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
     }
-
-    final AuthModel authModel = RequestResponseModel<AuthModel>.fromJson(
-      response.data,
-      (data) => AuthModel.fromJson(data as Map<String, dynamic>),
-    ).data!;
-
-    return authModel;
   }
 
   Future<AuthModel> signUp({required final CreateUserDTO createUserDTO}) async {
-    final response = await dio.post(
-      "$endpoint/create-account",
-      data: createUserDTO.toJson(),
-    );
+    try {
+      final response = await dio.post(
+        "$endpoint/create-account",
+        data: createUserDTO.toJson(),
+      );
 
-    if (response.data == null) {
-      throw Exception("Ocorreu um erro");
+      if (response.data == null) {
+        throw Exception("Ocorreu um erro");
+      }
+
+      final AuthModel authModel = RequestResponseModel<AuthModel>.fromJson(
+        response.data,
+        (data) => AuthModel.fromJson(data as Map<String, dynamic>),
+      ).data!;
+
+      return authModel;
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
     }
-
-    final AuthModel authModel = RequestResponseModel<AuthModel>.fromJson(
-      response.data,
-      (data) => AuthModel.fromJson(data as Map<String, dynamic>),
-    ).data!;
-
-    return authModel;
   }
 
   Future<AuthModel> refreshToken({
@@ -67,11 +78,15 @@ class UserRepository {
     dio.options.headers["Expired-Token"] = token;
     dio.options.headers["Refresh-Token"] = refreshToken;
 
-    final Response<dynamic> response =
-        await dio.post("$endpoint/refresh-token");
+    try {
+      final Response<dynamic> response = await dio.post("$endpoint/refresh-token");
 
-    final newOAuthModel = AuthModel.fromJson(response.data);
+      final newOAuthModel = AuthModel.fromJson(response.data);
 
-    return newOAuthModel;
+      return newOAuthModel;
+    } on DioException catch (exception) {
+      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      throw ErrorHint(errorMessage);
+    }
   }
 }

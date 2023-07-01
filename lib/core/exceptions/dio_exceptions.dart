@@ -1,47 +1,56 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 class DioExceptions implements Exception {
-  DioExceptions.fromDioError({required DioError dioError}) {
-    switch (dioError.type) {
-      case DioErrorType.cancel:
-        message = "Ocorreu um problema na conexão";
+  DioExceptions.extractMessage(DioException exception) {
+    switch (exception.type) {
+      case DioExceptionType.cancel:
+        message = "Ocorreu um problema na conexão.";
         break;
-      case DioErrorType.connectionTimeout:
-        message = "Tempo esgotado. Por favor, tente novamente";
+      case DioExceptionType.connectionTimeout:
+        message = "Tempo de conexão esgotado.";
         break;
-      case DioErrorType.unknown:
-        message = "Ocorreu um problema na conexão";
+      case DioExceptionType.unknown:
+        message = "Ocorreu um erro desconhecido.";
         break;
-      case DioErrorType.receiveTimeout:
-        message = "Tempo esgotado. Por favor, tente novamente";
+      case DioExceptionType.receiveTimeout:
+        message = "Tempo de recebimento de dados esgotado.";
         break;
-      case DioErrorType.badResponse:
-        message = _handleError(
-                dioError.response!.statusCode!, dioError.response!.data) ??
-            "Ocorreu um erro";
-        break;
-      case DioErrorType.sendTimeout:
-        message = "Tempo esgotado. Por favor, tente novamente";
+      case DioExceptionType.sendTimeout:
+        message = "Tempo de envio de dados esgotado.";
         break;
       default:
-        message = "Algo saiu errado";
+        message = _handleResponse(exception.response);
         break;
     }
   }
 
   late String message;
 
-  String? _handleError(int statusCode, dynamic error) {
-    switch (statusCode) {
-      case 400:
-        return 'Bad request';
-      case 404:
-        return error["message"];
-      case 500:
-        return error["message"];
-      default:
-        return 'Oops... Algo saiu errado';
+  String _handleResponse(Response<dynamic>? response) {
+    if (response == null) {
+      return "Ocorreu um erro desconhecido.";
     }
+
+    if (response.data != null) {
+      try {
+        if (response.data['errorMessage'] != null) {
+          return response.data['errorMessage'];
+        }
+      } catch (error) {
+        print(error);
+      }
+    }
+
+    if (response.statusCode != null) {
+      switch (response.statusCode) {
+        case 503:
+          return "Serviço temporariamente indisponível.";
+      }
+    }
+
+    return "Ocorreu um erro inesperado:\n$response";
   }
 
   @override

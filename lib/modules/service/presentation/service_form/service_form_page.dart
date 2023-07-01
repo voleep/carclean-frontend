@@ -62,6 +62,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             key: _formKey,
             child: Flex(
               direction: isMobile ? Axis.vertical : Axis.horizontal,
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Flexible(
@@ -79,6 +80,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                 Flexible(
                   flex: 3,
                   child: VoleepTextFormField(
+                    autofocus: widget.mode == FormMode.create ? true : false,
                     controller: _descriptionControl,
                     placeholder: "Descrição",
                     icon: isMobile ? Icons.description_rounded : null,
