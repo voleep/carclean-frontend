@@ -38,8 +38,6 @@ class CustomerFormController extends _$CustomerFormController {
     String? notes,
     required DisabledEnabled situation,
   }) async {
-    state = const AsyncLoading();
-
     state = await AsyncValue.guard<CustomerModel?>(
       () async {
         final isUpdateMode = mode == FormMode.update;

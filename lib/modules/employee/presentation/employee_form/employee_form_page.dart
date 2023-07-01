@@ -35,8 +35,12 @@ class EmployeeFormPage extends ConsumerWidget {
         value.showSnackBarOnError(context);
       }
 
-      if (value.hasValue) {
-        final dateFormat = DateFormat("dd/MM/yyyy '-' HH:mm");
+      if (value.hasError && !value.hasValue) {
+        context.pop();
+      }
+
+      if (value.hasValue && !value.hasError) {
+        final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
         ref.read(situationSwitchState.notifier).state = value.value!.situation;
         _nameControl.text = value.value!.name;
         _telephoneControl.text = value.value!.telephone ?? "";

@@ -48,13 +48,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
   void initState() {
     super.initState();
 
-    ref.listenManual(customerFormControllerProvider(widget.customerId, widget.mode), (_, data) {
-      if (data.isLoading) {
-        ref.read(isLoadingProvider.notifier).state = true;
-      } else {
-        ref.read(isLoadingProvider.notifier).state = false;
-      }
-
+    ref.listenManual(customerFormControllerProvider(widget.customerId, widget.mode), (previosData, data) {
       if (data.hasError) {
         data.showSnackBarOnError(context);
       }
@@ -122,6 +116,28 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                       keyboardType: TextInputType.text,
                       icon: Icons.description_outlined,
                       validator: (value) => Validators.maxLength(value, 250),
+                    ),
+                    Consumer(
+                      builder: (context, ref, widget) {
+                        final situation = ref.watch(situationSwitchState);
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 18),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Situação ",
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                              ),
+                              Switch(
+                                value: situation.boolean,
+                                onChanged: (value) => ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

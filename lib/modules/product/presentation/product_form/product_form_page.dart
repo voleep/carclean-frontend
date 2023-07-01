@@ -40,7 +40,11 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         value.showSnackBarOnError(context);
       }
 
-      if (value.hasValue) {
+      if (value.hasError && !value.hasValue) {
+        context.pop();
+      }
+
+      if (value.hasValue && !value.hasError) {
         ref.read(situationSwitchState.notifier).state = value.value!.situation == 1 ? true : false;
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;

@@ -29,7 +29,11 @@ class VehicleFormPage extends ConsumerWidget {
         next.showSnackBarOnError(context);
       }
 
-      if (next.hasValue) {
+      if (next.hasError && !next.hasValue) {
+        context.pop();
+      }
+
+      if (next.hasValue && !next.hasError) {
         _descriptionControl.text = next.value?.description ?? "";
         _licensePlateControl.text = next.value?.licensePlate ?? "";
         _modelYearControl.text = next.value?.modelYear ?? "";
