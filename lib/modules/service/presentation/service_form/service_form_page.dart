@@ -38,7 +38,11 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
         value.showSnackBarOnError(context);
       }
 
-      if (value.hasValue) {
+      if (value.hasError && !value.hasValue) {
+        context.pop();
+      }
+
+      if (value.hasValue && !value.hasError) {
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
         _fullDescriptionControl.text = value.value!.fullDescription;

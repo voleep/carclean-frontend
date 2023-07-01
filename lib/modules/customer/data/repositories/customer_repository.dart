@@ -23,25 +23,7 @@ class CustomerRepository {
     return CustomerModel.fromJson(response.data!);
   }
 
-  Future<CustomerModel?> saveOrUpdate({
-    CustomerId? customerId,
-    required String name,
-    String? telephone,
-    String? email,
-    String? document,
-    String? notes,
-    required int status,
-  }) async {
-    final createCustomerDTO = CreateCustomerDTO(
-      idCustomer: customerId,
-      dsName: name,
-      dsTelephone: telephone,
-      dsEmail: email,
-      dsDocument: document,
-      dsNote: notes,
-      stCustomer: status,
-    );
-
+  Future<CustomerModel?> saveOrUpdate(CreateCustomerDTO createCustomerDTO) async {
     if (createCustomerDTO.idCustomer == null) {
       return save(createCustomerDTO: createCustomerDTO);
     }
@@ -61,26 +43,6 @@ class CustomerRepository {
 
   Future<CustomerModel?> update({required CreateCustomerDTO createCustomerDTO}) async {
     final response = await http.put(endpoint, data: createCustomerDTO.toJson());
-
-    if (response.data == null) {
-      return null;
-    }
-
-    return CustomerModel.fromJson(response.data!);
-  }
-
-  Future<CustomerModel?> enable({required CustomerId customerId}) async {
-    final response = await http.post("$endpoint/$customerId/enable", data: null);
-
-    if (response.data == null) {
-      return null;
-    }
-
-    return CustomerModel.fromJson(response.data!);
-  }
-
-  Future<CustomerModel?> disable({required CustomerId customerId}) async {
-    final response = await http.post("$endpoint/$customerId/disable", data: null);
 
     if (response.data == null) {
       return null;

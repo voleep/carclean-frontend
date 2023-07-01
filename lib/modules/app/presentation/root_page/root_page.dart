@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/header_view/header_view.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_controller_provider.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
+import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 
 class RootPage extends StatelessWidget {
@@ -38,10 +37,10 @@ class RootPage extends StatelessWidget {
                       ),
                     ),
                     selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-                    selectedIndex: ref.watch(menuControllerProvider),
+                    selectedIndex: ref.watch(selectedMenuIndexProvider),
                     onDestinationSelected: (index) => ref.read(menuControllerProvider.notifier).onMenuSelected(selectedIndex: index),
                     destinations: ref
-                        .watch(menuListProvider)
+                        .read(menuListProvider)
                         .asMap()
                         .entries
                         .map(

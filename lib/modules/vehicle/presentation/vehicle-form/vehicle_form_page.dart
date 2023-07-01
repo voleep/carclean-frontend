@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
+import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle-form/vehicle_form_page_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
@@ -29,7 +30,11 @@ class VehicleFormPage extends ConsumerWidget {
         next.showSnackBarOnError(context);
       }
 
-      if (next.hasValue) {
+      if (next.hasError && !next.hasValue) {
+        context.pop();
+      }
+
+      if (next.hasValue && !next.hasError) {
         _descriptionControl.text = next.value?.description ?? "";
         _licensePlateControl.text = next.value?.licensePlate ?? "";
         _modelYearControl.text = next.value?.modelYear ?? "";
@@ -125,7 +130,7 @@ class VehicleFormPage extends ConsumerWidget {
                   .saveOrUpdate(
                 description: _descriptionControl.text,
                 licensePlate: _licensePlateControl.text,
-                modelYear: _modelYearControl.text,
+                modelYear: _modelYearControl.text.notEmptyOrNull,
               )
                   .then((value) {
                 if (!controller.hasError) {
