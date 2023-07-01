@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_controller_provider.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
+import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({super.key});
@@ -13,7 +14,7 @@ class MenuDrawer extends ConsumerWidget {
       child: NavigationDrawer(
         backgroundColor: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Theme.of(context).colorScheme.surface,
-        selectedIndex: ref.watch(menuControllerProvider),
+        selectedIndex: ref.watch(selectedMenuIndexProvider),
         onDestinationSelected: (selectedIndex) {
           ref.read(menuControllerProvider.notifier).onMenuSelected(selectedIndex: selectedIndex);
           Scaffold.of(context).closeEndDrawer();
@@ -27,7 +28,7 @@ class MenuDrawer extends ConsumerWidget {
             ),
           ),
           ...ref
-              .watch(menuListProvider)
+              .read(menuListProvider)
               .asMap()
               .entries
               .map(

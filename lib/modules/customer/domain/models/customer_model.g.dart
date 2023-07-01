@@ -14,7 +14,7 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       dsEmail: json['dsEmail'] as String?,
       dsDocument: json['dsDocument'] as String?,
       dsNote: json['dsNote'] as String?,
-      stCustomer: json['stCustomer'] as int,
+      stCustomer: $enumDecode(_$DisabledEnabledEnumMap, json['stCustomer']),
     );
 
 Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
@@ -25,5 +25,10 @@ Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
       'dsEmail': instance.dsEmail,
       'dsDocument': instance.dsDocument,
       'dsNote': instance.dsNote,
-      'stCustomer': instance.stCustomer,
+      'stCustomer': _$DisabledEnabledEnumMap[instance.stCustomer]!,
     };
+
+const _$DisabledEnabledEnumMap = {
+  DisabledEnabled.disabled: 0,
+  DisabledEnabled.enabled: 1,
+};

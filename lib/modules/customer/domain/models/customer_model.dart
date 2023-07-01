@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 part 'customer_model.g.dart';
 
 @JsonSerializable()
@@ -13,7 +14,7 @@ class CustomerModel extends Equatable {
   final String? dsEmail;
   final String? dsDocument;
   final String? dsNote;
-  final int stCustomer;
+  final DisabledEnabled stCustomer;
 
   const CustomerModel({
     required this.customerId,
@@ -24,6 +25,25 @@ class CustomerModel extends Equatable {
     this.dsNote,
     required this.stCustomer,
   });
+
+  CustomerModel copyWith({
+    CustomerId? customerId,
+    String? dsName,
+    String? dsTelephone,
+    String? dsEmail,
+    String? dsDocument,
+    String? dsNote,
+    DisabledEnabled? stCustomer,
+  }) =>
+      CustomerModel(
+        customerId: customerId ?? this.customerId,
+        dsName: dsName ?? this.dsName,
+        dsTelephone: dsTelephone ?? this.dsTelephone,
+        dsEmail: dsEmail ?? this.dsEmail,
+        dsDocument: dsDocument ?? this.dsDocument,
+        dsNote: dsNote ?? this.dsNote,
+        stCustomer: stCustomer ?? this.stCustomer,
+      );
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) => _$CustomerModelFromJson(json);
 

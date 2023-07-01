@@ -54,10 +54,11 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
+    final isCreateMode = widget.mode == FormMode.create;
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title: Text(widget.mode == FormMode.create ? "Novo produto" : "Produto"),
+        title: Text(isCreateMode ? "Novo produto" : "Produto"),
       ),
       body: ScrollableView(
         child: Padding(

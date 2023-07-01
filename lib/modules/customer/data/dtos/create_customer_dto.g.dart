@@ -14,5 +14,10 @@ Map<String, dynamic> _$CreateCustomerDTOToJson(CreateCustomerDTO instance) =>
       'dsEmail': instance.dsEmail,
       'dsDocument': instance.dsDocument,
       'dsNote': instance.dsNote,
-      'stCustomer': instance.stCustomer,
+      'stCustomer': _$DisabledEnabledEnumMap[instance.stCustomer]!,
     };
+
+const _$DisabledEnabledEnumMap = {
+  DisabledEnabled.disabled: 0,
+  DisabledEnabled.enabled: 1,
+};

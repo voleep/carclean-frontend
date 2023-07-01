@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_page.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
 import 'package:voleep_carclean_frontend/routing/routes/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/product/product_routes.dart';

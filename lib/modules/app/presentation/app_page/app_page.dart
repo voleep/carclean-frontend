@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_list_controller_provider.dart';
-import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/menu_controller_provider.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
+import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
+import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
 import 'package:voleep_carclean_frontend/routing/routes/go_router_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
@@ -38,7 +39,7 @@ class _AppPageState extends State<AppPage> {
               },
             );
 
-            int selectedIndex = ref.watch(menuControllerProvider);
+            int selectedIndex = ref.watch(selectedMenuIndexProvider);
             int menuLenght = 4;
 
             final menuList = ref.watch(menuListProvider);
@@ -69,7 +70,7 @@ class _AppPageState extends State<AppPage> {
           builder: (context, ref, child) {
             final menuList = ref.watch(menuListProvider);
 
-            final selectedIndex = ref.watch(menuControllerProvider);
+            final selectedIndex = ref.watch(selectedMenuIndexProvider);
 
             final selectedMenu = menuList[selectedIndex];
 
