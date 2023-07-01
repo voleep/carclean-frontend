@@ -56,10 +56,12 @@ class EmployeeFormPage extends ConsumerWidget {
             child: Flex(
               direction: isMobile ? Axis.vertical : Axis.horizontal,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
                   flex: 3,
                   child: VoleepTextFormField(
+                    autofocus: mode == FormMode.create ? true : false,
                     controller: _nameControl,
                     placeholder: "Nome",
                     icon: isMobile ? Icons.person_rounded : null,
@@ -78,9 +80,7 @@ class EmployeeFormPage extends ConsumerWidget {
                     placeholder: "Telefone",
                     icon: isMobile ? Icons.phone_rounded : null,
                     validator: (value) => Validators.maxLength(value, 20),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      signed: false,
-                    ),
+                    keyboardType: TextInputType.phone,
                   ),
                 ),
                 Flexible(

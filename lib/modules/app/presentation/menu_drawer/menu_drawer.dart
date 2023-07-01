@@ -33,16 +33,10 @@ class MenuDrawer extends ConsumerWidget {
               .map(
                 (menuEntry) => NavigationDrawerDestination(
                   label: Text(menuEntry.value.label),
-                  icon: Hero(
-                    tag: 'menu${menuEntry.key}',
-                    child: Icon(menuEntry.value.icon),
-                  ),
-                  selectedIcon: Hero(
-                    tag: 'menu${menuEntry.key}',
-                    child: Icon(
-                      menuEntry.value.icon,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  icon: Icon(menuEntry.value.icon),
+                  selectedIcon: Icon(
+                    menuEntry.value.icon,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,8 +23,7 @@ class LoginView extends StatelessWidget {
       children: [
         SizedBox(
           width: double.infinity,
-          child: SvgPicture.asset("assets/illustrations/login.svg",
-              semanticsLabel: "Startup", height: 300, fit: BoxFit.fitHeight),
+          child: SvgPicture.asset("assets/illustrations/login.svg", semanticsLabel: "Startup", height: 300, fit: BoxFit.fitHeight),
         ),
         const Spacer(),
         const Text(
@@ -38,22 +38,29 @@ class LoginView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VoleepTextFormField(
-                controller: emailController,
-                placeholder: "Email",
-                icon: Icons.alternate_email_rounded,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.email(value)
-                ]),
-              ),
-              VoleepTextFormField(
-                controller: passwordController,
-                placeholder: "Senha",
-                icon: Icons.lock_outline_rounded,
-                enableSuggestions: false,
-                obscureText: true,
-                validator: Validators.required,
+              AutofillGroup(
+                child: Column(
+                  children: [
+                    VoleepTextFormField(
+                      autofillHints: const [AutofillHints.email],
+                      keyboardType: TextInputType.emailAddress,
+                      controller: emailController,
+                      placeholder: "Email",
+                      icon: Icons.alternate_email_rounded,
+                      validator: (value) => Validators.listOf([() => Validators.required(value), () => Validators.email(value)]),
+                    ),
+                    VoleepTextFormField(
+                      autofillHints: const [AutofillHints.password],
+                      controller: passwordController,
+                      placeholder: "Senha",
+                      icon: Icons.lock_outline_rounded,
+                      enableSuggestions: false,
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: Validators.required,
+                    ),
+                  ],
+                ),
               ),
               Container(
                 width: double.infinity,
@@ -61,10 +68,7 @@ class LoginView extends StatelessWidget {
                 child: GestureDetector(
                   child: Text(
                     "Esqueci a senha?",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                   ),
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
@@ -82,23 +86,21 @@ class LoginView extends StatelessWidget {
                   builder: (context, ref, widget) {
                     final controller = ref.watch(loginViewControllerProvider);
 
-                    ref.listen<AsyncValue<void>>(loginViewControllerProvider,
-                        (_, state) => state.showSnackBarOnError(context));
+                    ref.listen<AsyncValue<void>>(loginViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
 
                     return VoleepButton(
                       disabled: controller.isLoading,
                       child: const Text(
                         'Entrar',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          ref
-                              .read(loginViewControllerProvider.notifier)
-                              .doLogin(emailController.text,
-                                  passwordController.text);
+                          await ref.read(loginViewControllerProvider.notifier).doLogin(emailController.text, passwordController.text);
+                          if (!ref.read(loginViewControllerProvider).hasError) {
+                            TextInput.finishAutofillContext();
+                          }
                         }
                       },
                     );
@@ -117,18 +119,12 @@ class LoginView extends StatelessWidget {
           children: [
             Text(
               "Ainda não tem uma conta?",
-              style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.outline,
-                  fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.outline, fontWeight: FontWeight.w500),
             ),
             GestureDetector(
                 child: Text(
                   " Criar conta",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();

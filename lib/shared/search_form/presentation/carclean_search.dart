@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/routing/presentation/menus/providers/selected_menu_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
@@ -159,12 +160,18 @@ class CarCleanSearch<T> extends ConsumerWidget {
                           final controller = ref.watch(searchControllerProvider(config));
 
                           return controller.when(
-                            error: (error, stackTrace) => Center(child: Text("$error")),
+                            error: (error, stackTrace) {
+                              Clipboard.setData(ClipboardData(text: "$error \n$stackTrace"));
+                              return Center(
+                                  child: SingleChildScrollView(
+                                child: Text("$error \n$stackTrace"),
+                              ));
+                            },
                             loading: () => const Center(
                               child: CircularProgressIndicator(),
                             ),
                             data: (data) {
-                              if (data == null) {
+                              if (data == null || data.pageData.isEmpty) {
                                 return const Center(
                                   child: Text("Sem resultados"),
                                 );

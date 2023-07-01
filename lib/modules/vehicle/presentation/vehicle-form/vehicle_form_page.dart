@@ -42,12 +42,13 @@ class VehicleFormPage extends ConsumerWidget {
       ),
       body: ScrollableView(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(18),
           child: Form(
             key: _formKey,
             child: Flex(
               direction: isMobile ? Axis.vertical : Axis.horizontal,
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
                   flex: 3,

@@ -55,13 +55,9 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: VoleepAppBar(
-          title: Text(widget.customerId == "new" ? "Novo cliente" : "Cliente"),
-        ),
+      appBar: VoleepAppBar(
+        title: Text(widget.customerId == "new" ? "Novo cliente" : "Cliente"),
       ),
       body: ScrollableView(
         child: Consumer(builder: (context, ref, child) {
@@ -82,8 +78,8 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
             }
           });
 
-          return Container(
-            padding: const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 24),
+          return Padding(
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -103,23 +99,27 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
                         controller: _dsDocumentController,
                         placeholder: "CPF ou CNPJ",
                         icon: Icons.badge_outlined,
+                        keyboardType: TextInputType.phone,
                         validator: (value) => Validators.maxLength(value, 20),
                       ),
                       VoleepTextFormField(
                         controller: _dsTelephoneController,
                         placeholder: "Telefone",
+                        keyboardType: TextInputType.phone,
                         icon: Icons.phone_outlined,
                         validator: (value) => Validators.maxLength(value, 20),
                       ),
                       VoleepTextFormField(
                         controller: _dsEmailController,
                         placeholder: "Email",
+                        keyboardType: TextInputType.emailAddress,
                         icon: Icons.email_outlined,
                         validator: (value) => Validators.maxLength(value, 100),
                       ),
                       VoleepTextFormField(
                         controller: _dsNoteController,
                         placeholder: "Observações",
+                        keyboardType: TextInputType.text,
                         icon: Icons.description_outlined,
                         validator: (value) => Validators.maxLength(value, 250),
                       ),
@@ -145,7 +145,7 @@ class _CustomersPageState extends ConsumerState<CustomersPage> {
                   status: _stCustomer,
                 );
             if (!ref.read(customerPageControllerProvider(widget.customerId)).hasError && context.mounted) {
-              context.pop();
+              context.pop(true);
             }
           }
         },

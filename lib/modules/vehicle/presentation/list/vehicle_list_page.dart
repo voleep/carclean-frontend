@@ -58,37 +58,10 @@ class VehicleListPage extends ConsumerWidget {
               Text(item.modelYear ?? ""),
             ];
           },
-          actionsBuilder: (_, index, item) => [
-            ActionOption(
-              title: "Editar",
-              icon: Icons.edit_rounded,
-              backgroundColor: Colors.greenAccent,
-              foregroundColor: const Color.fromARGB(255, 11, 88, 13),
-              onTap: () async {
-                final shouldReload = await context.push(
-                  Routes.app.vehicle.update(item.vehicleId ?? "new"),
-                );
-                if (shouldReload == true) {
-                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
-                }
-              },
-            ),
-            ActionOption(
-              title: "Excluir",
-              icon: Icons.delete_rounded,
-              backgroundColor: Colors.redAccent,
-              onTap: () async {
-                final value = await showModalBottomSheet(
-                  useRootNavigator: true,
-                  context: context,
-                  builder: (context) => const DeleteBottomSheet(),
-                );
-              },
-            ),
-          ],
+          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text("${item.licensePlate} - ${item.modelYear}"),
+            subtitle: Text("Placa: ${item.licensePlate} - Ano: ${item.modelYear}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
