@@ -13,6 +13,7 @@ import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_view.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart' as search_controller;
 import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/error_view/error_view.dart';
 
 class CarCleanSearchMobile<T> extends ConsumerWidget {
   CarCleanSearchMobile({
@@ -121,7 +122,11 @@ class CarCleanSearchMobile<T> extends ConsumerWidget {
           ];
         },
         body: controller.when(
-          error: (error, stackTrace) => Center(child: Text("$error")),
+          error: (error, stackTrace) => ErrorView(
+            error: error,
+            stackTrace: stackTrace,
+            onTryAgain: () => ref.read(search_controller.searchControllerProvider(config).notifier).refreshLoading(),
+          ),
           loading: () => const Center(
             child: CircularProgressIndicator(),
           ),
