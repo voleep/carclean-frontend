@@ -74,7 +74,7 @@ class AppPage extends StatelessWidget {
           }
 
           return NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
+            selectedIndex: selectedIndex,
             destinations: destinations
                 .map(
                   (menu) => NavigationDestination(

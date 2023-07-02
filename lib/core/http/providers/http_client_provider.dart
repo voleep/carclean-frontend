@@ -16,7 +16,7 @@ final httpClientProvider = Provider<HttpClient>((ref) {
     RetryInterceptor(
       dio: dio,
       logPrint: print,
-      retries: 2,
+      retries: 4,
       retryEvaluator: DefaultRetryEvaluator(retryableStatusList).evaluate,
     ),
   );

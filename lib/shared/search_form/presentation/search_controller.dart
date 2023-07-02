@@ -26,6 +26,11 @@ class SearchController extends _$SearchController {
     });
   }
 
+  Future<void> refreshLoading([page = 1]) async {
+    state = const AsyncLoading();
+    return await refresh(page);
+  }
+
   Future<void> refresh([page = 1]) async {
     final queryList = ref.read(filterQueryProvider(arg)) ?? [];
     state = await AsyncValue.guard<PaginationModel<Map<String, dynamic>>?>(() async {

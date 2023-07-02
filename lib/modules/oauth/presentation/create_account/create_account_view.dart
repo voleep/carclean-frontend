@@ -44,20 +44,17 @@ class CreateAccountView extends StatelessWidget {
                 controller: usernameController,
                 placeholder: "Usuário",
                 icon: Icons.person_outline_rounded,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 100)
-                ]),
+                validator: (value) => Validators.listOf(
+                  [() => Validators.required(value), () => Validators.maxLength(value, 100)],
+                ),
               ),
               VoleepTextFormField(
                 controller: emailController,
                 placeholder: "Email",
                 icon: Icons.alternate_email_rounded,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 100),
-                  () => Validators.email(value)
-                ]),
+                validator: (value) => Validators.listOf(
+                  [() => Validators.required(value), () => Validators.maxLength(value, 100), () => Validators.email(value)],
+                ),
               ),
               VoleepTextFormField(
                 controller: passwordController,
@@ -79,8 +76,7 @@ class CreateAccountView extends StatelessWidget {
                 validator: (value) => Validators.listOf([
                   () => Validators.required(value),
                   () => Validators.maxLength(value, 250),
-                  () => Validators.match(
-                      value, passwordController.text, "Senhas não coincidem"),
+                  () => Validators.match(value, passwordController.text, "Senhas não coincidem"),
                 ]),
               ),
               RichText(
@@ -95,8 +91,7 @@ class CreateAccountView extends StatelessWidget {
                           fontSize: 12,
                           fontFamily: "Montserrat",
                         ),
-                        text:
-                            "Ao criar uma conta, você concorda com os nossos "),
+                        text: "Ao criar uma conta, você concorda com os nossos "),
                     TextSpan(
                         style: TextStyle(
                           height: 1.5,
@@ -108,8 +103,7 @@ class CreateAccountView extends StatelessWidget {
                         text: "Termos e Condições",
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
-                            var url =
-                                "https://www.youtube.com/channel/UCwxiHP2Ryd-aR0SWKjYguxw?view_as=subscriber";
+                            var url = "https://www.voleep.com";
                             if (await canLaunchUrlString(url)) {
                               await launchUrlString(url);
                             } else {
@@ -136,8 +130,7 @@ class CreateAccountView extends StatelessWidget {
                         text: "Política de Privacidade",
                         recognizer: TapGestureRecognizer()
                           ..onTap = () async {
-                            var url =
-                                "https://www.youtube.com/channel/UCwxiHP2Ryd-aR0SWKjYguxw?view_as=subscriber";
+                            var url = "https://www.voleep.com";
                             if (await canLaunchUrlString(url)) {
                               await launchUrlString(url);
                             } else {
@@ -155,27 +148,20 @@ class CreateAccountView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Consumer(
                   builder: (context, ref, widget) {
-                    final controller =
-                        ref.watch(createAccountViewControllerProvider);
+                    final controller = ref.watch(createAccountViewControllerProvider);
 
-                    ref.listen<AsyncValue<void>>(
-                        createAccountViewControllerProvider,
-                        (_, state) => state.showSnackBarOnError(context));
+                    ref.listen<AsyncValue<void>>(createAccountViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
 
                     return VoleepButton(
                       disabled: controller.isLoading,
                       child: const Text(
                         'Continuar',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          ref
-                              .read(
-                                  createAccountViewControllerProvider.notifier)
-                              .signUp(
+                          ref.read(createAccountViewControllerProvider.notifier).signUp(
                                 nmUser: usernameController.text,
                                 dsEmail: emailController.text,
                                 dsPassword: passwordController.text,
@@ -196,18 +182,12 @@ class CreateAccountView extends StatelessWidget {
                 children: [
                   Text(
                     "Já tem uma conta?",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.outline,
-                        fontWeight: FontWeight.w500),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.outline, fontWeight: FontWeight.w500),
                   ),
                   GestureDetector(
                     child: Text(
                       " Entrar",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                     ),
                     onTap: () => context.pop(),
                   ),
