@@ -11,40 +11,53 @@ import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 part 'menu_list.g.dart';
 
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+final _shellNavigatorProductKey = GlobalKey<NavigatorState>(debugLabel: 'shellProduct');
+final _shellNavigatorServiceKey = GlobalKey<NavigatorState>(debugLabel: 'shellService');
+final _shellNavigatorVehicleKey = GlobalKey<NavigatorState>(debugLabel: 'shellVehicle');
+final _shellNavigatorCustomerKey = GlobalKey<NavigatorState>(debugLabel: 'shellCustomer');
+final _shellNavigatorEmployeeKey = GlobalKey<NavigatorState>(debugLabel: 'shellEmployee');
+
 @Riverpod(keepAlive: true)
 List<MenuModel> menuList(MenuListRef ref) => [
       MenuModel(
         location: Routes.app.home,
+        navigatorKey: _shellNavigatorHomeKey,
         label: 'Início',
         icon: Icons.home_rounded,
         child: const HomeView(),
       ),
       MenuModel(
         location: Routes.app.product.root,
+        navigatorKey: _shellNavigatorProductKey,
         label: 'Produtos',
         icon: Icons.store_rounded,
         child: ProductSearchPage(),
       ),
       MenuModel(
         location: Routes.app.service.root,
+        navigatorKey: _shellNavigatorServiceKey,
         label: 'Serviços',
         icon: Icons.settings_suggest_rounded,
         child: const ServiceSearchPage(),
       ),
       MenuModel(
         location: Routes.app.vehicle.root,
+        navigatorKey: _shellNavigatorVehicleKey,
         label: 'Veículos',
         icon: Icons.directions_car_rounded,
         child: VehicleListPage(),
       ),
       MenuModel(
         location: Routes.app.customer.root,
+        navigatorKey: _shellNavigatorCustomerKey,
         label: 'Clientes',
         icon: Icons.group_outlined,
         child: const CustomerSearchPage(),
       ),
       MenuModel(
         location: Routes.app.employee.root,
+        navigatorKey: _shellNavigatorEmployeeKey,
         label: 'Colaboradores',
         icon: Icons.diversity_3_rounded,
         child: EmployeeSearchPage(),
