@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/root_page/root_page.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/app_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/login_routes.dart';
 
@@ -17,12 +17,12 @@ class Routes {
 
   List<RouteBase> routes(Ref ref) => [
         ...login.routes,
-        ShellRoute(
-          navigatorKey: navigationkey,
-          builder: (context, state, child) => RootPage(
-            child: child,
+        ...app.routes,
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) => AppPage(
+            navigationShell: navigationShell,
           ),
-          routes: app.routes(ref),
+          branches: app.branches(ref),
         ),
       ];
 }
