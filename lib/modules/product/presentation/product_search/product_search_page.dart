@@ -5,14 +5,12 @@ import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
 
 class ProductSearchPage extends ConsumerWidget {
   ProductSearchPage({super.key});

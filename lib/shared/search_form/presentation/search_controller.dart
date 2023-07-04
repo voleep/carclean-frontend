@@ -10,6 +10,8 @@ part 'search_controller.g.dart';
 
 @riverpod
 class SearchController extends _$SearchController {
+  bool _isLoadingNewPage = false;
+
   @override
   FutureOr<PaginationModel<Map<String, dynamic>>?> build(SearchConfig arg) async {
     if (arg.filterOnInit) {
@@ -24,6 +26,33 @@ class SearchController extends _$SearchController {
       final pagination = await _fetch(page: page, orderField: arg.orderField, searchQuery: queryList.join(","));
       return pagination;
     });
+  }
+
+  Future<void> nextPage() async {
+    if (_isLoadingNewPage) {
+      return;
+    }
+
+    if (state.value == null) {
+      return;
+    }
+
+    final currentPage = state.value!.currentPage;
+    final numberOfPages = state.value!.numberOfPages;
+
+    if (currentPage >= numberOfPages) {
+      return;
+    }
+
+    _isLoadingNewPage = true;
+
+    final queryList = ref.read(filterQueryProvider(arg)) ?? [];
+
+    try {
+      final pagination = await _fetch(page: currentPage + 1, orderField: arg.orderField, searchQuery: queryList.join(","));
+      state = AsyncValue.data(pagination.copyWith(pageData: [...state.value!.pageData, ...pagination.pageData]));
+    } catch (exception) {}
+    _isLoadingNewPage = false;
   }
 
   Future<void> refreshLoading([page = 1]) async {
