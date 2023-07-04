@@ -10,6 +10,7 @@ part 'search_controller.g.dart';
 
 @riverpod
 class SearchController extends _$SearchController {
+  final _itemsPerPage = 20;
   bool _isLoadingNewPage = false;
 
   @override
@@ -55,15 +56,38 @@ class SearchController extends _$SearchController {
     _isLoadingNewPage = false;
   }
 
-  Future<void> refreshLoading([page = 1]) async {
-    state = const AsyncLoading();
-    return await refresh(page);
+  Future<void> refreshByIndex(int index) async {
+    final page = ((index / _itemsPerPage) + 1).floor();
+    return refresh(page);
   }
 
   Future<void> refresh([page = 1]) async {
+    if (state.value == null) {
+      return;
+    }
+
+    final queryList = ref.read(filterQueryProvider(arg)) ?? [];
+    final holePageData = state.value!.pageData;
+    try {
+      final newPageData = (await _fetch(page: page, orderField: arg.orderField, searchQuery: queryList.join(","))).pageData;
+      final fromItem = (page * _itemsPerPage) - _itemsPerPage;
+      final tillItem = page * _itemsPerPage;
+
+      final fromItemSafe = holePageData.length < fromItem ? holePageData.length : fromItem;
+      final tillItemSafe = holePageData.length < tillItem ? holePageData.length : tillItem;
+
+      holePageData.replaceRange(fromItemSafe, tillItemSafe, newPageData);
+
+      state = AsyncValue.data(state.value!.copyWith(pageData: holePageData));
+    } catch (exception) {}
+    _isLoadingNewPage = false;
+  }
+
+  Future<void> reload() async {
+    state = const AsyncLoading();
     final queryList = ref.read(filterQueryProvider(arg)) ?? [];
     state = await AsyncValue.guard<PaginationModel<Map<String, dynamic>>?>(() async {
-      final pagination = await _fetch(page: page, orderField: arg.orderField, searchQuery: queryList.join(","));
+      final pagination = await _fetch(page: 1, orderField: arg.orderField, searchQuery: queryList.join(","));
       return pagination;
     });
   }

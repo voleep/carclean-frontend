@@ -84,7 +84,7 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
                 Routes.app.service.update(item.serviceId),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),

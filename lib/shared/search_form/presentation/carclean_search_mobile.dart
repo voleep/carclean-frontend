@@ -140,7 +140,7 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
         error: (error, stackTrace) => ErrorView(
           error: error,
           stackTrace: stackTrace,
-          onTryAgain: () => ref.read(search_controller.searchControllerProvider(widget.config).notifier).refreshLoading(),
+          onTryAgain: () => ref.read(search_controller.searchControllerProvider(widget.config).notifier).reload(),
         ),
         loading: () => const Center(
           child: CircularProgressIndicator(),

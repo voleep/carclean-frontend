@@ -92,7 +92,7 @@ class ProductSearchPage extends ConsumerWidget {
                 Routes.app.product.update(item.productId),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),

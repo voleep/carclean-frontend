@@ -103,7 +103,7 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                 Routes.app.customer.update(item.customerId),
               );
               if (shouldRefresh == true) {
-                ref.read(searchControllerProvider(searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),

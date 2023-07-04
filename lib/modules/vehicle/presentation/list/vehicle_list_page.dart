@@ -83,7 +83,7 @@ class VehicleListPage extends ConsumerWidget {
                 Routes.app.vehicle.update(item.vehicleId ?? "new"),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
