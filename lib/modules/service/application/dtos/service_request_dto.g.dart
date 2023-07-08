@@ -12,4 +12,5 @@ Map<String, dynamic> _$ServiceRequestDTOToJson(ServiceRequestDTO instance) =>
       'description': instance.description,
       'fullDescription': instance.fullDescription,
       'price': instance.price,
+      'pcCommission': instance.pcCommission,
     };

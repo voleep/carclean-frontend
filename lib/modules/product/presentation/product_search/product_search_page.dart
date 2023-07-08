@@ -5,14 +5,12 @@ import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
 
 class ProductSearchPage extends ConsumerWidget {
   ProductSearchPage({super.key});
@@ -65,14 +63,13 @@ class ProductSearchPage extends ConsumerWidget {
             return [
               Text(item.code.toString()),
               Text(item.description),
-              Text(item.price?.toString() ?? ""),
+              Text(item.price.toStringAsFixed(2)),
             ];
           },
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text(
-                "${item.price != null ? "R\$ ${item.price!.toStringAsFixed(2)}" : "Sem preço"} - ${item.availableStock != null ? "Estoque: ${item.availableStock}" : "Estoque não definido"}"),
+            subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +91,7 @@ class ProductSearchPage extends ConsumerWidget {
                 Routes.app.product.update(item.productId),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),

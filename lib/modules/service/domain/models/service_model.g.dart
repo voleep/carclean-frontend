@@ -12,4 +12,5 @@ ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) => ServiceModel(
       description: json['description'] as String,
       fullDescription: json['fullDescription'] as String,
       price: (json['price'] as num).toDouble(),
+      pcCommission: (json['pcCommission'] as num).toDouble(),
     );

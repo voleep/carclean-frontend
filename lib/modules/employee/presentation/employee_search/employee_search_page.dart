@@ -85,7 +85,7 @@ class EmployeeSearchPage extends ConsumerWidget {
                 Routes.app.employee.update(item.employeeId),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),

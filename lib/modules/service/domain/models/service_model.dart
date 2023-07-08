@@ -13,6 +13,7 @@ class ServiceModel extends Equatable {
   final String description;
   final String fullDescription;
   final double price;
+  final double pcCommission;
 
   const ServiceModel({
     required this.serviceId,
@@ -20,6 +21,7 @@ class ServiceModel extends Equatable {
     required this.description,
     required this.fullDescription,
     required this.price,
+    required this.pcCommission,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);
@@ -31,5 +33,6 @@ class ServiceModel extends Equatable {
         description,
         fullDescription,
         price,
+        pcCommission,
       ];
 }

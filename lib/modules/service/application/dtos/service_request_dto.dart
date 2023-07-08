@@ -9,12 +9,14 @@ class ServiceRequestDTO {
   final String description;
   final String fullDescription;
   final double price;
+  final double pcCommission;
 
   const ServiceRequestDTO({
     this.serviceId,
     required this.description,
     required this.fullDescription,
     required this.price,
+    required this.pcCommission,
   });
 
   Map<String, dynamic> toJson() => _$ServiceRequestDTOToJson(this);

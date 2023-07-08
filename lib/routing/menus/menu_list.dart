@@ -28,11 +28,11 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: const HomeView(),
       ),
       MenuModel(
-        location: Routes.app.product.root,
-        navigatorKey: _shellNavigatorProductKey,
-        label: 'Produtos',
-        icon: Icons.store_rounded,
-        child: ProductSearchPage(),
+        location: Routes.app.customer.root,
+        navigatorKey: _shellNavigatorCustomerKey,
+        label: 'Clientes',
+        icon: Icons.group_outlined,
+        child: const CustomerSearchPage(),
       ),
       MenuModel(
         location: Routes.app.service.root,
@@ -42,18 +42,18 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: const ServiceSearchPage(),
       ),
       MenuModel(
+        location: Routes.app.product.root,
+        navigatorKey: _shellNavigatorProductKey,
+        label: 'Produtos',
+        icon: Icons.inventory_2_rounded,
+        child: ProductSearchPage(),
+      ),
+      MenuModel(
         location: Routes.app.vehicle.root,
         navigatorKey: _shellNavigatorVehicleKey,
         label: 'Veículos',
-        icon: Icons.directions_car_rounded,
+        icon: Icons.local_car_wash_rounded,
         child: VehicleListPage(),
-      ),
-      MenuModel(
-        location: Routes.app.customer.root,
-        navigatorKey: _shellNavigatorCustomerKey,
-        label: 'Clientes',
-        icon: Icons.group_outlined,
-        child: const CustomerSearchPage(),
       ),
       MenuModel(
         location: Routes.app.employee.root,
