@@ -48,9 +48,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         ref.read(situationSwitchState.notifier).state = value.value!.situation == 1 ? true : false;
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
-        _priceControl.text = value.value!.price != null ? "R\$ ${value.value!.price!.toStringAsFixed(2)}" : "";
-        _availableStockControl.text = value.value!.availableStock?.toString() ?? "";
-        _pcComissionControl.text = value.value!.pcCommission != null ? "${value.value!.pcCommission!.toStringAsFixed(2)} %" : "";
+        _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
+        _availableStockControl.text = value.value!.availableStock.toString();
+        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -204,10 +204,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price = _priceControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!) : null;
+            final price = _priceControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!) : 0.0;
             final availableStock =
-                _availableStockControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_availableStockControl.text)!.group(0)!) : null;
-            final pcCommission = _pcComissionControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!) : null;
+                _availableStockControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_availableStockControl.text)!.group(0)!) : 0.0;
+            final pcCommission = _pcComissionControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!) : 0.0;
 
             await notifier
                 .saveOrUpdate(

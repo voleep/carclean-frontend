@@ -12,18 +12,18 @@ class ProductModel extends Equatable {
   final ProductId productId;
   final int code;
   final String description;
-  final double? price;
-  final double? availableStock;
-  final double? pcCommission;
+  final double price;
+  final double availableStock;
+  final double pcCommission;
   final int situation;
 
   const ProductModel({
     required this.productId,
     required this.code,
     required this.description,
-    this.price,
-    this.availableStock,
-    this.pcCommission,
+    required this.price,
+    required this.availableStock,
+    required this.pcCommission,
     required this.situation,
   });
 

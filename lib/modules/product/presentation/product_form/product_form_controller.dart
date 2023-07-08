@@ -17,8 +17,13 @@ class ProductFormController extends _$ProductFormController {
     return null;
   }
 
-  Future<void> saveOrUpdate(
-      {required String description, double? price, double? availableStock, double? pcCommission, required int situation}) async {
+  Future<void> saveOrUpdate({
+    required String description,
+    required double price,
+    required double availableStock,
+    required double pcCommission,
+    required int situation,
+  }) async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
     state = await AsyncValue.guard<ProductModel?>(() async {

@@ -29,6 +29,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   final _descriptionControl = TextEditingController();
   final _fullDescriptionControl = TextEditingController();
   final _priceControl = TextEditingController();
+  final _pcComissionControl = TextEditingController();
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
         _descriptionControl.text = value.value!.description;
         _fullDescriptionControl.text = value.value!.fullDescription;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
+        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -134,6 +136,28 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                     ],
                   ),
                 ),
+                Flexible(
+                  flex: 1,
+                  child: VoleepTextFormField(
+                    controller: _pcComissionControl,
+                    placeholder: "Comissão por vendedor",
+                    icon: isMobile ? Icons.payments_rounded : null,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                      signed: false,
+                    ),
+                    inputFormatters: [
+                      NumberTextInputFormatter(
+                        integerDigits: 3,
+                        decimalDigits: 2,
+                        maxValue: '100.00',
+                        decimalSeparator: '.',
+                        insertDecimalDigits: true,
+                        suffix: " %",
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -147,12 +171,14 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
             final price = double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!);
+            final pcCommission = _pcComissionControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!) : 0.0;
 
             await notifier
                 .saveOrUpdate(
               description: _descriptionControl.text,
               fullDescription: _fullDescriptionControl.text,
               price: price,
+              pcCommission: pcCommission,
             )
                 .then((value) {
               if (!ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode)).hasError) {

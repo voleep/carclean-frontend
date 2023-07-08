@@ -18,7 +18,12 @@ class ServiceFormController extends _$ServiceFormController {
     return null;
   }
 
-  Future<void> saveOrUpdate({required String description, required String fullDescription, required double price}) async {
+  Future<void> saveOrUpdate({
+    required String description,
+    required String fullDescription,
+    required double price,
+    required double pcCommission,
+  }) async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
     state = await AsyncValue.guard<ServiceModel?>(() async {
@@ -27,6 +32,7 @@ class ServiceFormController extends _$ServiceFormController {
         description: description,
         fullDescription: fullDescription,
         price: price,
+        pcCommission: pcCommission,
       );
 
       final service = ref.read(serviceServiceProvider);

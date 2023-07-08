@@ -63,14 +63,13 @@ class ProductSearchPage extends ConsumerWidget {
             return [
               Text(item.code.toString()),
               Text(item.description),
-              Text(item.price?.toString() ?? ""),
+              Text(item.price.toStringAsFixed(2)),
             ];
           },
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text(
-                "${item.price != null ? "R\$ ${item.price!.toStringAsFixed(2)}" : "Sem preço"} - ${item.availableStock != null ? "Estoque: ${item.availableStock}" : "Estoque não definido"}"),
+            subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
