@@ -1,11 +1,11 @@
 {
-    "name": "voleep_carclean_frontend",
-    "short_name": "voleep_carclean_frontend",
+    "name": "CarClean Web",
+    "short_name": "CarClean Web",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FEFBFF",
     "theme_color": "#0057CE",
-    "description": "A new Flutter project.",
+    "description": "Sistema ERP para Lava-Rápidos.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

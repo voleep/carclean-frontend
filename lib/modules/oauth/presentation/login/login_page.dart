@@ -33,12 +33,6 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: Responsive.isDesktop(context),
-                      child: const Flexible(
-                        child: WelcomeView(),
-                      ),
-                    ),
                     Flexible(
                       child: Container(
                         alignment: Alignment.center,

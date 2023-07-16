@@ -16,13 +16,10 @@ class UserRepository {
 
   final Dio dio = Dio();
 
-  UserRepository() {
-    dio.options.headers.addAll({
-      HttpHeaders.contentTypeHeader: 'application/json',
-    });
-  }
+  UserRepository();
 
-  Future<AuthModel> signIn({required String email, required String password}) async {
+  Future<AuthModel> signIn(
+      {required String email, required String password}) async {
     try {
       final response = await dio.post(
         "$endpoint/login",
@@ -43,7 +40,8 @@ class UserRepository {
 
       return authModel;
     } on DioException catch (exception) {
-      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      final String errorMessage =
+          DioExceptions.extractMessage(exception).toString();
       throw ErrorHint(errorMessage);
     }
   }
@@ -66,7 +64,8 @@ class UserRepository {
 
       return authModel;
     } on DioException catch (exception) {
-      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      final String errorMessage =
+          DioExceptions.extractMessage(exception).toString();
       throw ErrorHint(errorMessage);
     }
   }
@@ -79,13 +78,15 @@ class UserRepository {
     dio.options.headers["Refresh-Token"] = refreshToken;
 
     try {
-      final Response<dynamic> response = await dio.post("$endpoint/refresh-token");
+      final Response<dynamic> response =
+          await dio.post("$endpoint/refresh-token");
 
       final newOAuthModel = AuthModel.fromJson(response.data);
 
       return newOAuthModel;
     } on DioException catch (exception) {
-      final String errorMessage = DioExceptions.extractMessage(exception).toString();
+      final String errorMessage =
+          DioExceptions.extractMessage(exception).toString();
       throw ErrorHint(errorMessage);
     }
   }
