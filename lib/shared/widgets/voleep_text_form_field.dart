@@ -8,6 +8,8 @@ class VoleepTextFormField extends StatefulWidget {
       {Key? key,
       required this.placeholder,
       this.enabled,
+      this.readOnly = false,
+      this.onTap,
       this.width,
       this.focusNode,
       this.icon,
@@ -25,11 +27,13 @@ class VoleepTextFormField extends StatefulWidget {
       : super(key: key);
 
   final bool? enabled;
+  final bool readOnly;
+  final void Function()? onTap;
   final double? width;
   final FocusNode? focusNode;
   final String placeholder;
   final IconData? icon;
-  final IconData? suffixIcon;
+  final Widget? suffixIcon;
   final bool obscureText;
   final bool enableSuggestions;
   final String? Function(String?)? validator;
@@ -66,6 +70,8 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
       child: TextFormField(
         autofocus: widget.autofocus,
         enabled: widget.enabled,
+        readOnly: widget.readOnly,
+        onTap: widget.onTap,
         textAlignVertical: TextAlignVertical.top,
         focusNode: widget.focusNode,
         style: const TextStyle(
@@ -102,7 +108,8 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
                     });
                   },
                 )
-              : null,
+              : widget.suffixIcon,
+          suffixIconConstraints: const BoxConstraints(maxHeight: 35),
           suffixIconColor: outlineColor,
           alignLabelWithHint: true,
           label: Text(

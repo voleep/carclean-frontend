@@ -12,7 +12,9 @@ import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclea
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
 
 class VehicleSearchPage extends ConsumerWidget {
-  VehicleSearchPage({super.key});
+  VehicleSearchPage({super.key, this.selectionMode = false});
+
+  final bool selectionMode;
 
   final _searchConfig = SearchConfig(
       endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle",
@@ -85,6 +87,9 @@ class VehicleSearchPage extends ConsumerWidget {
             ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
+              if (selectionMode) {
+                return context.pop(item);
+              }
               final shouldReload = await context.push(
                 Routes.app.vehicle.update(item.vehicleId ?? "new"),
               );
