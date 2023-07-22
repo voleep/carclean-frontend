@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
@@ -94,10 +96,14 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
               VoleepTextFormField(
                 width: 175,
                 controller: _dsDocumentController,
-                placeholder: "CPF ou CNPJ",
+                placeholder: "CPF/CNPJ",
                 icon: Icons.badge_outlined,
                 keyboardType: TextInputType.phone,
                 validator: (value) => Validators.maxLength(value, 20),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  CpfOuCnpjFormatter()
+                ],
               ),
               VoleepTextFormField(
                 width: 195,
@@ -106,6 +112,10 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 keyboardType: TextInputType.phone,
                 icon: Icons.phone_outlined,
                 validator: (value) => Validators.maxLength(value, 20),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  TelefoneInputFormatter()
+                ],
               ),
               VoleepTextFormField(
                 width: 380,

@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -82,6 +84,10 @@ class EmployeeFormPage extends ConsumerWidget {
                 icon: isMobile ? Icons.phone_rounded : null,
                 validator: (value) => Validators.maxLength(value, 20),
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  TelefoneInputFormatter()
+                ],
               ),
               Visibility(
                 visible: mode == FormMode.update,

@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -70,6 +71,7 @@ class VehicleFormPage extends ConsumerWidget {
                   () => Validators.required(value),
                   () => Validators.maxLength(value, 7),
                 ]),
+                inputFormatters: [PlacaVeiculoInputFormatter()],
               ),
               VoleepTextFormField(
                 width: 150,
