@@ -4,9 +4,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle-form/vehicle_form_page_controller_provider.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_form/vehicle_form_page_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
@@ -46,48 +47,38 @@ class VehicleFormPage extends ConsumerWidget {
         title: Text("Veículo"),
       ),
       body: ScrollableView(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Form(
-            key: _formKey,
-            child: Flex(
-              direction: isMobile ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  flex: 3,
-                  child: VoleepTextFormField(
-                      controller: _descriptionControl,
-                      placeholder: "Descrição",
-                      icon: isMobile ? Icons.description_outlined : null,
-                      validator: (value) => Validators.listOf([
-                            () => Validators.required(value),
-                            () => Validators.maxLength(value, 100),
-                          ])),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: VoleepTextFormField(
-                    controller: _licensePlateControl,
-                    placeholder: "Placa",
-                    icon: isMobile ? Icons.money_rounded : null,
-                    validator: (value) => Validators.listOf([
-                      () => Validators.required(value),
-                      () => Validators.maxLength(value, 7),
-                    ]),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: VoleepTextFormField(
-                      controller: _modelYearControl,
-                      placeholder: "Ano",
-                      icon: isMobile ? Icons.event_rounded : null,
-                      validator: (value) => Validators.maxLength(value, 20)),
-                ),
-              ],
-            ),
+        child: Form(
+          key: _formKey,
+          child: RowInline(
+            children: [
+              VoleepTextFormField(
+                width: 550,
+                controller: _descriptionControl,
+                placeholder: "Descrição",
+                icon: isMobile ? Icons.description_outlined : null,
+                validator: (value) => Validators.listOf([
+                  () => Validators.required(value),
+                  () => Validators.maxLength(value, 100),
+                ]),
+              ),
+              VoleepTextFormField(
+                width: 150,
+                controller: _licensePlateControl,
+                placeholder: "Placa",
+                icon: isMobile ? Icons.money_rounded : null,
+                validator: (value) => Validators.listOf([
+                  () => Validators.required(value),
+                  () => Validators.maxLength(value, 7),
+                ]),
+              ),
+              VoleepTextFormField(
+                width: 150,
+                controller: _modelYearControl,
+                placeholder: "Ano",
+                icon: isMobile ? Icons.event_rounded : null,
+                validator: (value) => Validators.maxLength(value, 20),
+              ),
+            ],
           ),
         ),
       ),
@@ -95,8 +86,10 @@ class VehicleFormPage extends ConsumerWidget {
         data: (value) => FloatingActionButton.extended(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              final notifier = ref.read(vehicleFormPageControllerProvider(vehicleId).notifier);
-              final existsByLicensePlate = await notifier.existsByLicensePlate(_licensePlateControl.text);
+              final notifier = ref
+                  .read(vehicleFormPageControllerProvider(vehicleId).notifier);
+              final existsByLicensePlate = await notifier
+                  .existsByLicensePlate(_licensePlateControl.text);
 
               if (existsByLicensePlate) {
                 if (context.mounted) {
@@ -104,7 +97,8 @@ class VehicleFormPage extends ConsumerWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text("Placa duplicada"),
-                      content: const Text("Já existe um veículo cadastrado com a mesma placa. Deseja continuar mesmo assim?"),
+                      content: const Text(
+                          "Já existe um veículo cadastrado com a mesma placa. Deseja continuar mesmo assim?"),
                       actions: [
                         TextButton(
                           onPressed: () => context.pop(false),

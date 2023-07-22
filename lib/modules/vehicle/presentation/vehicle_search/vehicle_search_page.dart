@@ -5,18 +5,19 @@ import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/delete_bottom_sheet/delete_bottom_sheet.dart';
 
-class VehicleListPage extends ConsumerWidget {
-  VehicleListPage({super.key});
+class VehicleSearchPage extends ConsumerWidget {
+  VehicleSearchPage({super.key});
 
-  final _searchConfig = SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle", orderField: "description", filterOnInit: true);
+  final _searchConfig = SearchConfig(
+      endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle",
+      orderField: "description",
+      filterOnInit: true);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,7 +62,8 @@ class VehicleListPage extends ConsumerWidget {
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text("Placa: ${item.licensePlate} - Ano: ${item.modelYear}"),
+            subtitle:
+                Text("Placa: ${item.licensePlate} - Ano: ${item.modelYear}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,8 +74,12 @@ class VehicleListPage extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
-                      child: Text(item.description.substring(0, 1).toUpperCase()),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceTint
+                          .withOpacity(0.5),
+                      child:
+                          Text(item.description.substring(0, 1).toUpperCase()),
                     )),
               ],
             ),
@@ -83,7 +89,9 @@ class VehicleListPage extends ConsumerWidget {
                 Routes.app.vehicle.update(item.vehicleId ?? "new"),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
+                ref
+                    .read(searchControllerProvider(_searchConfig).notifier)
+                    .refreshByIndex(index);
               }
             },
           ),
@@ -95,7 +103,9 @@ class VehicleListPage extends ConsumerWidget {
           onPressed: () async {
             final shouldReload = await context.push(Routes.app.vehicle.create);
             if (shouldReload == true) {
-              ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+              ref
+                  .read(searchControllerProvider(_searchConfig).notifier)
+                  .refresh();
             }
           }),
     );

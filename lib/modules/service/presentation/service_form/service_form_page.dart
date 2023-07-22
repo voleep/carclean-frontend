@@ -8,6 +8,7 @@ import 'package:voleep_carclean_frontend/modules/service/presentation/service_fo
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
@@ -19,7 +20,8 @@ class ServiceFormPage extends ConsumerStatefulWidget {
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceFormPageState();
 }
 
 class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
@@ -34,7 +36,9 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(ServiceFormControllerProvider(widget.serviceId, widget.mode), (_, value) {
+    ref.listenManual(
+        ServiceFormControllerProvider(widget.serviceId, widget.mode),
+        (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -48,7 +52,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
         _descriptionControl.text = value.value!.description;
         _fullDescriptionControl.text = value.value!.fullDescription;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
-        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
+        _pcComissionControl.text =
+            "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -59,119 +64,107 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title: Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
+        title:
+            Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
       ),
       body: ScrollableView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
-          child: Form(
+        child: Form(
             key: _formKey,
-            child: Flex(
-              direction: isMobile ? Axis.vertical : Axis.horizontal,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: 3,
-                  child: Visibility(
-                    visible: widget.mode == FormMode.update,
-                    child: VoleepTextFormField(
-                      controller: _codeControl,
-                      enabled: false,
-                      placeholder: "Código",
-                      icon: isMobile ? Icons.qr_code_rounded : null,
-                    ),
-                  ),
+            child: RowInline(children: [
+              Visibility(
+                visible: widget.mode == FormMode.update,
+                child: VoleepTextFormField(
+                  width: 130,
+                  controller: _codeControl,
+                  enabled: false,
+                  placeholder: "Código",
+                  icon: isMobile ? Icons.qr_code_rounded : null,
                 ),
-                Flexible(
-                  flex: 3,
-                  child: VoleepTextFormField(
-                    autofocus: widget.mode == FormMode.create ? true : false,
-                    controller: _descriptionControl,
-                    placeholder: "Descrição",
-                    icon: isMobile ? Icons.description_rounded : null,
-                    validator: (value) => Validators.listOf(
-                      [
-                        () => Validators.required(value),
-                        () => Validators.minLength(value, 3),
-                        () => Validators.maxLength(value, 250),
-                      ],
-                    ),
-                  ),
+              ),
+              VoleepTextFormField(
+                width: 550,
+                autofocus: widget.mode == FormMode.create ? true : false,
+                controller: _descriptionControl,
+                placeholder: "Descrição",
+                icon: isMobile ? Icons.description_rounded : null,
+                validator: (value) => Validators.listOf(
+                  [
+                    () => Validators.required(value),
+                    () => Validators.minLength(value, 3),
+                    () => Validators.maxLength(value, 250),
+                  ],
                 ),
-                Flexible(
-                  flex: 3,
-                  child: VoleepTextFormField(
-                    controller: _fullDescriptionControl,
-                    placeholder: "Descrição completa",
-                    icon: isMobile ? Icons.subject_rounded : null,
-                    validator: (value) => Validators.listOf(
-                      [
-                        () => Validators.required(value),
-                        () => Validators.minLength(value, 3),
-                        () => Validators.maxLength(value, 999),
-                      ],
-                    ),
-                  ),
+              ),
+              VoleepTextFormField(
+                width: 550,
+                controller: _fullDescriptionControl,
+                placeholder: "Descrição completa",
+                icon: isMobile ? Icons.subject_rounded : null,
+                validator: (value) => Validators.listOf(
+                  [
+                    () => Validators.required(value),
+                    () => Validators.minLength(value, 3),
+                    () => Validators.maxLength(value, 999),
+                  ],
                 ),
-                Flexible(
-                  flex: 1,
-                  child: VoleepTextFormField(
-                    controller: _priceControl,
-                    placeholder: "Valor",
-                    icon: isMobile ? Icons.attach_money_rounded : null,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    validator: (value) => Validators.required(value),
-                    inputFormatters: [
-                      NumberTextInputFormatter(
-                        integerDigits: 16,
-                        decimalDigits: 2,
-                        decimalSeparator: '.',
-                        insertDecimalDigits: true,
-                        prefix: "R\$ ",
-                      ),
-                    ],
-                  ),
+              ),
+              VoleepTextFormField(
+                width: 160,
+                controller: _priceControl,
+                placeholder: "Valor",
+                icon: isMobile ? Icons.attach_money_rounded : null,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
                 ),
-                Flexible(
-                  flex: 1,
-                  child: VoleepTextFormField(
-                    controller: _pcComissionControl,
-                    placeholder: "Comissão por vendedor",
-                    icon: isMobile ? Icons.payments_rounded : null,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    inputFormatters: [
-                      NumberTextInputFormatter(
-                        integerDigits: 3,
-                        decimalDigits: 2,
-                        maxValue: '100.00',
-                        decimalSeparator: '.',
-                        insertDecimalDigits: true,
-                        suffix: " %",
-                      ),
-                    ],
+                validator: (value) => Validators.required(value),
+                inputFormatters: [
+                  NumberTextInputFormatter(
+                    integerDigits: 16,
+                    decimalDigits: 2,
+                    decimalSeparator: '.',
+                    insertDecimalDigits: true,
+                    prefix: "R\$ ",
                   ),
+                ],
+              ),
+              VoleepTextFormField(
+                width: 260,
+                controller: _pcComissionControl,
+                placeholder: "Comissão por vendedor",
+                icon: isMobile ? Icons.payments_rounded : null,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
                 ),
-              ],
-            ),
-          ),
-        ),
+                inputFormatters: [
+                  NumberTextInputFormatter(
+                    integerDigits: 3,
+                    decimalDigits: 2,
+                    maxValue: '100.00',
+                    decimalSeparator: '.',
+                    insertDecimalDigits: true,
+                    suffix: " %",
+                  ),
+                ],
+              ),
+            ])),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode).notifier);
+            final notifier = ref.read(
+                serviceFormControllerProvider(widget.serviceId, widget.mode)
+                    .notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price = double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!);
-            final pcCommission = _pcComissionControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!) : 0.0;
+            final price = double.parse(
+                doubleRE.firstMatch(_priceControl.text)!.group(0)!);
+            final pcCommission = _pcComissionControl.text.isNotEmpty
+                ? double.parse(
+                    doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
+                : 0.0;
 
             await notifier
                 .saveOrUpdate(
@@ -181,7 +174,10 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
               pcCommission: pcCommission,
             )
                 .then((value) {
-              if (!ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode)).hasError) {
+              if (!ref
+                  .read(serviceFormControllerProvider(
+                      widget.serviceId, widget.mode))
+                  .hasError) {
                 context.pop(true);
               }
             });

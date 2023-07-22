@@ -6,7 +6,7 @@ import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/presentation/list/vehicle_list_page.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
@@ -69,7 +69,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorVehicleKey,
         label: 'Veículos',
         icon: Icons.local_car_wash_rounded,
-        child: VehicleListPage(),
+        child: VehicleSearchPage(),
       ),
       MenuModel(
         location: Routes.app.employee.root,
