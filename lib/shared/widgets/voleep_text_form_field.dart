@@ -120,7 +120,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          contentPadding: const EdgeInsets.all(0),
+          contentPadding: const EdgeInsets.only(bottom: 3),
           errorStyle: const TextStyle(fontSize: 12, height: 0.6),
         ),
         cursorHeight: 18,

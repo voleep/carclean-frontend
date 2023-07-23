@@ -10,7 +10,8 @@ import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_section_label/voleep_section_label.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_expansion_panel/voleep_expansion_panel.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_tile/voleep_form_tile.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
 class ServiceOrderFormPage extends HookConsumerWidget {
@@ -32,7 +33,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
       final selectedCustomer =
           await context.push(Routes.app.serviceOrder.selectCustomer);
       if (selectedCustomer != null && selectedCustomer is CustomerModel) {
-        customer.value = selectedCustomer;
+        //customer.value = selectedCustomer;
         customerNameController.text = selectedCustomer.dsName;
       }
     }
@@ -41,7 +42,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
       final selectedVehicle =
           await context.push(Routes.app.serviceOrder.selectVehicle);
       if (selectedVehicle != null && selectedVehicle is VehicleModel) {
-        vehicle.value = selectedVehicle;
+        //vehicle.value = selectedVehicle;
         vehicleNameController.text = selectedVehicle.description;
       }
     }
@@ -54,7 +55,6 @@ class ServiceOrderFormPage extends HookConsumerWidget {
           child: Form(
             child: Column(
               children: [
-                const VoleepSectionLabel("Identificação"),
                 RowInline(
                   children: [
                     VoleepTextFormField(
@@ -62,14 +62,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                       controller: customerNameController,
                       readOnly: true,
                       placeholder: "Cliente",
-                      icon: Icons.person_outline_rounded,
-                      suffixIcon: IconButton(
-                        padding: const EdgeInsets.only(left: 20),
-                        onPressed: handleCustomerClick,
-                        icon: const Icon(
-                          Icons.navigate_next_rounded,
-                        ),
-                      ),
+                      icon: Icons.person_add_alt_rounded,
                       onTap: handleCustomerClick,
                     ),
                     VoleepTextFormField(
@@ -77,19 +70,70 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                       controller: vehicleNameController,
                       readOnly: true,
                       placeholder: "Veículo",
-                      icon: Icons.local_car_wash_rounded,
-                      suffixIcon: IconButton(
-                        padding: const EdgeInsets.only(left: 20),
-                        onPressed: handleVehicleClick,
-                        icon: const Icon(
-                          Icons.navigate_next_rounded,
-                        ),
-                      ),
+                      icon: Icons.drive_eta_rounded,
                       onTap: handleVehicleClick,
                     ),
                   ],
                 ),
-                const VoleepSectionLabel("Itens"),
+                VoleepExpansionPanel("Itens", children: [
+                  VoleepFormTile(
+                    icon: Icons.playlist_add_rounded,
+                    title: "Serviços",
+                    trailing: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("R\$ 230,00"),
+                        Icon(
+                          Icons.navigate_next_rounded,
+                        )
+                      ],
+                    ),
+                    onTap: () =>
+                        context.push(Routes.app.serviceOrder.serviceList),
+                  ),
+                  VoleepFormTile(
+                    icon: Icons.add_shopping_cart_rounded,
+                    title: "Produtos",
+                    trailing: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.navigate_next_rounded,
+                        )
+                      ],
+                    ),
+                    onTap: () =>
+                        context.push(Routes.app.serviceOrder.productList),
+                  ),
+                  VoleepFormTile(
+                    icon: Icons.percent_rounded,
+                    title: "Desconto",
+                    trailing: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.navigate_next_rounded,
+                        )
+                      ],
+                    ),
+                    onTap: () {},
+                  ),
+                ]),
+                VoleepExpansionPanel("Detalhes", children: [
+                  VoleepFormTile(
+                    icon: Icons.attach_money_rounded,
+                    title: "Meio de pagamento",
+                    trailing: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.navigate_next_rounded,
+                        )
+                      ],
+                    ),
+                    onTap: () {},
+                  ),
+                ])
               ],
             ),
           ),
