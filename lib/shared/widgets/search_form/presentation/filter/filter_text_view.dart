@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_query_state.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_query.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_text_condition_provider.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter_chips_view/filter_chips_view.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_query_state.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_query.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_text_condition_provider.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter_chips_view/filter_chips_view.dart';
 
 class FilterTextView extends ConsumerWidget {
   FilterTextView({
@@ -45,11 +45,17 @@ class FilterTextView extends ConsumerWidget {
                     return;
                   }
 
-                  final operator = ref.read(filterTextConditionProvider(config));
+                  final operator =
+                      ref.read(filterTextConditionProvider(config));
                   final value = _textController.text;
 
                   ref.read(filterQueryProvider(config).notifier).add(
-                      FilterQueryState(title: filterOption.title, field: filterOption.field, operator: operator, valueLabel: value, value: value));
+                      FilterQueryState(
+                          title: filterOption.title,
+                          field: filterOption.field,
+                          operator: operator,
+                          valueLabel: value,
+                          value: value));
 
                   _textController.text = "";
                 },
@@ -66,7 +72,8 @@ class FilterTextView extends ConsumerWidget {
           field: filterOption.field,
           onPressed: (state) {
             _textController.text = state.value;
-            ref.read(filterTextConditionProvider(config).notifier).value = state.operator;
+            ref.read(filterTextConditionProvider(config).notifier).value =
+                state.operator;
             ref.read(filterQueryProvider(config).notifier).remove(state);
           },
         )

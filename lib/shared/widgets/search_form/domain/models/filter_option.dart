@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 
 @immutable
 class FilterOption extends Equatable {

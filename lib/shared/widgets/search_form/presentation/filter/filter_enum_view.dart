@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_condition.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_query_state.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/filter/filter_query.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_query_state.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_query.dart';
 
 class FilterEnumView extends ConsumerWidget {
   FilterEnumView({
@@ -13,7 +13,8 @@ class FilterEnumView extends ConsumerWidget {
     required this.config,
     required this.filterOption,
   }) : assert(
-          filterOption.type == FilterType.enumeration && filterOption.enumOptions != null,
+          filterOption.type == FilterType.enumeration &&
+              filterOption.enumOptions != null,
         );
 
   final SearchConfig config;
@@ -21,13 +22,18 @@ class FilterEnumView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final queryEnumList =
-        ref.watch(filterQueryProvider(config).select((value) => value?.where((element) => element.field == filterOption.field).toList() ?? []));
+    final queryEnumList = ref.watch(filterQueryProvider(config).select(
+        (value) =>
+            value
+                ?.where((element) => element.field == filterOption.field)
+                .toList() ??
+            []));
 
     return Column(
       children: filterOption.enumOptions!.asMap().entries.map((optionEntry) {
         final filterEnum = optionEntry.value;
-        final isChecked = queryEnumList.any((element) => element.value == filterEnum.value);
+        final isChecked =
+            queryEnumList.any((element) => element.value == filterEnum.value);
 
         return CheckboxListTile(
           controlAffinity: ListTileControlAffinity.leading,
@@ -42,8 +48,9 @@ class FilterEnumView extends ConsumerWidget {
           value: isChecked,
           title: Text(
             filterEnum.title,
-            style:
-                Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurfaceVariant),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
           onChanged: (value) {
             if (value == true) {
@@ -57,7 +64,8 @@ class FilterEnumView extends ConsumerWidget {
                     ),
                   );
             } else {
-              final query = queryEnumList.firstWhere((element) => element.value == filterEnum.value);
+              final query = queryEnumList
+                  .firstWhere((element) => element.value == filterEnum.value);
               ref.read(filterQueryProvider(config).notifier).remove(query);
             }
           },

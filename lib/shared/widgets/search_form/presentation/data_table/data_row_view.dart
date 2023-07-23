@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/typedefs/actions_builder.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/typedefs/cells_builder.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/data_table/selected_row_actions.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/data_table/selected_row_index.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/actions_builder.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/cells_builder.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/data_table/selected_row_actions.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/data_table/selected_row_index.dart';
 
 class DataRowView<T> extends ConsumerWidget {
   const DataRowView(
@@ -33,8 +33,13 @@ class DataRowView<T> extends ConsumerWidget {
         child: Material(
           child: InkWell(
             onTap: () {
-              ref.read(selectedRowIndexProvider(tableKey).notifier).onSelectChanged(isSelected, rowIndex);
-              ref.read(selectedRowActionsProvider(tableKey).notifier).onSelectChanged(isSelected, actionsBuilder(context, rowIndex, rowItem));
+              ref
+                  .read(selectedRowIndexProvider(tableKey).notifier)
+                  .onSelectChanged(isSelected, rowIndex);
+              ref
+                  .read(selectedRowActionsProvider(tableKey).notifier)
+                  .onSelectChanged(
+                      isSelected, actionsBuilder(context, rowIndex, rowItem));
             },
             splashColor: Colors.transparent,
             child: Ink(
@@ -42,16 +47,27 @@ class DataRowView<T> extends ConsumerWidget {
                 border: Border(
                   bottom: BorderSide(
                       width: 1,
-                      color: isSelected ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5)),
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context)
+                              .colorScheme
+                              .outlineVariant
+                              .withOpacity(0.5)),
                 ),
               ),
               child: Container(
                 height: 45,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: isSelected ? Theme.of(context).colorScheme.tertiary.withOpacity(0.03) : null,
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.tertiary.withOpacity(0.03)
+                      : null,
                   border: Border(
-                    bottom: BorderSide(width: 2, color: isSelected ? Theme.of(context).colorScheme.tertiary : Colors.transparent),
+                    bottom: BorderSide(
+                        width: 2,
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.tertiary
+                            : Colors.transparent),
                   ),
                 ),
                 child: Row(

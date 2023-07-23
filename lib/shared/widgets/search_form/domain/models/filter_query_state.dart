@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_condition.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 
 @immutable
 class FilterQueryState extends Equatable {
@@ -12,9 +12,15 @@ class FilterQueryState extends Equatable {
   final dynamic finalValue;
 
   const FilterQueryState(
-      {required this.title, required this.field, required this.operator, required this.valueLabel, required this.value, this.finalValue});
+      {required this.title,
+      required this.field,
+      required this.operator,
+      required this.valueLabel,
+      required this.value,
+      this.finalValue});
 
-  FilterQueryState copyWithOperator(FilterCondition operator) => FilterQueryState(
+  FilterQueryState copyWithOperator(FilterCondition operator) =>
+      FilterQueryState(
         title: title,
         field: field,
         operator: operator,
@@ -37,7 +43,8 @@ class FilterQueryState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [title, field, operator, valueLabel, value, finalValue];
+  List<Object?> get props =>
+      [title, field, operator, valueLabel, value, finalValue];
 
   @override
   String toString() {

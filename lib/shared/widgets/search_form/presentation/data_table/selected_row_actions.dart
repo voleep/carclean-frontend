@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/action_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/action_option.dart';
 
 part 'selected_row_actions.g.dart';
 

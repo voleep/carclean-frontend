@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/typedefs/actions_builder.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/typedefs/cells_builder.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/data_table/data_row_view.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/actions_builder.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/cells_builder.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/data_table/data_row_view.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 class DataTableView<T> extends ConsumerWidget {
   const DataTableView(
-      {required super.key, required this.data, required this.columns, required this.cellsBuilder, required this.actionsBuilder, this.tableHeight});
+      {required super.key,
+      required this.data,
+      required this.columns,
+      required this.cellsBuilder,
+      required this.actionsBuilder,
+      this.tableHeight});
 
   final List<T> data;
   final List<ColumnOption> columns;
@@ -20,9 +25,15 @@ class DataTableView<T> extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fixedColumns = columns.where((column) => column.isFixed).toList();
     final hasFixedColumns = fixedColumns.isNotEmpty;
-    final fixedColumnsWidth = hasFixedColumns ? fixedColumns.map((column) => column.width).reduce((value, element) => value + element) : 0.0;
+    final fixedColumnsWidth = hasFixedColumns
+        ? fixedColumns
+            .map((column) => column.width)
+            .reduce((value, element) => value + element)
+        : 0.0;
     final rightColumns = columns.where((column) => !column.isFixed).toList();
-    final rightColumnWidth = rightColumns.map((column) => column.width).reduce((value, element) => value + element);
+    final rightColumnWidth = rightColumns
+        .map((column) => column.width)
+        .reduce((value, element) => value + element);
 
     final List<Widget> headerWidgets = columns
         .map<Widget>(
@@ -36,11 +47,15 @@ class DataTableView<T> extends ConsumerWidget {
                 border: Border(
                   bottom: BorderSide(
                     width: 2,
-                    color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outlineVariant
+                        .withOpacity(0.5),
                   ),
                 ),
               ),
-              child: Text(col.title, style: const TextStyle(fontWeight: FontWeight.bold))),
+              child: Text(col.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold))),
         )
         .toList();
 
