@@ -29,22 +29,22 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     final vehicle = useState<VehicleModel?>(null);
     final vehicleNameController = useTextEditingController();
 
-    handleCustomerClick() async {
-      final selectedCustomer =
-          await context.push(Routes.app.serviceOrder.selectCustomer);
-      if (selectedCustomer != null && selectedCustomer is CustomerModel) {
-        //customer.value = selectedCustomer;
-        customerNameController.text = selectedCustomer.dsName;
-      }
+    handleCustomerClick() {
+      context.push(Routes.app.serviceOrder.selectCustomer).then((value) {
+        if (value != null && value is CustomerModel) {
+          //customer.value = selectedCustomer;
+          customerNameController.text = value.dsName;
+        }
+      });
     }
 
-    handleVehicleClick() async {
-      final selectedVehicle =
-          await context.push(Routes.app.serviceOrder.selectVehicle);
-      if (selectedVehicle != null && selectedVehicle is VehicleModel) {
-        //vehicle.value = selectedVehicle;
-        vehicleNameController.text = selectedVehicle.description;
-      }
+    handleVehicleClick() {
+      context.push(Routes.app.serviceOrder.selectVehicle).then((value) {
+        if (value != null && value is VehicleModel) {
+          //vehicle.value = selectedVehicle;
+          vehicleNameController.text = value.description;
+        }
+      });
     }
 
     return Scaffold(
