@@ -7,6 +7,7 @@ import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/s
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
@@ -15,11 +16,12 @@ import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_tile/voleep_
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
 class ServiceOrderFormPage extends HookConsumerWidget {
-  const ServiceOrderFormPage(
-      {super.key, this.serviceOrderId, required this.mode});
+  ServiceOrderFormPage({super.key, this.serviceOrderId, required this.mode});
 
   final ServiceOrderId? serviceOrderId;
   final FormMode mode;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,6 +55,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
         ),
         body: ScrollableView(
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 RowInline(
@@ -136,6 +139,13 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                 ])
               ],
             ),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
           ),
         ));
   }

@@ -6,6 +6,7 @@ import 'package:voleep_carclean_frontend/modules/product/presentation/product_fo
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
@@ -182,6 +183,13 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               Visibility(visible: !isMobile, child: situationSwitcher),
             ],
           ),
+          onWillPop: () async {
+            final canDeactivate = await showDialog(
+              context: context,
+              builder: (context) => const CanDeactivateDialog(),
+            );
+            return canDeactivate;
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

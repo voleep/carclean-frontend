@@ -62,7 +62,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorServiceKey,
         label: 'Serviços',
         icon: Icons.settings_suggest_rounded,
-        child: const ServiceSearchPage(),
+        child: ServiceSearchPage(),
       ),
       MenuModel(
         location: Routes.app.vehicle.root,

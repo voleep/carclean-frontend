@@ -8,6 +8,7 @@ import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_form/vehicle_form_page_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
@@ -82,6 +83,13 @@ class VehicleFormPage extends ConsumerWidget {
               ),
             ],
           ),
+          onWillPop: () async {
+            final canDeactivate = await showDialog(
+              context: context,
+              builder: (context) => const CanDeactivateDialog(),
+            );
+            return canDeactivate;
+          },
         ),
       ),
       floatingActionButton: controller.whenOrNull(
