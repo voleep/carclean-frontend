@@ -353,14 +353,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  flex_list:
-    dependency: "direct main"
-    description:
-      name: flex_list
-      sha256: "7b8fc52765c3ed75b042ab0797558d261f75a2b50799517055c339b11d610ae0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1029,14 +1021,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  shimmer:
-    dependency: "direct main"
-    description:
-      name: shimmer
-      sha256: "1f1009b5845a1f88f1c5630212279540486f97409e9fc3f63883e71070d107bf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   side_sheet:
     dependency: "direct main"
     description:
