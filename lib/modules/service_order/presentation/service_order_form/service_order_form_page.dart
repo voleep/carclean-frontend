@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
@@ -31,6 +33,10 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     final vehicle = useState<VehicleModel?>(null);
     final vehicleNameController = useTextEditingController();
 
+    final serviceItemList = useState<List<ServiceOrderItemModel>>([]);
+
+    final serviceTotal = serviceItemList.value.map((item) => item.price).sum;
+
     handleCustomerClick() {
       context.push(Routes.app.serviceOrder.selectCustomer).then((value) {
         if (value != null && value is CustomerModel) {
@@ -41,10 +47,20 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     }
 
     handleVehicleClick() {
-      context.push(Routes.app.serviceOrder.selectVehicle).then((value) {
+      GoRouter.of(context)
+          .push(Routes.app.serviceOrder.selectVehicle)
+          .then((value) {
         if (value != null && value is VehicleModel) {
           //vehicle.value = selectedVehicle;
           vehicleNameController.text = value.description;
+        }
+      });
+    }
+
+    handleServiceClick() {
+      context.push(Routes.app.serviceOrder.serviceList).then((value) {
+        if (value != null && value is List<ServiceOrderItemModel>) {
+          serviceItemList.value = value;
         }
       });
     }
@@ -82,17 +98,16 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                   VoleepFormTile(
                     icon: Icons.playlist_add_rounded,
                     title: "Serviços",
-                    trailing: const Row(
+                    trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("R\$ 230,00"),
-                        Icon(
+                        Text("R\$ $serviceTotal"),
+                        const Icon(
                           Icons.navigate_next_rounded,
                         )
                       ],
                     ),
-                    onTap: () =>
-                        context.push(Routes.app.serviceOrder.serviceList),
+                    onTap: handleServiceClick,
                   ),
                   VoleepFormTile(
                     icon: Icons.add_shopping_cart_rounded,

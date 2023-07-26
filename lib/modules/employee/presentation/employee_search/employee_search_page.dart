@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
@@ -14,7 +15,9 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class EmployeeSearchPage extends ConsumerWidget {
-  EmployeeSearchPage({super.key});
+  EmployeeSearchPage({super.key, this.selectionMode = SelectionMode.none});
+
+  final SelectionMode selectionMode;
 
   final _searchConfig = SearchConfig(
       endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee",
@@ -89,6 +92,10 @@ class EmployeeSearchPage extends ConsumerWidget {
             ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
+              if (selectionMode == SelectionMode.single) {
+                return context.pop(item);
+              }
+
               final shouldReload = await context.push(
                 Routes.app.employee.update(item.employeeId),
               );

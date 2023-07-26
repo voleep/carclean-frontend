@@ -11,9 +11,9 @@ class MenuController extends _$MenuController {
     final menuList = ref.read(menuListProvider);
     final goRouter = ref.read(goRouterProvider);
 
-    goRouter.addListener(_onRouteHasChanged);
+    goRouter.routerDelegate.addListener(_onRouteHasChanged);
     ref.onDispose(() {
-      goRouter.removeListener(_onRouteHasChanged);
+      goRouter.routerDelegate.removeListener(_onRouteHasChanged);
     });
 
     return menuList[0];
@@ -23,7 +23,8 @@ class MenuController extends _$MenuController {
     final menuList = ref.read(menuListProvider);
     final goRouter = ref.read(goRouterProvider);
 
-    final String location = goRouter.location;
+    final String location =
+        goRouter.routerDelegate.currentConfiguration.fullPath;
     final int menuIndex = menuList.indexWhere(
       (menu) => location.startsWith(menu.location),
     );

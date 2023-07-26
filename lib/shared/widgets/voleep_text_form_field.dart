@@ -7,6 +7,7 @@ class VoleepTextFormField extends StatefulWidget {
   const VoleepTextFormField(
       {Key? key,
       required this.placeholder,
+      this.initialValue,
       this.enabled,
       this.readOnly = false,
       this.onTap,
@@ -26,6 +27,7 @@ class VoleepTextFormField extends StatefulWidget {
       this.minLines})
       : super(key: key);
 
+  final String? initialValue;
   final bool? enabled;
   final bool readOnly;
   final void Function()? onTap;
@@ -68,6 +70,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
       height: VoleepTextFormField.defaultHeight,
       width: widget.width,
       child: TextFormField(
+        initialValue: widget.initialValue,
         autofocus: widget.autofocus,
         enabled: widget.enabled,
         readOnly: widget.readOnly,

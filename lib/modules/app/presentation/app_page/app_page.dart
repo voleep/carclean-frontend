@@ -10,7 +10,8 @@ import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
 class AppPage extends StatelessWidget {
-  const AppPage({Key? key, required this.navigationShell}) : super(key: key ?? const ValueKey('AppPage'));
+  const AppPage({Key? key, required this.navigationShell})
+      : super(key: key ?? const ValueKey('AppPage'));
 
   final StatefulNavigationShell navigationShell;
 

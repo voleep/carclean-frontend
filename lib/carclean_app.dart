@@ -9,8 +9,9 @@ class CarCleanApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.watch(goRouterProvider);
-    final localization = ref.watch(localizationProvider);
+    final goRouter = ref.read(goRouterProvider);
+    final localization = ref.read(localizationProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'CarClean',

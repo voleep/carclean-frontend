@@ -1,11 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer-search/customer_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_search/employee_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_form/service_order_form_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_product_list/service_order_product_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_service_list/service_order_service_list_page.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
@@ -27,6 +28,8 @@ class ServiceOrderRoutes {
   String get serviceList => "$root/service";
 
   String get selectService => "$serviceList/select";
+
+  String get selectEmployee => "$root/employee";
 
   String update(ServiceId id) => "$root/${FormMode.update.name}/$id";
 
@@ -75,12 +78,19 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: serviceList,
-          builder: (context, state) => const ServiceOrderServiceListPage(),
+          builder: (context, state) => ServiceOrderItemListPage(),
         ),
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectService,
           builder: (context, state) => ServiceSearchPage(
+            selectionMode: SelectionMode.single,
+          ),
+        ),
+        GoRoute(
+          parentNavigatorKey: Routes.i.navigationkey,
+          path: selectEmployee,
+          builder: (context, state) => EmployeeSearchPage(
             selectionMode: SelectionMode.single,
           ),
         ),

@@ -10,20 +10,33 @@ part 'service_order_item_model.g.dart';
 @immutable
 @JsonSerializable(createToJson: false)
 class ServiceOrderItemModel extends Equatable {
-  final ServiceOrderItemId serviceOrderItemId;
+  final ServiceOrderItemId? serviceOrderItemId;
   final ServiceModel service;
-  final EmployeeModel employee;
+  final EmployeeModel? employee;
   final double price;
 
   const ServiceOrderItemModel({
-    required this.serviceOrderItemId,
+    this.serviceOrderItemId,
     required this.service,
-    required this.employee,
+    this.employee,
     required this.price,
   });
 
   factory ServiceOrderItemModel.fromJson(Map<String, dynamic> json) =>
       _$ServiceOrderItemModelFromJson(json);
+
+  ServiceOrderItemModel copyWith({
+    ServiceOrderItemId? serviceOrderItemId,
+    ServiceModel? service,
+    EmployeeModel? employee,
+    double? price,
+  }) =>
+      ServiceOrderItemModel(
+        serviceOrderItemId: serviceOrderItemId ?? this.serviceOrderItemId,
+        service: service ?? this.service,
+        employee: employee ?? this.employee,
+        price: price ?? this.price,
+      );
 
   @override
   List<Object?> get props => [
