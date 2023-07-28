@@ -4,6 +4,7 @@ import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_form/service_order_form_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_product_list/service_order_product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_list_page.dart';
@@ -78,7 +79,11 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: serviceList,
-          builder: (context, state) => ServiceOrderItemListPage(),
+          builder: (context, state) {
+            final itemList = state.extra as List<ServiceOrderItemModel>;
+
+            return ServiceOrderItemListPage(modelList: itemList);
+          },
         ),
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,

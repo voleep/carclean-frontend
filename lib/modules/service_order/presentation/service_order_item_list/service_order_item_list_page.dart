@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +9,7 @@ import 'package:voleep_carclean_frontend/modules/service_order/domain/models/ser
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_controller.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
@@ -21,24 +23,23 @@ class ServiceOrderItemListPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final serviceLength = ref.watch(
-        serviceOrderItemControllerProvider.select((value) => value.length));
+    final serviceLength = ref.watch(serviceOrderItemControllerProvider.select((value) => value.length));
 
     handleSelectService() async {
-      final selectedService =
-          await context.push(Routes.app.serviceOrder.selectService);
+      final selectedService = await context.push(Routes.app.serviceOrder.selectService);
       if (selectedService != null && selectedService is ServiceModel) {
-        ref
-            .read(serviceOrderItemControllerProvider.notifier)
-            .addService(selectedService);
+        ref.read(serviceOrderItemControllerProvider.notifier).addService(selectedService);
       }
     }
 
     useEffect(() {
-      if (serviceLength == 0) {
-        SchedulerBinding.instance
-            .addPostFrameCallback((_) => handleSelectService());
-      }
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (modelList.isEmpty) {
+          handleSelectService();
+        } else {
+          ref.read(serviceOrderItemControllerProvider.notifier).setState(modelList);
+        }
+      });
 
       return () {};
     }, []);
@@ -48,26 +49,29 @@ class ServiceOrderItemListPage extends HookConsumerWidget {
         title: Text("Serviços da OS"),
       ),
       body: ScrollableView(
+        padding: const EdgeInsets.only(top: 24),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: [
-              ListView.separated(
-                separatorBuilder: (context, index) => const Divider(),
-                shrinkWrap: true,
-                itemCount: serviceLength,
-                itemBuilder: (context, index) {
-                  return ServiceOrderItemView(index: index);
-                },
-              ),
-              VoleepButton(
-                onPressed: handleSelectService,
-                child: const Text("Adicionar serviço"),
+              ...Iterable.generate(serviceLength).mapIndexed((_, index) {
+                return ServiceOrderItemView(index: index);
+              }).toList(),
+              Padding(
+                padding: const EdgeInsets.only(top: 24, right: 12, bottom: 50, left: 12),
+                child: VoleepButton(
+                  onPressed: handleSelectService,
+                  child: const Text(
+                    "ADICIONAR SERVIÇO",
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
               )
             ],
           ),
+          onWillPop: () async => await showDialog(context: context, builder: (context) => const CanDeactivateDialog()),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

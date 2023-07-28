@@ -4,28 +4,29 @@ import 'package:flutter/services.dart';
 class VoleepTextFormField extends StatefulWidget {
   static const double defaultHeight = 75;
 
-  const VoleepTextFormField(
-      {Key? key,
-      required this.placeholder,
-      this.initialValue,
-      this.enabled,
-      this.readOnly = false,
-      this.onTap,
-      this.width,
-      this.focusNode,
-      this.icon,
-      this.suffixIcon,
-      this.obscureText = false,
-      this.enableSuggestions = true,
-      this.validator,
-      this.controller,
-      this.inputFormatters,
-      this.keyboardType,
-      this.autofillHints,
-      this.autofocus = false,
-      this.maxLines = 1,
-      this.minLines})
-      : super(key: key);
+  const VoleepTextFormField({
+    Key? key,
+    required this.placeholder,
+    this.initialValue,
+    this.enabled,
+    this.readOnly = false,
+    this.onTap,
+    this.width,
+    this.focusNode,
+    this.icon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.enableSuggestions = true,
+    this.validator,
+    this.controller,
+    this.inputFormatters,
+    this.keyboardType,
+    this.autofillHints,
+    this.autofocus = false,
+    this.maxLines = 1,
+    this.minLines,
+    this.onChanged,
+  }) : super(key: key);
 
   final String? initialValue;
   final bool? enabled;
@@ -46,6 +47,7 @@ class VoleepTextFormField extends StatefulWidget {
   final bool autofocus;
   final int? minLines;
   final int? maxLines;
+  final void Function(String)? onChanged;
 
   @override
   State<VoleepTextFormField> createState() => _VoleepTextFormFieldState();
@@ -137,6 +139,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
         scrollPadding: const EdgeInsets.only(bottom: 95),
         minLines: widget.minLines,
         maxLines: widget.maxLines,
+        onChanged: widget.onChanged,
       ),
     );
   }

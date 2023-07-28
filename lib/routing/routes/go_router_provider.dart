@@ -38,7 +38,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     if (userId != null && businessId == null) {
       return goRouter.go(Routes.login.createBusiness);
     }
-  }, fireImmediately: true);
+  });
 
   return goRouter;
 });

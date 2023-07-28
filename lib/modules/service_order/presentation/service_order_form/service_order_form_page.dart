@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -38,7 +39,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     final serviceTotal = serviceItemList.value.map((item) => item.price).sum;
 
     handleCustomerClick() {
-      context.push(Routes.app.serviceOrder.selectCustomer).then((value) {
+      GoRouter.of(context).push(Routes.app.serviceOrder.selectCustomer).then((value) {
         if (value != null && value is CustomerModel) {
           //customer.value = selectedCustomer;
           customerNameController.text = value.dsName;
@@ -47,9 +48,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     }
 
     handleVehicleClick() {
-      GoRouter.of(context)
-          .push(Routes.app.serviceOrder.selectVehicle)
-          .then((value) {
+      GoRouter.of(context).push(Routes.app.serviceOrder.selectVehicle).then((value) {
         if (value != null && value is VehicleModel) {
           //vehicle.value = selectedVehicle;
           vehicleNameController.text = value.description;
@@ -58,7 +57,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     }
 
     handleServiceClick() {
-      context.push(Routes.app.serviceOrder.serviceList).then((value) {
+      context.push(Routes.app.serviceOrder.serviceList, extra: serviceItemList.value).then((value) {
         if (value != null && value is List<ServiceOrderItemModel>) {
           serviceItemList.value = value;
         }
@@ -81,7 +80,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                       controller: customerNameController,
                       readOnly: true,
                       placeholder: "Cliente",
-                      icon: Icons.person_add_alt_rounded,
+                      icon: Icons.person_rounded,
                       onTap: handleCustomerClick,
                     ),
                     VoleepTextFormField(
@@ -101,7 +100,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("R\$ $serviceTotal"),
+                        Text(UtilBrasilFields.obterReal(serviceTotal)),
                         const Icon(
                           Icons.navigate_next_rounded,
                         )
@@ -112,24 +111,25 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                   VoleepFormTile(
                     icon: Icons.add_shopping_cart_rounded,
                     title: "Produtos",
-                    trailing: const Row(
+                    trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        Text(UtilBrasilFields.obterReal(0.0)),
+                        const Icon(
                           Icons.navigate_next_rounded,
                         )
                       ],
                     ),
-                    onTap: () =>
-                        context.push(Routes.app.serviceOrder.productList),
+                    onTap: () => context.push(Routes.app.serviceOrder.productList),
                   ),
                   VoleepFormTile(
                     icon: Icons.percent_rounded,
                     title: "Desconto",
-                    trailing: const Row(
+                    trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        Text(UtilBrasilFields.obterReal(0)),
+                        const Icon(
                           Icons.navigate_next_rounded,
                         )
                       ],
