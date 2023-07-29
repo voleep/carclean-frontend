@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
@@ -39,18 +40,14 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
   final FromJsonT<T> fromJsonT;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CarCleanSearchMobileState<T>();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchMobileState<T>();
 }
 
-class _CarCleanSearchMobileState<T>
-    extends ConsumerState<CarCleanSearchMobile<T>> {
+class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T>> {
   final _debounceTime = DebounceTime(milliseconds: 500);
 
   _performSearch(final String value, final WidgetRef ref) {
-    final queryList = [
-      ...ref.read(filterQueryProvider(widget.config)) ?? <FilterQueryState>[]
-    ];
+    final queryList = [...ref.read(filterQueryProvider(widget.config)) ?? <FilterQueryState>[]];
 
     if (value.isNotEmpty) {
       queryList.add(FilterQueryState(
@@ -62,185 +59,168 @@ class _CarCleanSearchMobileState<T>
       ));
     }
 
-    ref
-        .read(
-            search_controller.searchControllerProvider(widget.config).notifier)
-        .search(queryList);
+    ref.read(search_controller.searchControllerProvider(widget.config).notifier).search(queryList);
   }
 
   _onScrollNotification(ScrollEndNotification scrollEndNotification) async {
-    if (scrollEndNotification.metrics.pixels > 0 &&
-        scrollEndNotification.metrics.atEdge) {
+    if (scrollEndNotification.metrics.pixels > 0 && scrollEndNotification.metrics.atEdge) {
       ref.read(loadindNextPageState.notifier).state = true;
-      await ref
-          .read(search_controller
-              .searchControllerProvider(widget.config)
-              .notifier)
-          .nextPage();
+      await ref.read(search_controller.searchControllerProvider(widget.config).notifier).nextPage();
       ref.read(loadindNextPageState.notifier).state = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        ref.watch(search_controller.searchControllerProvider(widget.config));
+    final scaffoldState = Scaffold.maybeOf(context);
 
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            sliver: SliverAppBar(
+    final controller = ref.watch(search_controller.searchControllerProvider(widget.config));
+
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
               floating: true,
               snap: true,
               elevation: 0,
               titleSpacing: 0,
-              leadingWidth: 30,
               backgroundColor: Theme.of(context).colorScheme.background,
-              title: Row(
-                children: [
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: TextField(
-                        textInputAction: TextInputAction.search,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(fontSize: 17),
-                          iconColor: Colors.black87,
-                          border: InputBorder.none,
-                          hintText: 'Pesquisar',
-                          prefixIcon: Icon(Icons.search),
-                        ),
-                        onChanged: (value) => _debounceTime.run(
-                          () => _performSearch(value, ref),
-                        ),
-                        onSubmitted: (value) => _performSearch(value, ref),
-                        onTapOutside: (event) =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                        onEditingComplete: () =>
-                            FocusManager.instance.primaryFocus?.unfocus(),
-                      ),
-                    ),
-                  ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final queryList =
-                          ref.watch(filterQueryProvider(widget.config));
-                      final hasFilter =
-                          queryList != null && queryList.isNotEmpty;
+              actions: [
+                Consumer(
+                  builder: (context, ref, child) {
+                    final queryList = ref.watch(filterQueryProvider(widget.config));
+                    final hasFilter = queryList != null && queryList.isNotEmpty;
 
-                      return Badge(
-                        isLabelVisible: hasFilter,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        label: hasFilter ? Text("${queryList.length}") : null,
-                        offset: const Offset(-3, 3),
-                        child: IconButton(
-                          onPressed: () async {
-                            final value = await showDialog(
-                                context: context,
-                                builder: (context) => FilterView(
-                                    config: widget.config,
-                                    filterOptions: widget.filterOptions));
+                    return Badge(
+                      isLabelVisible: hasFilter,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      label: hasFilter ? Text("${queryList.length}") : null,
+                      offset: const Offset(-3, 3),
+                      child: IconButton(
+                        onPressed: () async {
+                          final value = await showDialog(
+                              context: context,
+                              builder: (context) =>
+                                  FilterView(config: widget.config, filterOptions: widget.filterOptions));
 
-                            if (value == true) {
-                              final queryList =
-                                  ref.read(filterQueryProvider(widget.config));
-                              ref
-                                  .read(search_controller
-                                      .searchControllerProvider(widget.config)
-                                      .notifier)
-                                  .search(queryList ?? []);
-                            }
-                          },
-                          icon: const Icon(Icons.tune_rounded),
-                        ),
-                      );
-                    },
+                          if (value == true) {
+                            final queryList = ref.read(filterQueryProvider(widget.config));
+                            ref
+                                .read(search_controller.searchControllerProvider(widget.config).notifier)
+                                .search(queryList ?? []);
+                          }
+                        },
+                        icon: const Icon(Icons.tune_rounded),
+                      ),
+                    );
+                  },
+                ),
+                Visibility(
+                  visible: scaffoldState?.hasEndDrawer ?? false,
+                  child: IconButton(
+                    icon: const Icon(Icons.menu_rounded, size: 27),
+                    onPressed: () => scaffoldState?.openEndDrawer(),
                   ),
-                ],
+                )
+              ],
+              title: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                margin: context.canPop() ? null : const EdgeInsets.only(left: 12),
+                child: TextField(
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    hintStyle: TextStyle(fontSize: 17),
+                    iconColor: Colors.black87,
+                    border: InputBorder.none,
+                    hintText: 'Pesquisar',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) => _debounceTime.run(
+                    () => _performSearch(value, ref),
+                  ),
+                  onSubmitted: (value) => _performSearch(value, ref),
+                  onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+                  onEditingComplete: () => FocusManager.instance.primaryFocus?.unfocus(),
+                ),
               ),
+              bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(1),
+                  child: Container(
+                    height: 1,
+                    color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                  )),
             ),
+          ];
+        },
+        body: controller.when(
+          error: (error, stackTrace) => ErrorView(
+            error: error,
+            stackTrace: stackTrace,
+            onTryAgain: () => ref.read(search_controller.searchControllerProvider(widget.config).notifier).reload(),
           ),
-        ];
-      },
-      body: controller.when(
-        error: (error, stackTrace) => ErrorView(
-          error: error,
-          stackTrace: stackTrace,
-          onTryAgain: () => ref
-              .read(search_controller
-                  .searchControllerProvider(widget.config)
-                  .notifier)
-              .reload(),
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        data: (data) {
-          if (data == null) {
-            return const Center(
-              child: Text("Sem resultados"),
-            );
-          }
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          data: (data) {
+            if (data == null) {
+              return const Center(
+                child: Text("Sem resultados"),
+              );
+            }
 
-          final itemList =
-              data.pageData.map((json) => widget.fromJsonT(json)).toList();
+            final itemList = data.pageData.map((json) => widget.fromJsonT(json)).toList();
 
-          return Column(
-            children: [
-              Expanded(
-                child: Scrollbar(
-                  child: NotificationListener<ScrollEndNotification>(
-                    onNotification: (scrollEndNotification) {
-                      _onScrollNotification(scrollEndNotification);
-                      return true;
-                    },
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: itemList.length,
-                      itemBuilder: (context, index) {
-                        final currentItem = itemList[index];
-                        return Slidable(
-                            endActionPane: ActionPane(
-                                motion: const ScrollMotion(),
-                                children: widget
-                                    .actionsBuilder(context, index, currentItem)
-                                    .map(
-                                      (action) => SlidableAction(
-                                        onPressed: (context) => action.onTap(),
-                                        icon: action.icon,
-                                        foregroundColor: action.foregroundColor,
-                                        backgroundColor: action.backgroundColor,
-                                      ),
-                                    )
-                                    .toList()),
-                            child: widget.itemBuilder(
-                                context, index, currentItem));
+            return Column(
+              children: [
+                Expanded(
+                  child: Scrollbar(
+                    child: NotificationListener<ScrollEndNotification>(
+                      onNotification: (scrollEndNotification) {
+                        _onScrollNotification(scrollEndNotification);
+                        return true;
                       },
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: itemList.length,
+                        itemBuilder: (context, index) {
+                          final currentItem = itemList[index];
+                          return Slidable(
+                              endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: widget
+                                      .actionsBuilder(context, index, currentItem)
+                                      .map(
+                                        (action) => SlidableAction(
+                                          onPressed: (context) => action.onTap(),
+                                          icon: action.icon,
+                                          foregroundColor: action.foregroundColor,
+                                          backgroundColor: action.backgroundColor,
+                                        ),
+                                      )
+                                      .toList()),
+                              child: widget.itemBuilder(context, index, currentItem));
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Consumer(
-                builder: (context, ref, child) {
-                  final isLoadingNextPage = ref.watch(loadindNextPageState);
-                  if (isLoadingNextPage) {
-                    return const LinearProgressIndicator(minHeight: 0.5);
-                  }
-                  return const SizedBox.shrink();
-                },
-              )
-            ],
-          );
-        },
+                Consumer(
+                  builder: (context, ref, child) {
+                    final isLoadingNextPage = ref.watch(loadindNextPageState);
+                    if (isLoadingNextPage) {
+                      return const LinearProgressIndicator(minHeight: 0.5);
+                    }
+                    return const SizedBox.shrink();
+                  },
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }

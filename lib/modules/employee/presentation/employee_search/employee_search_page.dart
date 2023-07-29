@@ -19,18 +19,15 @@ class EmployeeSearchPage extends ConsumerWidget {
 
   final SelectionMode selectionMode;
 
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee",
-      orderField: "name",
-      filterOnInit: true);
-  final _searchFilter =
-      const FilterOption(title: "Nome", field: "name", type: FilterType.text);
+  final _searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee", orderField: "name", filterOnInit: true);
+  final _searchFilter = const FilterOption(title: "Nome", field: "name", type: FilterType.text);
   final _dateFormat = DateFormat("dd/MM/yyyy");
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<EmployeeModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<EmployeeModel>(
           config: _searchConfig,
           searchBarFilter: _searchFilter,
           filterOptions: [
@@ -70,8 +67,7 @@ class EmployeeSearchPage extends ConsumerWidget {
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.name),
-            subtitle: Text(
-                "${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
+            subtitle: Text("${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,10 +78,7 @@ class EmployeeSearchPage extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
                       child: Text(item.name.substring(0, 1).toUpperCase()),
                     )),
               ],
@@ -100,25 +93,25 @@ class EmployeeSearchPage extends ConsumerWidget {
                 Routes.app.employee.update(item.employeeId),
               );
               if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
           fromJsonT: EmployeeModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.employee.create);
-            if (shouldReload == true) {
-              ref
-                  .read(searchControllerProvider(_searchConfig).notifier)
-                  .refresh();
-            }
-          }),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add_rounded),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.employee.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                }
+              }),
+        )
+      ],
     );
   }
 }

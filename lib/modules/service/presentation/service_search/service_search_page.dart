@@ -18,20 +18,17 @@ class ServiceSearchPage extends HookConsumerWidget {
 
   final SelectionMode selectionMode;
 
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/service",
-      orderField: "description",
-      filterOnInit: true);
-  final _searchFilter = const FilterOption(
-      title: "Descrição", field: "description", type: FilterType.text);
+  final _searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/service", orderField: "description", filterOnInit: true);
+  final _searchFilter = const FilterOption(title: "Descrição", field: "description", type: FilterType.text);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedItems = useState<List<ServiceModel>>([]);
 
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<ServiceModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<ServiceModel>(
           config: _searchConfig,
           searchBarFilter: _searchFilter,
           filterOptions: [
@@ -80,10 +77,7 @@ class ServiceSearchPage extends HookConsumerWidget {
                           width: 40,
                           height: 40,
                           alignment: AlignmentDirectional.center,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceTint
-                              .withOpacity(0.5),
+                          color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
                           child: Text(item.code.toString()),
                         ),
                 ),
@@ -111,25 +105,25 @@ class ServiceSearchPage extends HookConsumerWidget {
                 Routes.app.service.update(item.serviceId),
               );
               if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
           fromJsonT: ServiceModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.service.create);
-            if (shouldReload == true) {
-              ref
-                  .read(searchControllerProvider(_searchConfig).notifier)
-                  .refresh();
-            }
-          }),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add_rounded),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.service.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }

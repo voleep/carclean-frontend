@@ -15,16 +15,14 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 class ProductSearchPage extends ConsumerWidget {
   ProductSearchPage({super.key});
 
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/product",
-      orderField: "code",
-      filterOnInit: true);
+  final _searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/product", orderField: "code", filterOnInit: true);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<ProductModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<ProductModel>(
           config: _searchConfig,
           searchBarFilter: const FilterOption(
             title: "Produto",
@@ -72,8 +70,7 @@ class ProductSearchPage extends ConsumerWidget {
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle: Text(
-                "R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
+            subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,10 +81,7 @@ class ProductSearchPage extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
                       child: Text(item.code.toString()),
                     )),
               ],
@@ -98,25 +92,25 @@ class ProductSearchPage extends ConsumerWidget {
                 Routes.app.product.update(item.productId),
               );
               if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
           fromJsonT: ProductModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.product.create);
-            if (shouldReload == true) {
-              ref
-                  .read(searchControllerProvider(_searchConfig).notifier)
-                  .refresh();
-            }
-          }),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add_rounded),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.product.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }

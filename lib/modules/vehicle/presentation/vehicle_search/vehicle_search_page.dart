@@ -16,16 +16,14 @@ class VehicleSearchPage extends ConsumerWidget {
 
   final bool selectionMode;
 
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle",
-      orderField: "description",
-      filterOnInit: true);
+  final _searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle", orderField: "description", filterOnInit: true);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<VehicleModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<VehicleModel>(
           config: _searchConfig,
           searchBarFilter: const FilterOption(
             title: "Veículo",
@@ -64,8 +62,7 @@ class VehicleSearchPage extends ConsumerWidget {
           actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item) => ListTile(
             title: Text(item.description),
-            subtitle:
-                Text("Placa: ${item.licensePlate} - Ano: ${item.modelYear}"),
+            subtitle: Text("Placa: ${item.licensePlate} - Ano: ${item.modelYear}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,12 +73,8 @@ class VehicleSearchPage extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
-                      child:
-                          Text(item.description.substring(0, 1).toUpperCase()),
+                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
+                      child: Text(item.description.substring(0, 1).toUpperCase()),
                     )),
               ],
             ),
@@ -94,25 +87,25 @@ class VehicleSearchPage extends ConsumerWidget {
                 Routes.app.vehicle.update(item.vehicleId ?? "new"),
               );
               if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
+                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
           fromJsonT: VehicleModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.vehicle.create);
-            if (shouldReload == true) {
-              ref
-                  .read(searchControllerProvider(_searchConfig).notifier)
-                  .refresh();
-            }
-          }),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add_rounded),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.vehicle.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }

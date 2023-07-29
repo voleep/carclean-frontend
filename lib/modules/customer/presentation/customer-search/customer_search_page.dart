@@ -13,8 +13,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class CustomerSearchPage extends ConsumerStatefulWidget {
-  const CustomerSearchPage({Key? key, this.selectionMode = false})
-      : super(key: key);
+  const CustomerSearchPage({Key? key, this.selectionMode = false}) : super(key: key);
 
   final bool selectionMode;
 
@@ -25,16 +24,14 @@ class CustomerSearchPage extends ConsumerStatefulWidget {
 class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
   final dataTableKey = GlobalKey();
 
-  final searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer",
-      orderField: "dsName",
-      filterOnInit: true);
+  final searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer", orderField: "dsName", filterOnInit: true);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<CustomerModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<CustomerModel>(
           config: searchConfig,
           searchBarFilter: const FilterOption(
             title: "Nome",
@@ -57,14 +54,10 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
               field: "dsEmail",
               type: FilterType.text,
             ),
-            FilterOption(
-                title: "Situação",
-                field: "stCustomer",
-                type: FilterType.enumeration,
-                enumOptions: [
-                  EnumOption(title: "Ativo", value: 1),
-                  EnumOption(title: "Inativo", value: 0),
-                ]),
+            FilterOption(title: "Situação", field: "stCustomer", type: FilterType.enumeration, enumOptions: [
+              EnumOption(title: "Ativo", value: 1),
+              EnumOption(title: "Inativo", value: 0),
+            ]),
           ],
           columns: const [
             ColumnOption(title: "Nome", width: 200),
@@ -104,10 +97,7 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
+                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
                       child: Text(item.dsName.substring(0, 1).toUpperCase()),
                     )),
               ],
@@ -121,25 +111,27 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                 Routes.app.customer.update(item.customerId),
               );
               if (shouldRefresh == true) {
-                ref
-                    .read(searchControllerProvider(searchConfig).notifier)
-                    .refreshByIndex(index);
+                ref.read(searchControllerProvider(searchConfig).notifier).refreshByIndex(index);
               }
             },
           ),
           fromJsonT: CustomerModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.customer.create);
-            if (shouldReload == true) {
-              ref
-                  .read(searchControllerProvider(searchConfig).notifier)
-                  .refresh();
-            }
-          }),
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: FloatingActionButton(
+              child: const Icon(
+                Icons.add_rounded,
+              ),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.customer.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }
