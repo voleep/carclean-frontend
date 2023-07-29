@@ -1,18 +1,13 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class ColumnOption extends Equatable {
-  final String title;
-  final double width;
-  final bool isFixed;
+part 'column_option.freezed.dart';
 
-  const ColumnOption({required this.title, required this.width, this.isFixed = false});
-
-  @override
-  List<Object?> get props => [
-        title,
-        width,
-        isFixed,
-      ];
+@freezed
+class ColumnOption with _$ColumnOption {
+  const factory ColumnOption({
+    required String title,
+    required double width,
+    @Default(false) bool isFixed,
+  }) = _ColumnOption;
 }

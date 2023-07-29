@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,7 +21,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 import 'package:side_sheet/side_sheet.dart';
 
-class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
+class CarCleanSearch<T> extends ConsumerWidget {
   CarCleanSearch({
     super.key,
     required this.config,
@@ -75,10 +74,7 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                                 (query) => InputChip(
                                   label: Text(query.formattedLabel()),
                                   onPressed: () {},
-                                  onDeleted: () => ref
-                                      .read(
-                                          filterQueryProvider(config).notifier)
-                                      .remove(query),
+                                  onDeleted: () => ref.read(filterQueryProvider(config).notifier).remove(query),
                                 ),
                               )
                               .toList() ??
@@ -100,27 +96,18 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                             final value = isMobile
                                 ? showDialog(
                                     context: context,
-                                    builder: (context) => FilterView(
-                                        config: config,
-                                        filterOptions: filterOptions),
+                                    builder: (context) => FilterView(config: config, filterOptions: filterOptions),
                                   )
                                 : await SideSheet.right(
                                     context: context,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.3,
+                                    width: MediaQuery.of(context).size.width * 0.3,
                                     sheetColor: Colors.transparent,
-                                    body: FilterView(
-                                        config: config,
-                                        filterOptions: filterOptions),
+                                    body: FilterView(config: config, filterOptions: filterOptions),
                                   );
 
                             if (value == true) {
-                              final queryList =
-                                  ref.read(filterQueryProvider(config));
-                              ref
-                                  .read(
-                                      searchControllerProvider(config).notifier)
-                                  .search(queryList ?? []);
+                              final queryList = ref.read(filterQueryProvider(config));
+                              ref.read(searchControllerProvider(config).notifier).search(queryList ?? []);
                             }
                           },
                           child: const Text("Filtros")),
@@ -137,22 +124,17 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                     SizedBox(
                       height: 50,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 24),
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 24),
                         child: Row(
                           children: [
                             Text(
                               selectedMenu.label,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(fontWeight: FontWeight.w600),
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
                             ),
                             const Spacer(),
                             Consumer(
                               builder: (context, ref, child) {
-                                final actions = ref.watch(
-                                    selectedRowActionsProvider(_dataTableKey));
+                                final actions = ref.watch(selectedRowActionsProvider(_dataTableKey));
 
                                 if (actions == null) {
                                   return const SizedBox.shrink();
@@ -161,9 +143,7 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                                 return Visibility(
                                   child: Row(
                                     children: actions
-                                        .map((action) => IconButton(
-                                            onPressed: action.onTap,
-                                            icon: Icon(action.icon)))
+                                        .map((action) => IconButton(onPressed: action.onTap, icon: Icon(action.icon)))
                                         .toList(),
                                   ),
                                 );
@@ -179,13 +159,11 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                     Expanded(
                       child: Consumer(
                         builder: (context, ref, child) {
-                          final controller =
-                              ref.watch(searchControllerProvider(config));
+                          final controller = ref.watch(searchControllerProvider(config));
 
                           return controller.when(
                             error: (error, stackTrace) {
-                              Clipboard.setData(
-                                  ClipboardData(text: "$error \n$stackTrace"));
+                              Clipboard.setData(ClipboardData(text: "$error \n$stackTrace"));
                               return Center(
                                   child: SingleChildScrollView(
                                 child: Text("$error \n$stackTrace"),
@@ -201,26 +179,21 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                                 );
                               }
 
-                              final itemList = data.pageData
-                                  .map((json) => fromJsonT(json))
-                                  .toList();
+                              final itemList = data.pageData.map((json) => fromJsonT(json)).toList();
 
                               if (isMobile) {
                                 return ListView.separated(
                                   itemCount: itemList.length,
                                   itemBuilder: (context, index) {
                                     final currentItem = itemList[index];
-                                    return itemBuilder(
-                                        context, index, currentItem);
+                                    return itemBuilder(context, index, currentItem);
                                   },
-                                  separatorBuilder: (context, index) =>
-                                      const Divider(),
+                                  separatorBuilder: (context, index) => const Divider(),
                                 );
                               }
 
                               return Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 24, bottom: 12, left: 24),
+                                padding: const EdgeInsets.only(right: 24, bottom: 12, left: 24),
                                 child: Column(
                                   children: [
                                     Expanded(
@@ -240,31 +213,17 @@ class CarCleanSearch<T extends Equatable> extends ConsumerWidget {
                                     Divider(
                                       height: 0,
                                       thickness: 2,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outlineVariant
-                                          .withOpacity(0.5),
+                                      color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
                                     ),
                                     const SizedBox(height: 8),
                                     DataPaginationView(
                                       pageData: data,
                                       onPageChanged: (page) {
-                                        final queryList = ref
-                                            .read(filterQueryProvider(config));
+                                        final queryList = ref.read(filterQueryProvider(config));
+                                        ref.read(selectedRowIndexProvider(_dataTableKey).notifier).unselect();
+                                        ref.read(selectedRowActionsProvider(_dataTableKey).notifier).unselect();
                                         ref
-                                            .read(selectedRowIndexProvider(
-                                                    _dataTableKey)
-                                                .notifier)
-                                            .unselect();
-                                        ref
-                                            .read(selectedRowActionsProvider(
-                                                    _dataTableKey)
-                                                .notifier)
-                                            .unselect();
-                                        ref
-                                            .read(
-                                                searchControllerProvider(config)
-                                                    .notifier)
+                                            .read(searchControllerProvider(config).notifier)
                                             .search(queryList ?? [], page);
                                       },
                                     )

@@ -1,35 +1,20 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
+
+part 'vehicle_model.freezed.dart';
 part 'vehicle_model.g.dart';
 
-@immutable
-@JsonSerializable()
-class VehicleModel extends Equatable {
-  final VehicleId? vehicleId;
-  final LicensePlate licensePlate;
-  final String description;
-  final String? modelYear;
-  final CustomerModel? customer;
-
-  const VehicleModel({
-    this.vehicleId,
-    required this.licensePlate,
-    required this.description,
-    this.modelYear,
-    this.customer,
-  });
+@freezed
+class VehicleModel with _$VehicleModel {
+  const factory VehicleModel({
+    VehicleId? vehicleId,
+    required LicensePlate licensePlate,
+    required String description,
+    String? modelYear,
+    CustomerModel? customer,
+  }) = _VehicleModel;
 
   factory VehicleModel.fromJson(Map<String, dynamic> json) => _$VehicleModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$VehicleModelToJson(this);
-
-  @override
-  List<Object?> get props => [
-        vehicleId,
-        licensePlate,
-        description,
-      ];
 }

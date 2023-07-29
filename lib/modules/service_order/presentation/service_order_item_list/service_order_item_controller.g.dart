@@ -7,7 +7,7 @@ part of 'service_order_item_controller.dart';
 // **************************************************************************
 
 String _$serviceOrderItemControllerHash() =>
-    r'2426fab620f9925c4c564490a6efbef8d3eca026';
+    r'96d1ffff2a28294263272c8861b563c2ffff8e9d';
 
 /// See also [ServiceOrderItemController].
 @ProviderFor(ServiceOrderItemController)

@@ -1,50 +1,29 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'pagination_model.freezed.dart';
 part 'pagination_model.g.dart';
 
+@freezed
 @JsonSerializable(genericArgumentFactories: true)
-@immutable
-class PaginationModel<T> extends Equatable {
-  final int numberOfItems;
-  final int numberOfPages;
-  final int currentPage;
-  final List<T> pageData;
+class PaginationModel<T> with _$PaginationModel<T> {
+  const PaginationModel._();
 
-  const PaginationModel({
-    required this.numberOfItems,
-    required this.numberOfPages,
-    required this.currentPage,
-    required this.pageData,
-  });
-
-  PaginationModel<T> copyWith({
-    int? numberOfItems,
-    int? numberOfPages,
-    int? currentPage,
-    List<T>? pageData,
-  }) =>
-      PaginationModel(
-        numberOfItems: numberOfItems ?? this.numberOfItems,
-        numberOfPages: numberOfPages ?? this.numberOfPages,
-        currentPage: currentPage ?? this.currentPage,
-        pageData: pageData ?? this.pageData,
-      );
+  const factory PaginationModel({
+    required int numberOfItems,
+    required int numberOfPages,
+    required int currentPage,
+    required List<T> pageData,
+  }) = _PaginationModel<T>;
 
   factory PaginationModel.fromJson(
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
-  ) =>
-      _$PaginationModelFromJson(json, fromJsonT);
+  ) {
+    return _$PaginationModelFromJson(json, fromJsonT);
+  }
 
-  Map<String, dynamic> toJson(Object Function(T value) toJsonT) => _$PaginationModelToJson(this, toJsonT);
-
-  @override
-  List<Object?> get props => [
-        numberOfItems,
-        numberOfPages,
-        currentPage,
-        pageData,
-      ];
+  Map<String, dynamic> toJson(Object Function(T value) toJsonT) {
+    return _$PaginationModelToJson<T>(this, toJsonT);
+  }
 }

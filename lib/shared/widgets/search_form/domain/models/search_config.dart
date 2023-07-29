@@ -1,14 +1,13 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class SearchConfig extends Equatable {
-  final String endpoint;
-  final String orderField;
-  final bool filterOnInit;
+part 'search_config.freezed.dart';
 
-  const SearchConfig({required this.endpoint, required this.orderField, required this.filterOnInit});
-
-  @override
-  List<Object?> get props => [endpoint, orderField, filterOnInit];
+@freezed
+class SearchConfig with _$SearchConfig {
+  const factory SearchConfig({
+    required String endpoint,
+    required String orderField,
+    required bool filterOnInit,
+  }) = _SearchConfig;
 }

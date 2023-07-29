@@ -1,27 +1,16 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 
-@immutable
-class FilterOption extends Equatable {
-  final String title;
-  final String field;
-  final FilterType type;
-  final List<EnumOption>? enumOptions;
+part 'filter_option.freezed.dart';
 
-  const FilterOption({
-    required this.title,
-    required this.field,
-    required this.type,
-    this.enumOptions,
-  });
-
-  @override
-  List<Object?> get props => [
-        title,
-        field,
-        type,
-        enumOptions,
-      ];
+@freezed
+class FilterOption with _$FilterOption {
+  const factory FilterOption({
+    required String title,
+    required String field,
+    required FilterType type,
+    List<EnumOption>? enumOptions,
+  }) = _FilterOption;
 }

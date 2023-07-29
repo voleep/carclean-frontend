@@ -1,50 +1,25 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 
-@immutable
-class FilterQueryState extends Equatable {
-  final String title;
-  final String field;
-  final FilterCondition operator;
-  final String valueLabel;
-  final dynamic value;
-  final dynamic finalValue;
+part 'filter_query_state.freezed.dart';
 
-  const FilterQueryState(
-      {required this.title,
-      required this.field,
-      required this.operator,
-      required this.valueLabel,
-      required this.value,
-      this.finalValue});
+@freezed
+class FilterQueryState with _$FilterQueryState {
+  const FilterQueryState._();
 
-  FilterQueryState copyWithOperator(FilterCondition operator) =>
-      FilterQueryState(
-        title: title,
-        field: field,
-        operator: operator,
-        valueLabel: valueLabel,
-        value: value,
-        finalValue: finalValue,
-      );
-
-  FilterQueryState copyWithValue(dynamic value) => FilterQueryState(
-        title: title,
-        field: field,
-        operator: operator,
-        valueLabel: valueLabel,
-        value: value,
-        finalValue: finalValue,
-      );
+  const factory FilterQueryState({
+    required String title,
+    required String field,
+    required FilterCondition operator,
+    required String valueLabel,
+    required dynamic value,
+    dynamic finalValue,
+  }) = _FilterQueryState;
 
   String formattedLabel() {
     return "$title ${operator.label().toLowerCase()} $valueLabel";
   }
-
-  @override
-  List<Object?> get props =>
-      [title, field, operator, valueLabel, value, finalValue];
 
   @override
   String toString() {

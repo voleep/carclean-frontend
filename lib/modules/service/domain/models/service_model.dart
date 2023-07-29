@@ -1,38 +1,20 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
+part 'service_model.freezed.dart';
 part 'service_model.g.dart';
 
-@immutable
-@JsonSerializable(createToJson: false)
-class ServiceModel extends Equatable {
-  final ServiceId serviceId;
-  final int code;
-  final String description;
-  final String fullDescription;
-  final double price;
-  final double pcCommission;
-
-  const ServiceModel({
-    required this.serviceId,
-    required this.code,
-    required this.description,
-    required this.fullDescription,
-    required this.price,
-    required this.pcCommission,
-  });
+@freezed
+class ServiceModel with _$ServiceModel {
+  const factory ServiceModel({
+    required ServiceId serviceId,
+    required int code,
+    required String description,
+    required String fullDescription,
+    required double price,
+    required double pcCommission,
+  }) = _ServiceModel;
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        serviceId,
-        code,
-        description,
-        fullDescription,
-        price,
-        pcCommission,
-      ];
 }

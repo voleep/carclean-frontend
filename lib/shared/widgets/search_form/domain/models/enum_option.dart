@@ -1,13 +1,12 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-@immutable
-class EnumOption extends Equatable {
-  final String title;
-  final dynamic value;
+part 'enum_option.freezed.dart';
 
-  const EnumOption({required this.title, required this.value});
-
-  @override
-  List<Object?> get props => [title, value];
+@freezed
+class EnumOption with _$EnumOption {
+  const factory EnumOption({
+    required String title,
+    required dynamic value,
+  }) = _EnumOption;
 }
