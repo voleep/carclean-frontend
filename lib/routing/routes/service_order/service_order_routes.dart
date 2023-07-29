@@ -11,7 +11,7 @@ import 'package:voleep_carclean_frontend/modules/service_order/presentation/serv
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
-import 'package:voleep_carclean_frontend/shared/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
 
 class ServiceOrderRoutes {
   final String root;
@@ -88,8 +88,8 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectService,
-          builder: (context, state) => ServiceSearchPage(
-            selectionMode: SelectionMode.single,
+          builder: (context, state) => const ServiceSearchPage(
+            selectionMode: SelectionMode.multi,
           ),
         ),
         GoRoute(

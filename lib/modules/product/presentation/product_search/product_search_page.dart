@@ -68,7 +68,7 @@ class ProductSearchPage extends ConsumerWidget {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.description),
             subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
             leading: Column(

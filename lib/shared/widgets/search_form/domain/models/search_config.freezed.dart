@@ -19,6 +19,7 @@ mixin _$SearchConfig {
   String get endpoint => throw _privateConstructorUsedError;
   String get orderField => throw _privateConstructorUsedError;
   bool get filterOnInit => throw _privateConstructorUsedError;
+  SelectionMode get selectionMode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchConfigCopyWith<SearchConfig> get copyWith =>
@@ -31,7 +32,11 @@ abstract class $SearchConfigCopyWith<$Res> {
           SearchConfig value, $Res Function(SearchConfig) then) =
       _$SearchConfigCopyWithImpl<$Res, SearchConfig>;
   @useResult
-  $Res call({String endpoint, String orderField, bool filterOnInit});
+  $Res call(
+      {String endpoint,
+      String orderField,
+      bool filterOnInit,
+      SelectionMode selectionMode});
 }
 
 /// @nodoc
@@ -50,6 +55,7 @@ class _$SearchConfigCopyWithImpl<$Res, $Val extends SearchConfig>
     Object? endpoint = null,
     Object? orderField = null,
     Object? filterOnInit = null,
+    Object? selectionMode = null,
   }) {
     return _then(_value.copyWith(
       endpoint: null == endpoint
@@ -64,6 +70,10 @@ class _$SearchConfigCopyWithImpl<$Res, $Val extends SearchConfig>
           ? _value.filterOnInit
           : filterOnInit // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectionMode: null == selectionMode
+          ? _value.selectionMode
+          : selectionMode // ignore: cast_nullable_to_non_nullable
+              as SelectionMode,
     ) as $Val);
   }
 }
@@ -76,7 +86,11 @@ abstract class _$$_SearchConfigCopyWith<$Res>
       __$$_SearchConfigCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String endpoint, String orderField, bool filterOnInit});
+  $Res call(
+      {String endpoint,
+      String orderField,
+      bool filterOnInit,
+      SelectionMode selectionMode});
 }
 
 /// @nodoc
@@ -93,6 +107,7 @@ class __$$_SearchConfigCopyWithImpl<$Res>
     Object? endpoint = null,
     Object? orderField = null,
     Object? filterOnInit = null,
+    Object? selectionMode = null,
   }) {
     return _then(_$_SearchConfig(
       endpoint: null == endpoint
@@ -107,6 +122,10 @@ class __$$_SearchConfigCopyWithImpl<$Res>
           ? _value.filterOnInit
           : filterOnInit // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectionMode: null == selectionMode
+          ? _value.selectionMode
+          : selectionMode // ignore: cast_nullable_to_non_nullable
+              as SelectionMode,
     ));
   }
 }
@@ -117,7 +136,8 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
   const _$_SearchConfig(
       {required this.endpoint,
       required this.orderField,
-      required this.filterOnInit});
+      required this.filterOnInit,
+      this.selectionMode = SelectionMode.none});
 
   @override
   final String endpoint;
@@ -125,10 +145,13 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
   final String orderField;
   @override
   final bool filterOnInit;
+  @override
+  @JsonKey()
+  final SelectionMode selectionMode;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SearchConfig(endpoint: $endpoint, orderField: $orderField, filterOnInit: $filterOnInit)';
+    return 'SearchConfig(endpoint: $endpoint, orderField: $orderField, filterOnInit: $filterOnInit, selectionMode: $selectionMode)';
   }
 
   @override
@@ -138,7 +161,8 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
       ..add(DiagnosticsProperty('type', 'SearchConfig'))
       ..add(DiagnosticsProperty('endpoint', endpoint))
       ..add(DiagnosticsProperty('orderField', orderField))
-      ..add(DiagnosticsProperty('filterOnInit', filterOnInit));
+      ..add(DiagnosticsProperty('filterOnInit', filterOnInit))
+      ..add(DiagnosticsProperty('selectionMode', selectionMode));
   }
 
   @override
@@ -151,12 +175,14 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
             (identical(other.orderField, orderField) ||
                 other.orderField == orderField) &&
             (identical(other.filterOnInit, filterOnInit) ||
-                other.filterOnInit == filterOnInit));
+                other.filterOnInit == filterOnInit) &&
+            (identical(other.selectionMode, selectionMode) ||
+                other.selectionMode == selectionMode));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, endpoint, orderField, filterOnInit);
+  int get hashCode => Object.hash(
+      runtimeType, endpoint, orderField, filterOnInit, selectionMode);
 
   @JsonKey(ignore: true)
   @override
@@ -169,7 +195,8 @@ abstract class _SearchConfig implements SearchConfig {
   const factory _SearchConfig(
       {required final String endpoint,
       required final String orderField,
-      required final bool filterOnInit}) = _$_SearchConfig;
+      required final bool filterOnInit,
+      final SelectionMode selectionMode}) = _$_SearchConfig;
 
   @override
   String get endpoint;
@@ -177,6 +204,8 @@ abstract class _SearchConfig implements SearchConfig {
   String get orderField;
   @override
   bool get filterOnInit;
+  @override
+  SelectionMode get selectionMode;
   @override
   @JsonKey(ignore: true)
   _$$_SearchConfigCopyWith<_$_SearchConfig> get copyWith =>

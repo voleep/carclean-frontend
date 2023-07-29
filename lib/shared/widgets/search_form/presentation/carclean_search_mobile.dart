@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voelep_search_field/voleep_search_field.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
@@ -12,6 +14,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typed
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/from_json_t.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_query.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_view.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/providers/search_multiselection_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart'
     as search_controller;
 import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
@@ -29,6 +32,8 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
     required this.actionsBuilder,
     required this.itemBuilder,
     required this.fromJsonT,
+    this.onTap,
+    this.onSelect,
   });
 
   final SearchConfig config;
@@ -38,6 +43,8 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
   final ItemBuilder<T> itemBuilder;
   final ActionsBuilder<T> actionsBuilder;
   final FromJsonT<T> fromJsonT;
+  final void Function(T item, int index)? onTap;
+  final void Function(List<T> items)? onSelect;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchMobileState<T>();
@@ -73,8 +80,9 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
   @override
   Widget build(BuildContext context) {
     final scaffoldState = Scaffold.maybeOf(context);
-
     final controller = ref.watch(search_controller.searchControllerProvider(widget.config));
+    final isSingleSelection = widget.config.selectionMode == SelectionMode.single;
+    final isMultiSelection = widget.config.selectionMode == SelectionMode.multi;
 
     return Scaffold(
       body: NestedScrollView(
@@ -116,6 +124,24 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
                     );
                   },
                 ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+
+                    final hasSelection = itemSelectedList.isNotEmpty;
+
+                    return AnimatedSize(
+                      duration: const Duration(milliseconds: 180),
+                      child: Visibility(
+                        visible: isMultiSelection && hasSelection,
+                        child: TextButton(
+                          child: const Text("CONCLUIR"),
+                          onPressed: () => widget.onSelect?.call(List<T>.from(itemSelectedList)),
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 Visibility(
                   visible: scaffoldState?.hasEndDrawer ?? false,
                   child: IconButton(
@@ -124,28 +150,38 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
                   ),
                 )
               ],
-              title: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                margin: context.canPop() ? null : const EdgeInsets.only(left: 12),
-                child: TextField(
-                  textInputAction: TextInputAction.search,
-                  decoration: const InputDecoration(
-                    hintStyle: TextStyle(fontSize: 17),
-                    iconColor: Colors.black87,
-                    border: InputBorder.none,
-                    hintText: 'Pesquisar',
-                    prefixIcon: Icon(Icons.search),
+              title: Row(
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+                      final hasSelection = itemSelectedList.isNotEmpty;
+
+                      return AnimatedSize(
+                        duration: const Duration(milliseconds: 180),
+                        child: Visibility(
+                          visible: isMultiSelection && hasSelection,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minWidth: 24),
+                            child: Text(
+                              "${itemSelectedList.length}",
+                              style: const TextStyle(fontSize: 18, height: 1.2),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  onChanged: (value) => _debounceTime.run(
-                    () => _performSearch(value, ref),
-                  ),
-                  onSubmitted: (value) => _performSearch(value, ref),
-                  onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
-                  onEditingComplete: () => FocusManager.instance.primaryFocus?.unfocus(),
-                ),
+                  Expanded(
+                    child: VoleepSearchField(
+                      margin: context.canPop() ? null : const EdgeInsets.only(left: 12),
+                      onChanged: (value) => _debounceTime.run(
+                        () => _performSearch(value, ref),
+                      ),
+                      onSubmitted: (value) => _performSearch(value, ref),
+                    ),
+                  )
+                ],
               ),
               bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(1),
@@ -202,7 +238,43 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
                                         ),
                                       )
                                       .toList()),
-                              child: widget.itemBuilder(context, index, currentItem));
+                              child: Consumer(builder: (context, ref, child) {
+                                final itemSelectedList =
+                                    ref.watch(searchMultiSelectionControllerProvider(widget.config));
+
+                                final hasSelection = itemSelectedList.isNotEmpty;
+                                final isSelected = itemSelectedList.contains(currentItem);
+
+                                return InkWell(
+                                  onTap: () {
+                                    if (isMultiSelection && hasSelection) {
+                                      ref
+                                          .read(searchMultiSelectionControllerProvider(widget.config).notifier)
+                                          .handleItemClicked(currentItem);
+                                      return;
+                                    }
+                                    if (isSingleSelection) {
+                                      widget.onSelect?.call([currentItem]);
+                                      return;
+                                    }
+
+                                    widget.onTap?.call(currentItem, index);
+                                  },
+                                  onLongPress: () {
+                                    if (isMultiSelection) {
+                                      ref
+                                          .read(searchMultiSelectionControllerProvider(widget.config).notifier)
+                                          .handleItemClicked(currentItem);
+                                    }
+                                  },
+                                  child: widget.itemBuilder(
+                                    context,
+                                    index,
+                                    currentItem,
+                                    isSelected,
+                                  ),
+                                );
+                              }));
                         },
                       ),
                     ),

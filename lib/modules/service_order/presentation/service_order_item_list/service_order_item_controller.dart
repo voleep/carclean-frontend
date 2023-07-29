@@ -23,6 +23,12 @@ class ServiceOrderItemController extends _$ServiceOrderItemController {
     state = [...state, serviceOrderItem];
   }
 
+  addServiceList(List<ServiceModel> services) {
+    final serviceOrderItemList =
+        services.map((service) => ServiceOrderItemModel(service: service, price: service.price)).toList();
+    state = [...state, ...serviceOrderItemList];
+  }
+
   removeService(int index) {
     final newState = [...state];
     newState.removeAt(index);

@@ -32,6 +32,8 @@ class CarCleanSearch<T> extends ConsumerWidget {
     required this.itemBuilder,
     required this.cellsBuilder,
     required this.fromJsonT,
+    this.onTap,
+    this.onSelect,
   }) : assert(searchBarFilter.type == FilterType.text);
 
   final SearchConfig config;
@@ -42,6 +44,8 @@ class CarCleanSearch<T> extends ConsumerWidget {
   final CellsBuilder<T> cellsBuilder;
   final ActionsBuilder<T> actionsBuilder;
   final FromJsonT<T> fromJsonT;
+  final void Function(T item, int index)? onTap;
+  final void Function(List<T> items)? onSelect;
 
   final _dataTableKey = GlobalKey();
 
@@ -58,7 +62,10 @@ class CarCleanSearch<T> extends ConsumerWidget {
             columns: columns,
             actionsBuilder: actionsBuilder,
             itemBuilder: itemBuilder,
-            fromJsonT: fromJsonT)
+            fromJsonT: fromJsonT,
+            onTap: onTap,
+            onSelect: onSelect,
+          )
         : Column(
             children: [
               SizedBox(
@@ -186,7 +193,7 @@ class CarCleanSearch<T> extends ConsumerWidget {
                                   itemCount: itemList.length,
                                   itemBuilder: (context, index) {
                                     final currentItem = itemList[index];
-                                    return itemBuilder(context, index, currentItem);
+                                    return itemBuilder(context, index, currentItem, false);
                                   },
                                   separatorBuilder: (context, index) => const Divider(),
                                 );

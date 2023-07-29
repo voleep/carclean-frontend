@@ -60,7 +60,7 @@ class VehicleSearchPage extends ConsumerWidget {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.description),
             subtitle: Text("Placa: ${item.licensePlate} ${item.modelYear != null ? '- Ano: ${item.modelYear}' : ''}"),
             leading: Column(

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
@@ -65,7 +65,7 @@ class EmployeeSearchPage extends ConsumerWidget {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.name),
             subtitle: Text("${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
             leading: Column(

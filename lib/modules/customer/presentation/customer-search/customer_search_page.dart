@@ -74,7 +74,7 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, isSelected) => ListTile(
             title: Text(item.dsName),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +98,9 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                       height: 40,
                       alignment: AlignmentDirectional.center,
                       color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
-                      child: Text(item.dsName.substring(0, 1).toUpperCase()),
+                      child: isSelected
+                          ? const Icon(Icons.check_rounded)
+                          : Text(item.dsName.substring(0, 1).toUpperCase()),
                     )),
               ],
             ),

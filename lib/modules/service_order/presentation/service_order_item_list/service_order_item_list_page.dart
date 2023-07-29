@@ -27,8 +27,8 @@ class ServiceOrderItemListPage extends HookConsumerWidget {
 
     handleSelectService() async {
       final selectedService = await context.push(Routes.app.serviceOrder.selectService);
-      if (selectedService != null && selectedService is ServiceModel) {
-        ref.read(serviceOrderItemControllerProvider.notifier).addService(selectedService);
+      if (selectedService != null && selectedService is List<ServiceModel>) {
+        ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(selectedService);
       }
     }
 
