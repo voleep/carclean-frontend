@@ -7,29 +7,24 @@ import 'package:voleep_carclean_frontend/modules/product/presentation/product_se
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
+import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 part 'menu_list.g.dart';
 
-final _shellNavigatorHomeKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
-final _shellNavigatorProductKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellProduct');
-final _shellNavigatorServiceKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellService');
-final _shellNavigatorVehicleKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellVehicle');
-final _shellNavigatorCustomerKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellCustomer');
-final _shellNavigatorEmployeeKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellEmployee');
-final _shellNavigatorServiceOrderKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellServiceOrder');
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+final _shellNavigatorProductKey = GlobalKey<NavigatorState>(debugLabel: 'shellProduct');
+final _shellNavigatorServiceKey = GlobalKey<NavigatorState>(debugLabel: 'shellService');
+final _shellNavigatorVehicleKey = GlobalKey<NavigatorState>(debugLabel: 'shellVehicle');
+final _shellNavigatorCustomerKey = GlobalKey<NavigatorState>(debugLabel: 'shellCustomer');
+final _shellNavigatorEmployeeKey = GlobalKey<NavigatorState>(debugLabel: 'shellEmployee');
+final _shellNavigatorServiceOrderKey = GlobalKey<NavigatorState>(debugLabel: 'shellServiceOrder');
 
 @Riverpod(keepAlive: true)
 List<MenuModel> menuList(MenuListRef ref) => [
       MenuModel(
+        group: MenuGroup.home,
         location: Routes.app.home,
         navigatorKey: _shellNavigatorHomeKey,
         label: 'Início',
@@ -37,6 +32,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: const HomeView(),
       ),
       MenuModel(
+        group: MenuGroup.home,
         location: Routes.app.serviceOrder.root,
         navigatorKey: _shellNavigatorServiceOrderKey,
         label: 'OS',
@@ -44,6 +40,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: const ServiceOrderSearchPage(),
       ),
       MenuModel(
+        group: MenuGroup.register,
         location: Routes.app.customer.root,
         navigatorKey: _shellNavigatorCustomerKey,
         label: 'Clientes',
@@ -51,6 +48,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: const CustomerSearchPage(),
       ),
       MenuModel(
+        group: MenuGroup.register,
         location: Routes.app.product.root,
         navigatorKey: _shellNavigatorProductKey,
         label: 'Produtos',
@@ -58,6 +56,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: ProductSearchPage(),
       ),
       MenuModel(
+        group: MenuGroup.register,
         location: Routes.app.service.root,
         navigatorKey: _shellNavigatorServiceKey,
         label: 'Serviços',
@@ -65,6 +64,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: ServiceSearchPage(),
       ),
       MenuModel(
+        group: MenuGroup.register,
         location: Routes.app.vehicle.root,
         navigatorKey: _shellNavigatorVehicleKey,
         label: 'Veículos',
@@ -72,6 +72,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         child: VehicleSearchPage(),
       ),
       MenuModel(
+        group: MenuGroup.register,
         location: Routes.app.employee.root,
         navigatorKey: _shellNavigatorEmployeeKey,
         label: 'Colaboradores',

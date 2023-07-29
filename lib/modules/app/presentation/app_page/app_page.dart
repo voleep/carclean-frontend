@@ -10,8 +10,7 @@ import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
 class AppPage extends StatelessWidget {
-  const AppPage({Key? key, required this.navigationShell})
-      : super(key: key ?? const ValueKey('AppPage'));
+  const AppPage({Key? key, required this.navigationShell}) : super(key: key ?? const ValueKey('AppPage'));
 
   final StatefulNavigationShell navigationShell;
 
@@ -29,23 +28,7 @@ class AppPage extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
       extendBodyBehindAppBar: true,
       body: navigationShell,
-      endDrawer: Consumer(builder: (context, ref, child) {
-        return Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-          const MenuDrawer(),
-          Container(
-            margin: const EdgeInsets.only(bottom: 10),
-            width: 280,
-            height: 50,
-            child: TextButton.icon(
-              icon: const Icon(Icons.logout_rounded),
-              onPressed: () {
-                ref.read(oAuthStateProvider.notifier).logout();
-              },
-              label: const Text("Fazer logout"),
-            ),
-          )
-        ]);
-      }),
+      endDrawer: const MenuDrawer(),
       bottomNavigationBar: Visibility(
         visible: isMobile,
         child: Consumer(builder: (_, ref, child) {

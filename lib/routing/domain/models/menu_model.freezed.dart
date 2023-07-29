@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$MenuModel {
+  MenuGroup get group => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
   GlobalKey<NavigatorState> get navigatorKey =>
       throw _privateConstructorUsedError;
@@ -34,7 +35,8 @@ abstract class $MenuModelCopyWith<$Res> {
       _$MenuModelCopyWithImpl<$Res, MenuModel>;
   @useResult
   $Res call(
-      {String location,
+      {MenuGroup group,
+      String location,
       GlobalKey<NavigatorState> navigatorKey,
       String label,
       IconData icon,
@@ -54,6 +56,7 @@ class _$MenuModelCopyWithImpl<$Res, $Val extends MenuModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? group = null,
     Object? location = null,
     Object? navigatorKey = null,
     Object? label = null,
@@ -61,6 +64,10 @@ class _$MenuModelCopyWithImpl<$Res, $Val extends MenuModel>
     Object? child = null,
   }) {
     return _then(_value.copyWith(
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as MenuGroup,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -93,7 +100,8 @@ abstract class _$$_MenuModelCopyWith<$Res> implements $MenuModelCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String location,
+      {MenuGroup group,
+      String location,
       GlobalKey<NavigatorState> navigatorKey,
       String label,
       IconData icon,
@@ -111,6 +119,7 @@ class __$$_MenuModelCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? group = null,
     Object? location = null,
     Object? navigatorKey = null,
     Object? label = null,
@@ -118,6 +127,10 @@ class __$$_MenuModelCopyWithImpl<$Res>
     Object? child = null,
   }) {
     return _then(_$_MenuModel(
+      group: null == group
+          ? _value.group
+          : group // ignore: cast_nullable_to_non_nullable
+              as MenuGroup,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -146,12 +159,15 @@ class __$$_MenuModelCopyWithImpl<$Res>
 
 class _$_MenuModel implements _MenuModel {
   const _$_MenuModel(
-      {required this.location,
+      {required this.group,
+      required this.location,
       required this.navigatorKey,
       required this.label,
       required this.icon,
       required this.child});
 
+  @override
+  final MenuGroup group;
   @override
   final String location;
   @override
@@ -165,7 +181,7 @@ class _$_MenuModel implements _MenuModel {
 
   @override
   String toString() {
-    return 'MenuModel(location: $location, navigatorKey: $navigatorKey, label: $label, icon: $icon, child: $child)';
+    return 'MenuModel(group: $group, location: $location, navigatorKey: $navigatorKey, label: $label, icon: $icon, child: $child)';
   }
 
   @override
@@ -173,6 +189,7 @@ class _$_MenuModel implements _MenuModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MenuModel &&
+            (identical(other.group, group) || other.group == group) &&
             (identical(other.location, location) ||
                 other.location == location) &&
             (identical(other.navigatorKey, navigatorKey) ||
@@ -183,8 +200,8 @@ class _$_MenuModel implements _MenuModel {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, location, navigatorKey, label, icon, child);
+  int get hashCode => Object.hash(
+      runtimeType, group, location, navigatorKey, label, icon, child);
 
   @JsonKey(ignore: true)
   @override
@@ -195,12 +212,15 @@ class _$_MenuModel implements _MenuModel {
 
 abstract class _MenuModel implements MenuModel {
   const factory _MenuModel(
-      {required final String location,
+      {required final MenuGroup group,
+      required final String location,
       required final GlobalKey<NavigatorState> navigatorKey,
       required final String label,
       required final IconData icon,
       required final Widget child}) = _$_MenuModel;
 
+  @override
+  MenuGroup get group;
   @override
   String get location;
   @override

@@ -1,5 +1,9 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer_divider.dart';
+import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
 import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
 import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
@@ -24,11 +28,13 @@ class MenuDrawer extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(28, 20, 16, 20),
             child: Text(
               'CarClean',
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
             ),
           ),
           ...ref
               .read(menuListProvider)
+              .where((menu) => menu.group == MenuGroup.home)
+              .toList()
               .asMap()
               .entries
               .map(
@@ -42,16 +48,52 @@ class MenuDrawer extends ConsumerWidget {
                 ),
               )
               .toList(),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(28, 0, 28, 0),
-            child: Divider(),
+          const MenuDrawerDivider("Cadastro"),
+          ...ref
+              .read(menuListProvider)
+              .where((menu) => menu.group == MenuGroup.register)
+              .toList()
+              .asMap()
+              .entries
+              .map(
+                (menuEntry) => NavigationDrawerDestination(
+                  label: Text(menuEntry.value.label),
+                  icon: Icon(menuEntry.value.icon),
+                  selectedIcon: Icon(
+                    menuEntry.value.icon,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              )
+              .toList(),
+          const MenuDrawerDivider("Configurações"),
+          NavigationDrawerDestination(
+            label: Row(children: [
+              const Text("Empresa"),
+              const SizedBox(width: 105),
+              Icon(
+                Icons.navigate_next_rounded,
+                color: Theme.of(context).colorScheme.outline,
+              )
+            ]),
+            icon: const Icon(Icons.business_rounded),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
-            child: Text(
-              'Cadastro',
-              style: Theme.of(context).textTheme.titleSmall,
+          NavigationDrawerDestination(
+            label: GestureDetector(
+              onTap: () => ref.read(oAuthStateProvider.notifier).logout(),
+              child: SizedBox(
+                height: 55,
+                child: Row(children: [
+                  const Text("Encerrar sessão"),
+                  const SizedBox(width: 55),
+                  Icon(
+                    Icons.navigate_next_rounded,
+                    color: Theme.of(context).colorScheme.outline,
+                  )
+                ]),
+              ),
             ),
+            icon: const Icon(Icons.logout_rounded),
           ),
         ],
       ),
