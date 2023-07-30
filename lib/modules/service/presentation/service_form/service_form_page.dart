@@ -21,8 +21,7 @@ class ServiceFormPage extends ConsumerStatefulWidget {
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ServiceFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceFormPageState();
 }
 
 class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
@@ -37,9 +36,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(
-        ServiceFormControllerProvider(widget.serviceId, widget.mode),
-        (_, value) {
+    ref.listenManual(ServiceFormControllerProvider(widget.serviceId, widget.mode), (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -48,13 +45,12 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
         context.pop();
       }
 
-      if (value.hasValue && !value.hasError) {
+      if (value.valueOrNull != null && !value.hasError) {
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
         _fullDescriptionControl.text = value.value!.fullDescription;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
-        _pcComissionControl.text =
-            "${value.value!.pcCommission.toStringAsFixed(2)} %";
+        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -62,25 +58,22 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
+    final isUpdateMode = widget.mode == FormMode.update;
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title:
-            Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
+        title: Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
       ),
       body: ScrollableView(
         child: Form(
           key: _formKey,
           child: RowInline(children: [
-            Visibility(
-              visible: widget.mode == FormMode.update,
-              child: VoleepTextFormField(
-                width: 130,
-                controller: _codeControl,
-                enabled: false,
-                placeholder: "Código",
-                icon: isMobile ? Icons.qr_code_rounded : null,
-              ),
+            VoleepTextFormField(
+              width: 130,
+              controller: _codeControl,
+              enabled: false,
+              placeholder: "Código",
+              icon: isMobile ? Icons.qr_code_rounded : null,
             ),
             VoleepTextFormField(
               width: 550,
@@ -162,17 +155,13 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(
-                serviceFormControllerProvider(widget.serviceId, widget.mode)
-                    .notifier);
+            final notifier = ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode).notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price = double.parse(
-                doubleRE.firstMatch(_priceControl.text)!.group(0)!);
+            final price = double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!);
             final pcCommission = _pcComissionControl.text.isNotEmpty
-                ? double.parse(
-                    doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
+                ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
                 : 0.0;
 
             await notifier
@@ -183,10 +172,7 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
               pcCommission: pcCommission,
             )
                 .then((value) {
-              if (!ref
-                  .read(serviceFormControllerProvider(
-                      widget.serviceId, widget.mode))
-                  .hasError) {
+              if (!ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode)).hasError) {
                 context.pop(true);
               }
             });

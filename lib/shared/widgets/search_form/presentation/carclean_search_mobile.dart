@@ -1,8 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/fab_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voelep_search_field/voleep_search_field.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
@@ -26,25 +27,29 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
   const CarCleanSearchMobile({
     super.key,
     required this.config,
+    required this.selectId,
     required this.searchBarFilter,
     required this.filterOptions,
+    this.fabOption,
     required this.columns,
     required this.actionsBuilder,
     required this.itemBuilder,
     required this.fromJsonT,
-    this.onTap,
-    this.onSelect,
+    this.onTapItem,
+    this.onSelectItems,
   });
 
   final SearchConfig config;
+  final Object Function(T item) selectId;
   final FilterOption searchBarFilter;
   final List<FilterOption> filterOptions;
+  final FabOption? fabOption;
   final List<ColumnOption> columns;
   final ItemBuilder<T> itemBuilder;
   final ActionsBuilder<T> actionsBuilder;
   final FromJsonT<T> fromJsonT;
-  final void Function(T item, int index)? onTap;
-  final void Function(List<T> items)? onSelect;
+  final void Function(T item, int index)? onTapItem;
+  final void Function(List<T> items)? onSelectItems;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchMobileState<T>();
@@ -120,24 +125,6 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
                           }
                         },
                         icon: const Icon(Icons.tune_rounded),
-                      ),
-                    );
-                  },
-                ),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
-
-                    final hasSelection = itemSelectedList.isNotEmpty;
-
-                    return AnimatedSize(
-                      duration: const Duration(milliseconds: 180),
-                      child: Visibility(
-                        visible: isMultiSelection && hasSelection,
-                        child: TextButton(
-                          child: const Text("CONCLUIR"),
-                          onPressed: () => widget.onSelect?.call(List<T>.from(itemSelectedList)),
-                        ),
                       ),
                     );
                   },
@@ -220,61 +207,55 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
                         return true;
                       },
                       child: ListView.builder(
-                        padding: EdgeInsets.zero,
+                        padding: const EdgeInsets.all(8),
                         itemCount: itemList.length,
                         itemBuilder: (context, index) {
                           final currentItem = itemList[index];
-                          return Slidable(
-                              endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
-                                  children: widget
-                                      .actionsBuilder(context, index, currentItem)
-                                      .map(
-                                        (action) => SlidableAction(
-                                          onPressed: (context) => action.onTap(),
-                                          icon: action.icon,
-                                          foregroundColor: action.foregroundColor,
-                                          backgroundColor: action.backgroundColor,
-                                        ),
-                                      )
-                                      .toList()),
-                              child: Consumer(builder: (context, ref, child) {
-                                final itemSelectedList =
-                                    ref.watch(searchMultiSelectionControllerProvider(widget.config));
+                          return Consumer(builder: (context, ref, child) {
+                            final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
 
-                                final hasSelection = itemSelectedList.isNotEmpty;
-                                final isSelected = itemSelectedList.contains(currentItem);
+                            final hasSelection = itemSelectedList.isNotEmpty;
+                            final isSelected = itemSelectedList.contains(widget.selectId(currentItem));
 
-                                return InkWell(
-                                  onTap: () {
-                                    if (isMultiSelection && hasSelection) {
-                                      ref
-                                          .read(searchMultiSelectionControllerProvider(widget.config).notifier)
-                                          .handleItemClicked(currentItem);
-                                      return;
-                                    }
-                                    if (isSingleSelection) {
-                                      widget.onSelect?.call([currentItem]);
-                                      return;
-                                    }
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 3),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Material(
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (isMultiSelection && hasSelection) {
+                                        ref
+                                            .read(searchMultiSelectionControllerProvider(widget.config).notifier)
+                                            .handleItemClicked(widget.selectId(currentItem));
+                                        return;
+                                      }
+                                      if (isSingleSelection || isMultiSelection) {
+                                        widget.onSelectItems?.call([currentItem]);
+                                        return;
+                                      }
 
-                                    widget.onTap?.call(currentItem, index);
-                                  },
-                                  onLongPress: () {
-                                    if (isMultiSelection) {
-                                      ref
-                                          .read(searchMultiSelectionControllerProvider(widget.config).notifier)
-                                          .handleItemClicked(currentItem);
-                                    }
-                                  },
-                                  child: widget.itemBuilder(
-                                    context,
-                                    index,
-                                    currentItem,
-                                    isSelected,
+                                      widget.onTapItem?.call(currentItem, index);
+                                    },
+                                    onLongPress: () {
+                                      if (isMultiSelection) {
+                                        ref
+                                            .read(searchMultiSelectionControllerProvider(widget.config).notifier)
+                                            .handleItemClicked(widget.selectId(currentItem));
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: widget.itemBuilder(
+                                      context,
+                                      index,
+                                      currentItem,
+                                      isSelected,
+                                    ),
                                   ),
-                                );
-                              }));
+                                ),
+                              ),
+                            );
+                          });
                         },
                       ),
                     ),
@@ -293,6 +274,53 @@ class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T
             );
           },
         ),
+      ),
+      floatingActionButton: Consumer(
+        builder: (context, ref, child) {
+          final selectedIdList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+          final hasSelection = selectedIdList.isNotEmpty;
+
+          handleSelectItems() {
+            if (controller.isLoading || controller.value == null) {
+              return;
+            }
+
+            final selectedItems = selectedIdList
+                .map((selectedId) {
+                  final selectedItem = controller.value!.pageData
+                      .firstWhereOrNull((element) => widget.selectId(widget.fromJsonT(element)) == selectedId);
+                  if (selectedItem == null) {
+                    return null;
+                  }
+
+                  return widget.fromJsonT(selectedItem);
+                })
+                .whereType<T>()
+                .toList();
+
+            widget.onSelectItems?.call(selectedItems);
+          }
+
+          if (hasSelection || widget.fabOption != null) {
+            return FloatingActionButton.extended(
+              extendedIconLabelSpacing: 0,
+              extendedPadding: const EdgeInsets.all(16),
+              onPressed: hasSelection ? handleSelectItems : widget.fabOption!.onPressed,
+              label: AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                child: hasSelection
+                    ? const Padding(
+                        padding: EdgeInsets.only(left: 12),
+                        child: Text("Concluir"),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              icon: hasSelection ? const Icon(Icons.done_rounded) : widget.fabOption!.child,
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
       ),
     );
   }

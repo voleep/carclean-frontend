@@ -5,9 +5,11 @@ import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final goRouter = GoRouter(
+    initialLocation: Routes.app.home,
     navigatorKey: Routes.i.navigationkey,
     redirect: (context, state) {
-      if (state.matchedLocation == "/") {
+      final location = state.uri.toString();
+      if (location == "" || location == "/") {
         return Routes.app.home;
       }
 
@@ -17,11 +19,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   );
 
   ref.listen(oAuthStateProvider, (_, state) {
-    final fullPath = goRouter.routerDelegate.currentConfiguration.fullPath;
+    final location = goRouter.routerDelegate.currentConfiguration.uri.toString();
     final userId = state.value?.userId;
     final businessId = state.value?.businessId;
 
-    final isAuthRoute = fullPath.startsWith(Routes.login.root);
+    final isAuthRoute = location.startsWith(Routes.login.root);
 
     if (!isAuthRoute) {
       if (userId == null) {

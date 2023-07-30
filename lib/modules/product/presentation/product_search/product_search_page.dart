@@ -24,6 +24,7 @@ class ProductSearchPage extends ConsumerWidget {
       children: [
         CarCleanSearch<ProductModel>(
           config: _searchConfig,
+          selectId: (item) => item.productId,
           searchBarFilter: const FilterOption(
             title: "Produto",
             field: "description",

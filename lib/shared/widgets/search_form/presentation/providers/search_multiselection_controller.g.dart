@@ -7,7 +7,7 @@ part of 'search_multiselection_controller.dart';
 // **************************************************************************
 
 String _$searchMultiSelectionControllerHash() =>
-    r'282c16139d7d2865808ab885d5dd8d77a2977838';
+    r'65bfa0449b3237b72952b647ea2dcda3f9cff6e8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 }
 
 abstract class _$SearchMultiSelectionController
-    extends BuildlessAutoDisposeNotifier<List<dynamic>> {
+    extends BuildlessAutoDisposeNotifier<List<Object>> {
   late final SearchConfig config;
 
-  List<dynamic> build(
+  List<Object> build(
     SearchConfig config,
   );
 }
@@ -45,7 +45,7 @@ const searchMultiSelectionControllerProvider =
     SearchMultiSelectionControllerFamily();
 
 /// See also [SearchMultiSelectionController].
-class SearchMultiSelectionControllerFamily extends Family<List<dynamic>> {
+class SearchMultiSelectionControllerFamily extends Family<List<Object>> {
   /// See also [SearchMultiSelectionController].
   const SearchMultiSelectionControllerFamily();
 
@@ -85,7 +85,7 @@ class SearchMultiSelectionControllerFamily extends Family<List<dynamic>> {
 /// See also [SearchMultiSelectionController].
 class SearchMultiSelectionControllerProvider
     extends AutoDisposeNotifierProviderImpl<SearchMultiSelectionController,
-        List<dynamic>> {
+        List<Object>> {
   /// See also [SearchMultiSelectionController].
   SearchMultiSelectionControllerProvider(
     this.config,
@@ -119,7 +119,7 @@ class SearchMultiSelectionControllerProvider
   }
 
   @override
-  List<dynamic> runNotifierBuild(
+  List<Object> runNotifierBuild(
     covariant SearchMultiSelectionController notifier,
   ) {
     return notifier.build(

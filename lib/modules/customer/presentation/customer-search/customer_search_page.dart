@@ -33,6 +33,7 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
       children: [
         CarCleanSearch<CustomerModel>(
           config: searchConfig,
+          selectId: (item) => item.customerId,
           searchBarFilter: const FilterOption(
             title: "Nome",
             field: "dsName",

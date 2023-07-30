@@ -5,6 +5,7 @@ import 'package:voleep_carclean_frontend/routing/menus/selected_menu.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/fab_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/typedefs/cells_builder.dart';
@@ -25,27 +26,31 @@ class CarCleanSearch<T> extends ConsumerWidget {
   CarCleanSearch({
     super.key,
     required this.config,
+    required this.selectId,
     required this.searchBarFilter,
     required this.filterOptions,
+    this.fabOption,
     required this.columns,
     required this.actionsBuilder,
     required this.itemBuilder,
     required this.cellsBuilder,
     required this.fromJsonT,
-    this.onTap,
-    this.onSelect,
+    this.onTapItem,
+    this.onSelectItems,
   }) : assert(searchBarFilter.type == FilterType.text);
 
   final SearchConfig config;
+  final Object Function(T item) selectId;
   final FilterOption searchBarFilter;
   final List<FilterOption> filterOptions;
+  final FabOption? fabOption;
   final List<ColumnOption> columns;
   final ItemBuilder<T> itemBuilder;
   final CellsBuilder<T> cellsBuilder;
   final ActionsBuilder<T> actionsBuilder;
   final FromJsonT<T> fromJsonT;
-  final void Function(T item, int index)? onTap;
-  final void Function(List<T> items)? onSelect;
+  final void Function(T item, int index)? onTapItem;
+  final void Function(List<T> items)? onSelectItems;
 
   final _dataTableKey = GlobalKey();
 
@@ -57,14 +62,16 @@ class CarCleanSearch<T> extends ConsumerWidget {
     return isMobile
         ? CarCleanSearchMobile(
             config: config,
+            selectId: selectId,
             searchBarFilter: searchBarFilter,
             filterOptions: filterOptions,
+            fabOption: fabOption,
             columns: columns,
             actionsBuilder: actionsBuilder,
             itemBuilder: itemBuilder,
             fromJsonT: fromJsonT,
-            onTap: onTap,
-            onSelect: onSelect,
+            onTapItem: onTapItem,
+            onSelectItems: onSelectItems,
           )
         : Column(
             children: [

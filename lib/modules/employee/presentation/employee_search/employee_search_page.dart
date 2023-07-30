@@ -29,6 +29,7 @@ class EmployeeSearchPage extends ConsumerWidget {
       children: [
         CarCleanSearch<EmployeeModel>(
           config: _searchConfig,
+          selectId: (item) => item.employeeId,
           searchBarFilter: _searchFilter,
           filterOptions: [
             _searchFilter,

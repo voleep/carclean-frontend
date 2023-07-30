@@ -1,6 +1,7 @@
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_request_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 
 class VehicleRepository {
@@ -20,8 +21,8 @@ class VehicleRepository {
     return VehicleModel.fromJson(response.data!);
   }
 
-  Future<VehicleModel?> save(VehicleModel vehicleDTO) async {
-    final response = await http.post(endpoint, data: vehicleDTO.toJson());
+  Future<VehicleModel?> save(VehicleRequestModel vehicleRequestModel) async {
+    final response = await http.post(endpoint, data: vehicleRequestModel.toJson());
 
     if (response.data == null) {
       return null;
@@ -30,8 +31,8 @@ class VehicleRepository {
     return VehicleModel.fromJson(response.data!);
   }
 
-  Future<VehicleModel?> update(VehicleModel vehicleDTO) async {
-    final response = await http.put(endpoint, data: vehicleDTO.toJson());
+  Future<VehicleModel?> update(VehicleRequestModel vehicleRequestModel) async {
+    final response = await http.put(endpoint, data: vehicleRequestModel.toJson());
 
     if (response.data == null) {
       return null;

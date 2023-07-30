@@ -6,18 +6,18 @@ part 'search_multiselection_controller.g.dart';
 @riverpod
 class SearchMultiSelectionController extends _$SearchMultiSelectionController {
   @override
-  List<dynamic> build(SearchConfig config) {
+  List<Object> build(SearchConfig config) {
     return [];
   }
 
-  handleItemClicked(dynamic item) {
+  handleItemClicked(Object selectId) {
     final newState = [...state];
-    final isSelected = state.contains(item);
+    final isSelected = state.contains(selectId);
 
     if (isSelected) {
-      newState.remove(item);
+      newState.remove(selectId);
     } else {
-      newState.add(item);
+      newState.add(selectId);
     }
 
     state = newState;

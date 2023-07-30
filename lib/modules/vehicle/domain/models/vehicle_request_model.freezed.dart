@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'vehicle_model.dart';
+part of 'vehicle_request_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,13 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-VehicleModel _$VehicleModelFromJson(Map<String, dynamic> json) {
-  return _VehicleModel.fromJson(json);
+VehicleRequestModel _$VehicleRequestModelFromJson(Map<String, dynamic> json) {
+  return _VehicleRequestModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$VehicleModel {
-  String get vehicleId => throw _privateConstructorUsedError;
+mixin _$VehicleRequestModel {
+  String? get vehicleId => throw _privateConstructorUsedError;
   String get licensePlate => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String? get modelYear => throw _privateConstructorUsedError;
@@ -28,18 +28,18 @@ mixin _$VehicleModel {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $VehicleModelCopyWith<VehicleModel> get copyWith =>
+  $VehicleRequestModelCopyWith<VehicleRequestModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $VehicleModelCopyWith<$Res> {
-  factory $VehicleModelCopyWith(
-          VehicleModel value, $Res Function(VehicleModel) then) =
-      _$VehicleModelCopyWithImpl<$Res, VehicleModel>;
+abstract class $VehicleRequestModelCopyWith<$Res> {
+  factory $VehicleRequestModelCopyWith(
+          VehicleRequestModel value, $Res Function(VehicleRequestModel) then) =
+      _$VehicleRequestModelCopyWithImpl<$Res, VehicleRequestModel>;
   @useResult
   $Res call(
-      {String vehicleId,
+      {String? vehicleId,
       String licensePlate,
       String description,
       String? modelYear,
@@ -49,9 +49,9 @@ abstract class $VehicleModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$VehicleModelCopyWithImpl<$Res, $Val extends VehicleModel>
-    implements $VehicleModelCopyWith<$Res> {
-  _$VehicleModelCopyWithImpl(this._value, this._then);
+class _$VehicleRequestModelCopyWithImpl<$Res, $Val extends VehicleRequestModel>
+    implements $VehicleRequestModelCopyWith<$Res> {
+  _$VehicleRequestModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -61,17 +61,17 @@ class _$VehicleModelCopyWithImpl<$Res, $Val extends VehicleModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vehicleId = null,
+    Object? vehicleId = freezed,
     Object? licensePlate = null,
     Object? description = null,
     Object? modelYear = freezed,
     Object? customer = freezed,
   }) {
     return _then(_value.copyWith(
-      vehicleId: null == vehicleId
+      vehicleId: freezed == vehicleId
           ? _value.vehicleId
           : vehicleId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       licensePlate: null == licensePlate
           ? _value.licensePlate
           : licensePlate // ignore: cast_nullable_to_non_nullable
@@ -105,15 +105,15 @@ class _$VehicleModelCopyWithImpl<$Res, $Val extends VehicleModel>
 }
 
 /// @nodoc
-abstract class _$$_VehicleModelCopyWith<$Res>
-    implements $VehicleModelCopyWith<$Res> {
-  factory _$$_VehicleModelCopyWith(
-          _$_VehicleModel value, $Res Function(_$_VehicleModel) then) =
-      __$$_VehicleModelCopyWithImpl<$Res>;
+abstract class _$$_VehicleRequestModelCopyWith<$Res>
+    implements $VehicleRequestModelCopyWith<$Res> {
+  factory _$$_VehicleRequestModelCopyWith(_$_VehicleRequestModel value,
+          $Res Function(_$_VehicleRequestModel) then) =
+      __$$_VehicleRequestModelCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {String vehicleId,
+      {String? vehicleId,
       String licensePlate,
       String description,
       String? modelYear,
@@ -124,27 +124,27 @@ abstract class _$$_VehicleModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_VehicleModelCopyWithImpl<$Res>
-    extends _$VehicleModelCopyWithImpl<$Res, _$_VehicleModel>
-    implements _$$_VehicleModelCopyWith<$Res> {
-  __$$_VehicleModelCopyWithImpl(
-      _$_VehicleModel _value, $Res Function(_$_VehicleModel) _then)
+class __$$_VehicleRequestModelCopyWithImpl<$Res>
+    extends _$VehicleRequestModelCopyWithImpl<$Res, _$_VehicleRequestModel>
+    implements _$$_VehicleRequestModelCopyWith<$Res> {
+  __$$_VehicleRequestModelCopyWithImpl(_$_VehicleRequestModel _value,
+      $Res Function(_$_VehicleRequestModel) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? vehicleId = null,
+    Object? vehicleId = freezed,
     Object? licensePlate = null,
     Object? description = null,
     Object? modelYear = freezed,
     Object? customer = freezed,
   }) {
-    return _then(_$_VehicleModel(
-      vehicleId: null == vehicleId
+    return _then(_$_VehicleRequestModel(
+      vehicleId: freezed == vehicleId
           ? _value.vehicleId
           : vehicleId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       licensePlate: null == licensePlate
           ? _value.licensePlate
           : licensePlate // ignore: cast_nullable_to_non_nullable
@@ -167,19 +167,21 @@ class __$$_VehicleModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_VehicleModel with DiagnosticableTreeMixin implements _VehicleModel {
-  const _$_VehicleModel(
-      {required this.vehicleId,
+class _$_VehicleRequestModel
+    with DiagnosticableTreeMixin
+    implements _VehicleRequestModel {
+  const _$_VehicleRequestModel(
+      {this.vehicleId,
       required this.licensePlate,
       required this.description,
       this.modelYear,
       this.customer});
 
-  factory _$_VehicleModel.fromJson(Map<String, dynamic> json) =>
-      _$$_VehicleModelFromJson(json);
+  factory _$_VehicleRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$$_VehicleRequestModelFromJson(json);
 
   @override
-  final String vehicleId;
+  final String? vehicleId;
   @override
   final String licensePlate;
   @override
@@ -191,14 +193,14 @@ class _$_VehicleModel with DiagnosticableTreeMixin implements _VehicleModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VehicleModel(vehicleId: $vehicleId, licensePlate: $licensePlate, description: $description, modelYear: $modelYear, customer: $customer)';
+    return 'VehicleRequestModel(vehicleId: $vehicleId, licensePlate: $licensePlate, description: $description, modelYear: $modelYear, customer: $customer)';
   }
 
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'VehicleModel'))
+      ..add(DiagnosticsProperty('type', 'VehicleRequestModel'))
       ..add(DiagnosticsProperty('vehicleId', vehicleId))
       ..add(DiagnosticsProperty('licensePlate', licensePlate))
       ..add(DiagnosticsProperty('description', description))
@@ -210,7 +212,7 @@ class _$_VehicleModel with DiagnosticableTreeMixin implements _VehicleModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_VehicleModel &&
+            other is _$_VehicleRequestModel &&
             (identical(other.vehicleId, vehicleId) ||
                 other.vehicleId == vehicleId) &&
             (identical(other.licensePlate, licensePlate) ||
@@ -231,30 +233,31 @@ class _$_VehicleModel with DiagnosticableTreeMixin implements _VehicleModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_VehicleModelCopyWith<_$_VehicleModel> get copyWith =>
-      __$$_VehicleModelCopyWithImpl<_$_VehicleModel>(this, _$identity);
+  _$$_VehicleRequestModelCopyWith<_$_VehicleRequestModel> get copyWith =>
+      __$$_VehicleRequestModelCopyWithImpl<_$_VehicleRequestModel>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_VehicleModelToJson(
+    return _$$_VehicleRequestModelToJson(
       this,
     );
   }
 }
 
-abstract class _VehicleModel implements VehicleModel {
-  const factory _VehicleModel(
-      {required final String vehicleId,
+abstract class _VehicleRequestModel implements VehicleRequestModel {
+  const factory _VehicleRequestModel(
+      {final String? vehicleId,
       required final String licensePlate,
       required final String description,
       final String? modelYear,
-      final CustomerModel? customer}) = _$_VehicleModel;
+      final CustomerModel? customer}) = _$_VehicleRequestModel;
 
-  factory _VehicleModel.fromJson(Map<String, dynamic> json) =
-      _$_VehicleModel.fromJson;
+  factory _VehicleRequestModel.fromJson(Map<String, dynamic> json) =
+      _$_VehicleRequestModel.fromJson;
 
   @override
-  String get vehicleId;
+  String? get vehicleId;
   @override
   String get licensePlate;
   @override
@@ -265,6 +268,6 @@ abstract class _VehicleModel implements VehicleModel {
   CustomerModel? get customer;
   @override
   @JsonKey(ignore: true)
-  _$$_VehicleModelCopyWith<_$_VehicleModel> get copyWith =>
+  _$$_VehicleRequestModelCopyWith<_$_VehicleRequestModel> get copyWith =>
       throw _privateConstructorUsedError;
 }

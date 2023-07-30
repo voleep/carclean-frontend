@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/repositories/vehicle_repository_provider.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_request_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 
 class VehicleFormPageController extends AutoDisposeFamilyAsyncNotifier<VehicleModel?, VehicleId> {
@@ -16,11 +17,12 @@ class VehicleFormPageController extends AutoDisposeFamilyAsyncNotifier<VehicleMo
     return vehicle;
   }
 
-  Future<void> saveOrUpdate({required String description, required LicensePlate licensePlate, String? modelYear}) async {
+  Future<void> saveOrUpdate(
+      {required String description, required LicensePlate licensePlate, String? modelYear}) async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
     state = await AsyncValue.guard<VehicleModel?>(() async {
-      final vehicleModel = VehicleModel(
+      final vehicleModel = VehicleRequestModel(
         vehicleId: state.value?.vehicleId,
         licensePlate: licensePlate,
         description: description,
