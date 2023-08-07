@@ -22,7 +22,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 import 'package:side_sheet/side_sheet.dart';
 
-class CarCleanSearch<T> extends ConsumerWidget {
+class CarCleanSearch<T, I> extends ConsumerWidget {
   CarCleanSearch({
     super.key,
     required this.config,
@@ -40,7 +40,7 @@ class CarCleanSearch<T> extends ConsumerWidget {
   }) : assert(searchBarFilter.type == FilterType.text);
 
   final SearchConfig config;
-  final Object Function(T item) selectId;
+  final I Function(T item) selectId;
   final FilterOption searchBarFilter;
   final List<FilterOption> filterOptions;
   final FabOption? fabOption;
@@ -60,7 +60,7 @@ class CarCleanSearch<T> extends ConsumerWidget {
     final isMobile = Responsive.isMobile(context);
 
     return isMobile
-        ? CarCleanSearchMobile(
+        ? CarCleanSearchMobile<T, I>(
             config: config,
             selectId: selectId,
             searchBarFilter: searchBarFilter,

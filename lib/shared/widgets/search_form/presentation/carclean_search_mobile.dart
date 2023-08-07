@@ -23,7 +23,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/error_view/error_view.da
 
 final loadindNextPageState = AutoDisposeStateProvider<bool>((ref) => false);
 
-class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
+class CarCleanSearchMobile<T, I> extends ConsumerStatefulWidget {
   const CarCleanSearchMobile({
     super.key,
     required this.config,
@@ -40,7 +40,7 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
   });
 
   final SearchConfig config;
-  final Object Function(T item) selectId;
+  final I Function(T item) selectId;
   final FilterOption searchBarFilter;
   final List<FilterOption> filterOptions;
   final FabOption? fabOption;
@@ -52,10 +52,10 @@ class CarCleanSearchMobile<T> extends ConsumerStatefulWidget {
   final void Function(List<T> items)? onSelectItems;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchMobileState<T>();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchMobileState<T, I>();
 }
 
-class _CarCleanSearchMobileState<T> extends ConsumerState<CarCleanSearchMobile<T>> {
+class _CarCleanSearchMobileState<T, I> extends ConsumerState<CarCleanSearchMobile<T, I>> {
   final _debounceTime = DebounceTime(milliseconds: 500);
 
   _performSearch(final String value, final WidgetRef ref) {

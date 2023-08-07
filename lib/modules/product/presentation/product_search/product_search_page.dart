@@ -22,7 +22,7 @@ class ProductSearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
-        CarCleanSearch<ProductModel>(
+        CarCleanSearch<ProductModel, ProductId>(
           config: _searchConfig,
           selectId: (item) => item.productId,
           searchBarFilter: const FilterOption(

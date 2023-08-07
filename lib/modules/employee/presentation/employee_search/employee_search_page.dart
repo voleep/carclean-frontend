@@ -27,7 +27,7 @@ class EmployeeSearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
-        CarCleanSearch<EmployeeModel>(
+        CarCleanSearch<EmployeeModel, EmployeeId>(
           config: _searchConfig,
           selectId: (item) => item.employeeId,
           searchBarFilter: _searchFilter,

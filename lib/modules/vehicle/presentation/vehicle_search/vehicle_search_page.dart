@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
@@ -23,7 +24,7 @@ class VehicleSearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
       children: [
-        CarCleanSearch<VehicleModel>(
+        CarCleanSearch<VehicleModel, VehicleId>(
           config: _searchConfig,
           selectId: (item) => item.vehicleId,
           searchBarFilter: const FilterOption(

@@ -93,7 +93,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                VoleepExpansionPanel("Itens", children: [
+                VoleepExpansionPanel("Itens", initiallyExpanded: true, children: [
                   VoleepFormTile(
                     icon: Icons.playlist_add_rounded,
                     title: "Serviços",
@@ -137,7 +137,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
                     onTap: () {},
                   ),
                 ]),
-                VoleepExpansionPanel("Detalhes", children: [
+                VoleepExpansionPanel("Detalhes", initiallyExpanded: true, children: [
                   VoleepFormTile(
                     icon: Icons.attach_money_rounded,
                     title: "Meio de pagamento",
