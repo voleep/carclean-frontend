@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'employee_request_dto.dart';
+part of 'create_employee_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$EmployeeRequestDTOToJson(EmployeeRequestDTO instance) =>
+Map<String, dynamic> _$CreateEmployeeModelToJson(
+        CreateEmployeeModel instance) =>
     <String, dynamic>{
       'employeeId': instance.employeeId,
       'name': instance.name,

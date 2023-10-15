@@ -1,8 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/employee/application/dtos/employee_request_dto.dart';
-import 'package:voleep_carclean_frontend/modules/employee/application/services/employee_service.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/data/models/create_employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/data/repositories/employee_repository.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 
@@ -11,32 +13,41 @@ part 'employee_form_controller.g.dart';
 @riverpod
 class EmployeeFormController extends _$EmployeeFormController {
   @override
-  FutureOr<EmployeeModel?> build(EmployeeId? arg, FormMode mode) async {
+  AsyncValue<Employee?> build(EmployeeId? arg, FormMode mode) {
     if (arg != null) {
-      return await ref.read(employeeServiceProvider).findById(arg);
+      findById(arg);
     }
-    return null;
+
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> findById(EmployeeId employeeId) async {
+    final getEmplyeeResult = await ref.read(employeeRepositoryProvider).findById(employeeId);
+
+    state = switch (getEmplyeeResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
   }
 
   Future<void> saveOrUpdate({required String name, String? telephone, required DisabledEnabled situation}) async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
-    state = await AsyncValue.guard<EmployeeModel?>(() async {
-      final employeeRequestDTO = EmployeeRequestDTO(
-        employeeId: state.value?.employeeId,
-        name: name,
-        telephone: telephone,
-        situation: situation,
-      );
 
-      final service = ref.read(employeeServiceProvider);
+    final createEmployeeModel = CreateEmployeeModel(
+      employeeId: state.value?.employeeId,
+      name: name,
+      telephone: telephone,
+      situation: situation,
+    );
 
-      if (employeeRequestDTO.employeeId != null) {
-        return await service.update(employeeRequestDTO);
-      }
+    final saveEmployeeResult = await ref.read(employeeRepositoryProvider).saveOrUpdate(createEmployeeModel);
 
-      return await service.save(employeeRequestDTO);
-    });
+    state = switch (saveEmployeeResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
+
     showProgress.state = false;
   }
 }

@@ -6,8 +6,8 @@ part of 'employee_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EmployeeModel _$$_EmployeeModelFromJson(Map<String, dynamic> json) =>
-    _$_EmployeeModel(
+EmployeeModel _$EmployeeModelFromJson(Map<String, dynamic> json) =>
+    EmployeeModel(
       employeeId: json['employeeId'] as String,
       name: json['name'] as String,
       telephone: json['telephone'] as String?,
@@ -16,7 +16,7 @@ _$_EmployeeModel _$$_EmployeeModelFromJson(Map<String, dynamic> json) =>
       situation: $enumDecode(_$DisabledEnabledEnumMap, json['situation']),
     );
 
-Map<String, dynamic> _$$_EmployeeModelToJson(_$_EmployeeModel instance) =>
+Map<String, dynamic> _$EmployeeModelToJson(EmployeeModel instance) =>
     <String, dynamic>{
       'employeeId': instance.employeeId,
       'name': instance.name,

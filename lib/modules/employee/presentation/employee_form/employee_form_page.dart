@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_form/employee_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
@@ -18,8 +18,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollab
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
-final situationSwitchState =
-    AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
+final situationSwitchState = AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
 
 class EmployeeFormPage extends ConsumerWidget {
   EmployeeFormPage({super.key, this.employeeId, required this.mode});
@@ -50,15 +49,13 @@ class EmployeeFormPage extends ConsumerWidget {
         ref.read(situationSwitchState.notifier).state = value.value!.situation;
         _nameControl.text = value.value!.name;
         _telephoneControl.text = value.value!.telephone ?? "";
-        _registrationDateControl.text =
-            dateFormat.format(value.value!.registrationDate);
+        _registrationDateControl.text = dateFormat.format(value.value!.registrationDate);
       }
     });
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title:
-            Text(mode == FormMode.create ? "Novo colaborador" : "Colaborador"),
+        title: Text(mode == FormMode.create ? "Novo colaborador" : "Colaborador"),
       ),
       body: ScrollableView(
         child: Form(
@@ -85,10 +82,7 @@ class EmployeeFormPage extends ConsumerWidget {
                 icon: isMobile ? Icons.phone_rounded : null,
                 validator: (value) => Validators.maxLength(value, 20),
                 keyboardType: TextInputType.phone,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  TelefoneInputFormatter()
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, TelefoneInputFormatter()],
               ),
               Visibility(
                 visible: mode == FormMode.update,
@@ -108,14 +102,15 @@ class EmployeeFormPage extends ConsumerWidget {
                     children: [
                       Text(
                         "Situação ",
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.outline),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(color: Theme.of(context).colorScheme.outline),
                       ),
                       Switch(
                         value: situation.boolean,
-                        onChanged: (value) => ref
-                            .read(situationSwitchState.notifier)
-                            .state = DisabledEnabled.fromBool(value),
+                        onChanged: (value) =>
+                            ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
                       ),
                     ],
                   );
@@ -135,8 +130,7 @@ class EmployeeFormPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(
-                employeeFormControllerProvider(employeeId, mode).notifier);
+            final notifier = ref.read(employeeFormControllerProvider(employeeId, mode).notifier);
 
             await notifier
                 .saveOrUpdate(
@@ -145,9 +139,7 @@ class EmployeeFormPage extends ConsumerWidget {
               situation: ref.read(situationSwitchState),
             )
                 .then((value) {
-              if (!ref
-                  .read(employeeFormControllerProvider(employeeId, mode))
-                  .hasError) {
+              if (!ref.read(employeeFormControllerProvider(employeeId, mode)).hasError) {
                 context.pop(true);
               }
             });
