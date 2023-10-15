@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_typedefs.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_form/vehicle_form_page_controller_provider.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_form/vehicle_form_page_controller.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
@@ -96,10 +96,8 @@ class VehicleFormPage extends ConsumerWidget {
         data: (value) => FloatingActionButton.extended(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              final notifier = ref
-                  .read(vehicleFormPageControllerProvider(vehicleId).notifier);
-              final existsByLicensePlate = await notifier
-                  .existsByLicensePlate(_licensePlateControl.text);
+              final notifier = ref.read(vehicleFormPageControllerProvider(vehicleId).notifier);
+              final existsByLicensePlate = await notifier.existsByLicensePlate(_licensePlateControl.text);
 
               if (existsByLicensePlate) {
                 if (context.mounted) {
