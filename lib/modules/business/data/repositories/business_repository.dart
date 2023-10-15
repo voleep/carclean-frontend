@@ -1,7 +1,19 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
+import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
+import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
+import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_business_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
+import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
+
+part 'business_repository.g.dart';
+
+@riverpod
+BusinessRepository businessRepository(BusinessRepositoryRef ref) =>
+    BusinessRepository(http: ref.read(httpClientProvider));
 
 class BusinessRepository {
   get endpoint => "${ApiConfig.OAUTH_API_URL}/business";
@@ -10,19 +22,22 @@ class BusinessRepository {
 
   BusinessRepository({required this.http});
 
-  Future<AuthModel> createBusiness(
-      {required CreateBusinessDTO createBusinessDTO}) async {
-    final response = await http.post(
-      endpoint,
-      data: createBusinessDTO.toJson(),
-    );
+  Future<Either<RepositoryException, AuthModel>> createBusiness({required CreateBusinessDTO createBusinessDTO}) async {
+    final postResult = await http.post(endpoint, data: createBusinessDTO.toJson());
 
-    if (response.data == null) {
-      throw Exception("Ocorreu um erro.");
+    switch (postResult) {
+      case Success(value: GenericResponse(:final data)):
+        if (data == null) {
+          return Failure(RepositoryException(message: Strings.erroCriarEmpresa), StackTrace.current);
+        }
+
+        return Success(AuthModel.fromJson(data));
+      case Failure(:final exception, :final stackTrace):
+        if (exception is HttpBadResponseException) {
+          return Failure(RepositoryException(message: exception.message ?? Strings.erroCriarEmpresa), stackTrace);
+        }
+
+        return Failure(RepositoryException(message: Strings.erroCriarEmpresa), stackTrace);
     }
-
-    final AuthModel authModel = AuthModel.fromJson(response.data);
-
-    return authModel;
   }
 }
