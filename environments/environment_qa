@@ -1,2 +1,2 @@
-OAUTH_API_URL=https://oauth.api.qa.carclean.voleep.com
-CARCLEAN_API_URL=https://api.carclean.qa.voleep.com
+OAUTH_API_URL=https://oauth.carclean.voleep.com/api
+CARCLEAN_API_URL=https://main.carclean.voleep.com/api

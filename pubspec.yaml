@@ -30,7 +30,6 @@ dependencies:
   intl: ^0.18.0
   collection: ^1.17.1
   number_text_input_formatter: ^1.0.0+6
-  dio_smart_retry: ^5.0.0
   graphql_flutter: ^5.1.2
   gql_dio_link: ^0.3.0
   assorted_layout_widgets: ^8.0.4
@@ -48,6 +47,7 @@ dev_dependencies:
   custom_lint: ^0.3.4
   build_test: ^2.1.0
   freezed: ^2.3.3
+  mockito: ^5.4.0
 
 flutter:
   uses-material-design: true
