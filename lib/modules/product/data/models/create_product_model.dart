@@ -1,17 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 
-part 'product_request_dto.g.dart';
+part 'create_product_model.g.dart';
 
 @JsonSerializable(createFactory: false)
-class ProductRequestDTO {
+class CreateProductModel {
   final String? productId;
   final String description;
   final double price;
   final double availableStock;
   final double pcCommission;
-  final int situation;
+  final DisabledEnabled situation;
 
-  const ProductRequestDTO({
+  const CreateProductModel({
     this.productId,
     required this.description,
     required this.price,
@@ -20,15 +21,5 @@ class ProductRequestDTO {
     required this.situation,
   });
 
-  Map<String, dynamic> toJson() => _$ProductRequestDTOToJson(this);
-
-  @override
-  List<Object?> get props => [
-        productId,
-        description,
-        price,
-        availableStock,
-        pcCommission,
-        situation,
-      ];
+  Map<String, dynamic> toJson() => _$CreateProductModelToJson(this);
 }

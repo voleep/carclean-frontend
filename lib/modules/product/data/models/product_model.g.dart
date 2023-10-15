@@ -6,18 +6,17 @@ part of 'product_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ProductModel _$$_ProductModelFromJson(Map<String, dynamic> json) =>
-    _$_ProductModel(
+ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       productId: json['productId'] as String,
       code: json['code'] as int,
       description: json['description'] as String,
       price: (json['price'] as num).toDouble(),
       availableStock: (json['availableStock'] as num).toDouble(),
       pcCommission: (json['pcCommission'] as num).toDouble(),
-      situation: json['situation'] as int,
+      situation: $enumDecode(_$DisabledEnabledEnumMap, json['situation']),
     );
 
-Map<String, dynamic> _$$_ProductModelToJson(_$_ProductModel instance) =>
+Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
     <String, dynamic>{
       'productId': instance.productId,
       'code': instance.code,
@@ -25,5 +24,10 @@ Map<String, dynamic> _$$_ProductModelToJson(_$_ProductModel instance) =>
       'price': instance.price,
       'availableStock': instance.availableStock,
       'pcCommission': instance.pcCommission,
-      'situation': instance.situation,
+      'situation': _$DisabledEnabledEnumMap[instance.situation]!,
     };
+
+const _$DisabledEnabledEnumMap = {
+  DisabledEnabled.disabled: 0,
+  DisabledEnabled.enabled: 1,
+};

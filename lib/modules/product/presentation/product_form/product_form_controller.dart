@@ -1,20 +1,33 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/product/application/dtos/product_request_dto.dart';
-import 'package:voleep_carclean_frontend/modules/product/application/services/product_service.dart';
-import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/data/models/create_product_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/data/repositories/product_repository.dart';
+import 'package:voleep_carclean_frontend/modules/product/domain/entities/product.dart';
+import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/modules/product/domain/typedefs/product_id.dart';
 
 part 'product_form_controller.g.dart';
 
 @riverpod
 class ProductFormController extends _$ProductFormController {
   @override
-  FutureOr<ProductModel?> build(ProductId? arg, FormMode mode) async {
+  AsyncValue<Product?> build(ProductId? arg, FormMode mode) {
     if (arg != null) {
-      return await ref.read(productServiceProvider).findById(arg);
+      findById(arg);
     }
-    return null;
+
+    return const AsyncValue.data(null);
+  }
+
+  Future<void> findById(ProductId productId) async {
+    final getProductResult = await ref.read(productRepositoryProvider).findById(productId);
+
+    state = switch (getProductResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
   }
 
   Future<void> saveOrUpdate({
@@ -26,23 +39,23 @@ class ProductFormController extends _$ProductFormController {
   }) async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
-    state = await AsyncValue.guard<ProductModel?>(() async {
-      final productRequestDTO = ProductRequestDTO(
-          productId: state.value?.productId,
-          description: description,
-          price: price,
-          availableStock: availableStock,
-          pcCommission: pcCommission,
-          situation: situation);
 
-      final service = ref.read(productServiceProvider);
+    final createProductModel = CreateProductModel(
+      productId: state.value?.productId,
+      description: description,
+      price: price,
+      availableStock: availableStock,
+      pcCommission: pcCommission,
+      situation: DisabledEnabled.values[situation],
+    );
 
-      if (productRequestDTO.productId != null) {
-        return await service.update(productRequestDTO);
-      }
+    final saveProductResult = await ref.read(productRepositoryProvider).saveOrUpdate(createProductModel);
 
-      return await service.save(productRequestDTO);
-    });
+    state = switch (saveProductResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
+
     showProgress.state = false;
   }
 }

@@ -1,18 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_request_dto.dart';
+part of 'create_product_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Map<String, dynamic> _$ProductRequestDTOToJson(ProductRequestDTO instance) =>
+Map<String, dynamic> _$CreateProductModelToJson(CreateProductModel instance) =>
     <String, dynamic>{
       'productId': instance.productId,
       'description': instance.description,
       'price': instance.price,
       'availableStock': instance.availableStock,
       'pcCommission': instance.pcCommission,
-      'situation': instance.situation,
-      'props': instance.props,
+      'situation': _$DisabledEnabledEnumMap[instance.situation]!,
     };
+
+const _$DisabledEnabledEnumMap = {
+  DisabledEnabled.disabled: 0,
+  DisabledEnabled.enabled: 1,
+};

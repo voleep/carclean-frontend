@@ -1,24 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_service.dart';
+part of 'product_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productServiceHash() => r'9e9166dcec66aa53d3a69693571115f69b2b82be';
+String _$productRepositoryHash() => r'4441097f3b361d95bb9dee66c62121fe3126be7f';
 
-/// See also [productService].
-@ProviderFor(productService)
-final productServiceProvider = AutoDisposeProvider<ProductService>.internal(
-  productService,
-  name: r'productServiceProvider',
+/// See also [productRepository].
+@ProviderFor(productRepository)
+final productRepositoryProvider =
+    AutoDisposeProvider<ProductRepository>.internal(
+  productRepository,
+  name: r'productRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$productServiceHash,
+      : _$productRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef ProductServiceRef = AutoDisposeProviderRef<ProductService>;
+typedef ProductRepositoryRef = AutoDisposeProviderRef<ProductRepository>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

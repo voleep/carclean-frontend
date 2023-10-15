@@ -7,7 +7,7 @@ part of 'product_form_controller.dart';
 // **************************************************************************
 
 String _$productFormControllerHash() =>
-    r'af6ff7a46c1da3760409ad5d19d4f3d264945f48';
+    r'c0e65b7e410bebc85abffc8835ce798a2e94155e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,11 +31,11 @@ class _SystemHash {
 }
 
 abstract class _$ProductFormController
-    extends BuildlessAutoDisposeAsyncNotifier<ProductModel?> {
+    extends BuildlessAutoDisposeNotifier<AsyncValue<Product?>> {
   late final String? arg;
   late final FormMode mode;
 
-  FutureOr<ProductModel?> build(
+  AsyncValue<Product?> build(
     String? arg,
     FormMode mode,
   );
@@ -46,7 +46,7 @@ abstract class _$ProductFormController
 const productFormControllerProvider = ProductFormControllerFamily();
 
 /// See also [ProductFormController].
-class ProductFormControllerFamily extends Family<AsyncValue<ProductModel?>> {
+class ProductFormControllerFamily extends Family<AsyncValue<Product?>> {
   /// See also [ProductFormController].
   const ProductFormControllerFamily();
 
@@ -87,9 +87,8 @@ class ProductFormControllerFamily extends Family<AsyncValue<ProductModel?>> {
 }
 
 /// See also [ProductFormController].
-class ProductFormControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<ProductFormController,
-        ProductModel?> {
+class ProductFormControllerProvider extends AutoDisposeNotifierProviderImpl<
+    ProductFormController, AsyncValue<Product?>> {
   /// See also [ProductFormController].
   ProductFormControllerProvider(
     this.arg,
@@ -129,7 +128,7 @@ class ProductFormControllerProvider
   }
 
   @override
-  FutureOr<ProductModel?> runNotifierBuild(
+  AsyncValue<Product?> runNotifierBuild(
     covariant ProductFormController notifier,
   ) {
     return notifier.build(
