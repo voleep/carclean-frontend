@@ -1,17 +1,21 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
-part 'service_request_dto.g.dart';
+part 'create_service_model.g.dart';
 
 @JsonSerializable(createFactory: false)
-class ServiceRequestDTO {
+class CreateServiceModel {
   final ServiceId? serviceId;
+
   final String description;
+
   final String fullDescription;
+
   final double price;
+
   final double pcCommission;
 
-  const ServiceRequestDTO({
+  const CreateServiceModel({
     this.serviceId,
     required this.description,
     required this.fullDescription,
@@ -19,5 +23,5 @@ class ServiceRequestDTO {
     required this.pcCommission,
   });
 
-  Map<String, dynamic> toJson() => _$ServiceRequestDTOToJson(this);
+  Map<String, dynamic> toJson() => _$CreateServiceModelToJson(this);
 }

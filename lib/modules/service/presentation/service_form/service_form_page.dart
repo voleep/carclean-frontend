@@ -58,7 +58,6 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
-    final isUpdateMode = widget.mode == FormMode.update;
 
     return Scaffold(
       appBar: VoleepAppBar(

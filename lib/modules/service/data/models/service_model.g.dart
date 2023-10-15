@@ -6,8 +6,7 @@ part of 'service_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ServiceModel _$$_ServiceModelFromJson(Map<String, dynamic> json) =>
-    _$_ServiceModel(
+ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) => ServiceModel(
       serviceId: json['serviceId'] as String,
       code: json['code'] as int,
       description: json['description'] as String,
@@ -16,7 +15,7 @@ _$_ServiceModel _$$_ServiceModelFromJson(Map<String, dynamic> json) =>
       pcCommission: (json['pcCommission'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$$_ServiceModelToJson(_$_ServiceModel instance) =>
+Map<String, dynamic> _$ServiceModelToJson(ServiceModel instance) =>
     <String, dynamic>{
       'serviceId': instance.serviceId,
       'code': instance.code,
