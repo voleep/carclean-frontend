@@ -6,7 +6,7 @@ part of 'search_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$searchControllerHash() => r'964b6abcae765d4992c99e5d818c1b248dab11c8';
+String _$searchControllerHash() => r'26cf60a28467bb4db8fecab4c1da9dd1242c0260';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,11 +29,11 @@ class _SystemHash {
   }
 }
 
-abstract class _$SearchController extends BuildlessAutoDisposeAsyncNotifier<
-    PaginationModel<Map<String, dynamic>>?> {
+abstract class _$SearchController extends BuildlessAutoDisposeNotifier<
+    AsyncValue<PaginationModel<Map<String, dynamic>>?>> {
   late final SearchConfig arg;
 
-  FutureOr<PaginationModel<Map<String, dynamic>>?> build(
+  AsyncValue<PaginationModel<Map<String, dynamic>>?> build(
     SearchConfig arg,
   );
 }
@@ -82,8 +82,8 @@ class SearchControllerFamily
 }
 
 /// See also [SearchController].
-class SearchControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    SearchController, PaginationModel<Map<String, dynamic>>?> {
+class SearchControllerProvider extends AutoDisposeNotifierProviderImpl<
+    SearchController, AsyncValue<PaginationModel<Map<String, dynamic>>?>> {
   /// See also [SearchController].
   SearchControllerProvider(
     this.arg,
@@ -116,7 +116,7 @@ class SearchControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
   }
 
   @override
-  FutureOr<PaginationModel<Map<String, dynamic>>?> runNotifierBuild(
+  AsyncValue<PaginationModel<Map<String, dynamic>>?> runNotifierBuild(
     covariant SearchController notifier,
   ) {
     return notifier.build(
