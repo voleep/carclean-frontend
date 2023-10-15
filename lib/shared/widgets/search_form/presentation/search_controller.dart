@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/shared/enums/direction.dart';
+import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/shared/models/pagination_model.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/data/repositories/search_repository.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_query_state.dart';
@@ -12,21 +12,30 @@ part 'search_controller.g.dart';
 class SearchController extends _$SearchController {
   final _itemsPerPage = 20;
   bool _isLoadingNewPage = false;
+  late final SearchRepository searchRepository;
 
   @override
-  FutureOr<PaginationModel<Map<String, dynamic>>?> build(SearchConfig arg) async {
+  AsyncValue<PaginationModel<Map<String, dynamic>>?> build(SearchConfig arg) {
+    searchRepository = ref.read(searchRepositoryProvider(arg.endpoint));
+
     if (arg.filterOnInit) {
-      return await _fetch(page: 1, orderField: arg.orderField);
+      search([]);
     }
 
-    return null;
+    return const AsyncValue.data(null);
   }
 
   Future<void> search(List<FilterQueryState> queryList, [page = 1]) async {
-    state = await AsyncValue.guard<PaginationModel<Map<String, dynamic>>?>(() async {
-      final pagination = await _fetch(page: page, orderField: arg.orderField, searchQuery: queryList.join(","));
-      return pagination;
-    });
+    final listAllResult = await searchRepository.listAll(
+      page: page,
+      orderField: arg.orderField,
+      searchQuery: queryList.join(","),
+    );
+
+    state = switch (listAllResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
   }
 
   Future<void> nextPage() async {
@@ -49,11 +58,17 @@ class SearchController extends _$SearchController {
 
     final queryList = ref.read(filterQueryProvider(arg)) ?? [];
 
-    try {
-      final pagination =
-          await _fetch(page: currentPage + 1, orderField: arg.orderField, searchQuery: queryList.join(","));
-      state = AsyncValue.data(pagination.copyWith(pageData: [...state.value!.pageData, ...pagination.pageData]));
-    } catch (exception) {}
+    final listAllResult = await searchRepository.listAll(
+      page: currentPage + 1,
+      orderField: arg.orderField,
+      searchQuery: queryList.join(","),
+    );
+
+    state = switch (listAllResult) {
+      Success(:final value) => AsyncValue.data(value.copyWith(pageData: [...state.value!.pageData, ...value.pageData])),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
+
     _isLoadingNewPage = false;
   }
 
@@ -69,49 +84,45 @@ class SearchController extends _$SearchController {
 
     final queryList = ref.read(filterQueryProvider(arg)) ?? [];
     final holePageData = [...state.value!.pageData];
-    try {
-      final newPageData =
-          (await _fetch(page: page, orderField: arg.orderField, searchQuery: queryList.join(","))).pageData;
-      final fromItem = (page * _itemsPerPage) - _itemsPerPage;
-      final tillItem = page * _itemsPerPage;
 
-      final fromItemSafe = holePageData.length < fromItem ? holePageData.length : fromItem;
-      final tillItemSafe = holePageData.length < tillItem ? holePageData.length : tillItem;
+    final listAllResult = await searchRepository.listAll(
+      page: page,
+      orderField: arg.orderField,
+      searchQuery: queryList.join(","),
+    );
 
-      holePageData.replaceRange(fromItemSafe, tillItemSafe, newPageData);
+    switch (listAllResult) {
+      case Success(:final value):
+        final fromItem = (page * _itemsPerPage) - _itemsPerPage;
+        final tillItem = page * _itemsPerPage;
 
-      state = AsyncValue.data(state.value!.copyWith(pageData: holePageData));
-    } catch (exception) {
-      print("Erro ao atualizar lista de itens: \n$exception");
+        final fromItemSafe = holePageData.length < fromItem ? holePageData.length : fromItem;
+        final tillItemSafe = holePageData.length < tillItem ? holePageData.length : tillItem;
+
+        holePageData.replaceRange(fromItemSafe, tillItemSafe, value.pageData);
+
+        state = AsyncValue.data(state.value!.copyWith(pageData: holePageData));
+      case Failure(:final exception, :final stackTrace):
+        state = AsyncValue.error(exception, stackTrace);
     }
+
     _isLoadingNewPage = false;
   }
 
   Future<void> reload() async {
     state = const AsyncLoading();
+
     final queryList = ref.read(filterQueryProvider(arg)) ?? [];
-    state = await AsyncValue.guard<PaginationModel<Map<String, dynamic>>?>(() async {
-      final pagination = await _fetch(page: 1, orderField: arg.orderField, searchQuery: queryList.join(","));
-      return pagination;
-    });
-  }
 
-  Future<PaginationModel<Map<String, dynamic>>> _fetch({
-    required int page,
-    required String orderField,
-    String searchQuery = "",
-    Direction orderDirection = Direction.asc,
-  }) async {
-    final pagination = await ref
-        .read(
-          searchRepositoryProvider(arg.endpoint),
-        )
-        .listAll(page: page, orderField: orderField, searchQuery: searchQuery, orderDirection: orderDirection);
+    final listAllResult = await searchRepository.listAll(
+      page: 1,
+      orderField: arg.orderField,
+      searchQuery: queryList.join(","),
+    );
 
-    if (pagination == null) {
-      throw Exception('Ocorreu um erro');
-    }
-
-    return pagination;
+    state = switch (listAllResult) {
+      Success(:final value) => AsyncValue.data(value),
+      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    };
   }
 }
