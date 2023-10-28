@@ -7,7 +7,7 @@ part of 'service_form_controller.dart';
 // **************************************************************************
 
 String _$serviceFormControllerHash() =>
-    r'7ce1165eafec011896984c6d544e00c25f32a11f';
+    r'13ce7347c4ffe0e4be87b7c4b7b48f78b137b072';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,11 +31,11 @@ class _SystemHash {
 }
 
 abstract class _$ServiceFormController
-    extends BuildlessAutoDisposeAsyncNotifier<ServiceModel?> {
+    extends BuildlessAutoDisposeNotifier<AsyncValue<Service?>> {
   late final String? arg;
   late final FormMode mode;
 
-  FutureOr<ServiceModel?> build(
+  AsyncValue<Service?> build(
     String? arg,
     FormMode mode,
   );
@@ -46,7 +46,7 @@ abstract class _$ServiceFormController
 const serviceFormControllerProvider = ServiceFormControllerFamily();
 
 /// See also [ServiceFormController].
-class ServiceFormControllerFamily extends Family<AsyncValue<ServiceModel?>> {
+class ServiceFormControllerFamily extends Family<AsyncValue<Service?>> {
   /// See also [ServiceFormController].
   const ServiceFormControllerFamily();
 
@@ -87,9 +87,8 @@ class ServiceFormControllerFamily extends Family<AsyncValue<ServiceModel?>> {
 }
 
 /// See also [ServiceFormController].
-class ServiceFormControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<ServiceFormController,
-        ServiceModel?> {
+class ServiceFormControllerProvider extends AutoDisposeNotifierProviderImpl<
+    ServiceFormController, AsyncValue<Service?>> {
   /// See also [ServiceFormController].
   ServiceFormControllerProvider(
     this.arg,
@@ -129,7 +128,7 @@ class ServiceFormControllerProvider
   }
 
   @override
-  FutureOr<ServiceModel?> runNotifierBuild(
+  AsyncValue<Service?> runNotifierBuild(
     covariant ServiceFormController notifier,
   ) {
     return notifier.build(

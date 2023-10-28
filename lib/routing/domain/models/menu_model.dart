@@ -1,24 +1,19 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' as material show IconData, Widget, immutable, GlobalKey, NavigatorState;
+import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/domain/typedefs/menu_label.dart';
 import 'package:voleep_carclean_frontend/routing/domain/typedefs/menu_location.dart';
 
-@material.immutable
-class MenuModel extends Equatable {
-  final MenuLocation location;
-  final material.GlobalKey<material.NavigatorState> navigatorKey;
-  final MenuLabel label;
-  final material.IconData icon;
-  final material.Widget child;
+part 'menu_model.freezed.dart';
 
-  const MenuModel({
-    required this.location,
-    required this.navigatorKey,
-    required this.label,
-    required this.icon,
-    required this.child,
-  });
-
-  @override
-  List<Object?> get props => [location, label, icon, child];
+@freezed
+class MenuModel with _$MenuModel {
+  const factory MenuModel({
+    required MenuGroup group,
+    required MenuLocation location,
+    required GlobalKey<NavigatorState> navigatorKey,
+    required MenuLabel label,
+    required IconData icon,
+    required Widget child,
+  }) = _MenuModel;
 }

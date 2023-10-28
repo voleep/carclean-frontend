@@ -3,17 +3,20 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class CustomerSearchPage extends ConsumerStatefulWidget {
-  const CustomerSearchPage({Key? key}) : super(key: key);
+  const CustomerSearchPage({Key? key, this.selectionMode = false}) : super(key: key);
+
+  final bool selectionMode;
 
   @override
   ConsumerState<CustomerSearchPage> createState() => _CustomerSearchPageState();
@@ -22,14 +25,16 @@ class CustomerSearchPage extends ConsumerStatefulWidget {
 class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
   final dataTableKey = GlobalKey();
 
-  final searchConfig = SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer", orderField: "dsName", filterOnInit: true);
+  final searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer", orderField: "dsName", filterOnInit: true);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<CustomerModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<CustomerModel, CustomerId>(
           config: searchConfig,
+          selectId: (item) => item.customerId,
           searchBarFilter: const FilterOption(
             title: "Nome",
             field: "dsName",
@@ -71,12 +76,14 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, isSelected) => ListTile(
             title: Text(item.dsName),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                item.dsEmail != null && item.dsEmail!.isNotEmpty ? Text(item.dsEmail!, overflow: TextOverflow.ellipsis) : const SizedBox.shrink(),
+                item.dsEmail != null && item.dsEmail!.isNotEmpty
+                    ? Text(item.dsEmail!, overflow: TextOverflow.ellipsis)
+                    : const SizedBox.shrink(),
                 item.dsTelephone != null && item.dsTelephone!.isNotEmpty
                     ? Text(item.dsTelephone!, overflow: TextOverflow.ellipsis)
                     : const SizedBox.shrink()
@@ -93,12 +100,17 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                       height: 40,
                       alignment: AlignmentDirectional.center,
                       color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
-                      child: Text(item.dsName.substring(0, 1).toUpperCase()),
+                      child: isSelected
+                          ? const Icon(Icons.check_rounded)
+                          : Text(item.dsName.substring(0, 1).toUpperCase()),
                     )),
               ],
             ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
+              if (widget.selectionMode) {
+                return context.pop(item);
+              }
               final shouldRefresh = await context.push(
                 Routes.app.customer.update(item.customerId),
               );
@@ -109,15 +121,21 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
           ),
           fromJsonT: CustomerModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.customer.create);
-            if (shouldReload == true) {
-              ref.read(searchControllerProvider(searchConfig).notifier).refresh();
-            }
-          }),
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: FloatingActionButton(
+              child: const Icon(
+                Icons.add_rounded,
+              ),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.customer.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }

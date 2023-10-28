@@ -1,8 +1,8 @@
 extension ExceptionExtension on Exception {
-  String get getMessage {
+  String get message {
     if (toString().startsWith("Exception: ")) {
       return toString().substring(11);
-    }else {
+    } else {
       return toString();
     }
   }

@@ -7,7 +7,7 @@ part of 'employee_form_controller.dart';
 // **************************************************************************
 
 String _$employeeFormControllerHash() =>
-    r'7d4a0b7249447f4804cc62923bed30203840db6a';
+    r'abee09fa8f28c7ec61ab71635f606457eaa0151d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,11 +31,11 @@ class _SystemHash {
 }
 
 abstract class _$EmployeeFormController
-    extends BuildlessAutoDisposeAsyncNotifier<EmployeeModel?> {
+    extends BuildlessAutoDisposeNotifier<AsyncValue<Employee?>> {
   late final String? arg;
   late final FormMode mode;
 
-  FutureOr<EmployeeModel?> build(
+  AsyncValue<Employee?> build(
     String? arg,
     FormMode mode,
   );
@@ -46,7 +46,7 @@ abstract class _$EmployeeFormController
 const employeeFormControllerProvider = EmployeeFormControllerFamily();
 
 /// See also [EmployeeFormController].
-class EmployeeFormControllerFamily extends Family<AsyncValue<EmployeeModel?>> {
+class EmployeeFormControllerFamily extends Family<AsyncValue<Employee?>> {
   /// See also [EmployeeFormController].
   const EmployeeFormControllerFamily();
 
@@ -87,9 +87,8 @@ class EmployeeFormControllerFamily extends Family<AsyncValue<EmployeeModel?>> {
 }
 
 /// See also [EmployeeFormController].
-class EmployeeFormControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<EmployeeFormController,
-        EmployeeModel?> {
+class EmployeeFormControllerProvider extends AutoDisposeNotifierProviderImpl<
+    EmployeeFormController, AsyncValue<Employee?>> {
   /// See also [EmployeeFormController].
   EmployeeFormControllerProvider(
     this.arg,
@@ -129,7 +128,7 @@ class EmployeeFormControllerProvider
   }
 
   @override
-  FutureOr<EmployeeModel?> runNotifierBuild(
+  AsyncValue<Employee?> runNotifierBuild(
     covariant EmployeeFormController notifier,
   ) {
     return notifier.build(

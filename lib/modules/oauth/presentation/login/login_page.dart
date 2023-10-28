@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/login_view.dart';
-import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/welcome_view.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 
 class LoginPage extends StatelessWidget {
@@ -33,12 +32,6 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: Responsive.isDesktop(context),
-                      child: const Flexible(
-                        child: WelcomeView(),
-                      ),
-                    ),
                     Flexible(
                       child: Container(
                         alignment: Alignment.center,

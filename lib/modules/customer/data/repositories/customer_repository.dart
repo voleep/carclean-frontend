@@ -1,8 +1,20 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/constants/strings.dart';
+import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
+import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
+import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/dtos/create_customer_dto.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
+import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
+
+part 'customer_repository.g.dart';
+
+@riverpod
+CustomerRepository customerRepository(CustomerRepositoryRef ref) =>
+    CustomerRepository(http: ref.read(httpClientProvider));
 
 class CustomerRepository {
   final HttpClient http;
@@ -13,41 +25,69 @@ class CustomerRepository {
     return "${ApiConfig.CARCLEAN_API_URL}/customer";
   }
 
-  Future<CustomerModel?> findById({required CustomerId customerId}) async {
-    final response = await http.get("$endpoint/$customerId");
+  Future<Either<RepositoryException, CustomerModel>> findById({required CustomerId customerId}) async {
+    final getCustomerResult = await http.get("$endpoint/$customerId");
 
-    if (response.data == null) {
-      return null;
+    switch (getCustomerResult) {
+      case Success(value: GenericResponse(:final data)):
+        if (data == null) {
+          return Failure(RepositoryException(message: Strings.clienteNaoEncontrado), StackTrace.current);
+        }
+
+        return Success(CustomerModel.fromJson(data));
+      case Failure(:final exception, :final stackTrace):
+        if (exception is HttpBadResponseException) {
+          return Failure(RepositoryException(message: exception.message ?? Strings.erroCarregarCliente), stackTrace);
+        }
+
+        return Failure(RepositoryException(message: Strings.erroCarregarCliente), stackTrace);
     }
-
-    return CustomerModel.fromJson(response.data!);
   }
 
-  Future<CustomerModel?> saveOrUpdate(CreateCustomerDTO createCustomerDTO) async {
+  Future<Either<RepositoryException, CustomerModel>> saveOrUpdate(CreateCustomerDTO createCustomerDTO) async {
     if (createCustomerDTO.idCustomer == null) {
-      return save(createCustomerDTO: createCustomerDTO);
+      return save(createCustomerDTO);
     }
 
-    return update(createCustomerDTO: createCustomerDTO);
+    return update(createCustomerDTO);
   }
 
-  Future<CustomerModel?> save({required CreateCustomerDTO createCustomerDTO}) async {
-    final response = await http.post(endpoint, data: createCustomerDTO.toJson());
+  Future<Either<RepositoryException, CustomerModel>> save(CreateCustomerDTO createCustomerDTO) async {
+    final createCustomerResult = await http.post(endpoint, data: createCustomerDTO.toJson());
 
-    if (response.data == null) {
-      return null;
+    switch (createCustomerResult) {
+      case Success(value: GenericResponse(:final data)):
+        if (data == null) {
+          return Failure(RepositoryException(message: Strings.erroSalvarDadosCliente), StackTrace.current);
+        }
+
+        return Success(CustomerModel.fromJson(data));
+      case Failure(:final exception, :final stackTrace):
+        if (exception is HttpBadResponseException) {
+          return Failure(RepositoryException(message: exception.message ?? Strings.erroSalvarDadosCliente), stackTrace);
+        }
+
+        return Failure(RepositoryException(message: Strings.erroSalvarDadosCliente), stackTrace);
     }
-
-    return CustomerModel.fromJson(response.data!);
   }
 
-  Future<CustomerModel?> update({required CreateCustomerDTO createCustomerDTO}) async {
-    final response = await http.put(endpoint, data: createCustomerDTO.toJson());
+  Future<Either<RepositoryException, CustomerModel>> update(CreateCustomerDTO createCustomerDTO) async {
+    final updateCustomerResult = await http.put(endpoint, data: createCustomerDTO.toJson());
 
-    if (response.data == null) {
-      return null;
+    switch (updateCustomerResult) {
+      case Success(value: GenericResponse(:final data)):
+        if (data == null) {
+          return Failure(RepositoryException(message: Strings.erroAtualzarDadosCliente), StackTrace.current);
+        }
+
+        return Success(CustomerModel.fromJson(data));
+      case Failure(:final exception, :final stackTrace):
+        if (exception is HttpBadResponseException) {
+          return Failure(
+              RepositoryException(message: exception.message ?? Strings.erroAtualzarDadosCliente), stackTrace);
+        }
+
+        return Failure(RepositoryException(message: Strings.erroAtualzarDadosCliente), stackTrace);
     }
-
-    return CustomerModel.fromJson(response.data!);
   }
 }

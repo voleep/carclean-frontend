@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
-import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/domain/typedefs/product_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/column_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/enum_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/carclean_search.dart';
-import 'package:voleep_carclean_frontend/shared/search_form/presentation/search_controller.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class ProductSearchPage extends ConsumerWidget {
   ProductSearchPage({super.key});
 
-  final _searchConfig = SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/product", orderField: "code", filterOnInit: true);
+  final _searchConfig =
+      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/product", orderField: "code", filterOnInit: true);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: SafeArea(
-        child: CarCleanSearch<ProductModel>(
+    return Stack(
+      children: [
+        CarCleanSearch<ProductModel, ProductId>(
           config: _searchConfig,
+          selectId: (item) => item.productId,
           searchBarFilter: const FilterOption(
             title: "Produto",
             field: "description",
@@ -67,7 +70,7 @@ class ProductSearchPage extends ConsumerWidget {
             ];
           },
           actionsBuilder: (_, index, item) => [],
-          itemBuilder: (context, index, item) => ListTile(
+          itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.description),
             subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),
             leading: Column(
@@ -97,15 +100,19 @@ class ProductSearchPage extends ConsumerWidget {
           ),
           fromJsonT: ProductModel.fromJson,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add_rounded),
-          onPressed: () async {
-            final shouldReload = await context.push(Routes.app.product.create);
-            if (shouldReload == true) {
-              ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
-            }
-          }),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+              child: const Icon(Icons.add_rounded),
+              onPressed: () async {
+                final shouldReload = await context.push(Routes.app.product.create);
+                if (shouldReload == true) {
+                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                }
+              }),
+        ),
+      ],
     );
   }
 }

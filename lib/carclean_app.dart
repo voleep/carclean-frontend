@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/core/states/providers/localization_provider.dart';
 import 'package:voleep_carclean_frontend/routing/routes/go_router_provider.dart';
 import 'package:voleep_carclean_frontend/shared/theme/themes.dart';
 
@@ -9,8 +8,8 @@ class CarCleanApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final goRouter = ref.watch(goRouterProvider);
-    final localization = ref.watch(localizationProvider);
+    final goRouter = ref.read(goRouterProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'CarClean',
@@ -18,8 +17,6 @@ class CarCleanApp extends ConsumerWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       routerConfig: goRouter,
-      localizationsDelegates: localization.localizationsDelegates,
-      supportedLocales: localization.supportedLocales,
     );
   }
 }

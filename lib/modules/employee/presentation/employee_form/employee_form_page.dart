@@ -1,15 +1,19 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_form/employee_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
@@ -54,90 +58,73 @@ class EmployeeFormPage extends ConsumerWidget {
         title: Text(mode == FormMode.create ? "Novo colaborador" : "Colaborador"),
       ),
       body: ScrollableView(
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Form(
-            key: _formKey,
-            child: Flex(
-              direction: isMobile ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  flex: 3,
-                  child: VoleepTextFormField(
-                    autofocus: mode == FormMode.create ? true : false,
-                    controller: _nameControl,
-                    placeholder: "Nome",
-                    icon: isMobile ? Icons.person_rounded : null,
-                    validator: (value) => Validators.listOf(
-                      [
-                        () => Validators.required(value),
-                        () => Validators.maxLength(value, 100),
-                      ],
-                    ),
-                  ),
+        child: Form(
+          key: _formKey,
+          child: RowInline(
+            children: [
+              VoleepTextFormField(
+                width: 550,
+                autofocus: mode == FormMode.create ? true : false,
+                controller: _nameControl,
+                placeholder: "Nome",
+                icon: isMobile ? Icons.person_rounded : null,
+                validator: (value) => Validators.listOf(
+                  [
+                    () => Validators.required(value),
+                    () => Validators.maxLength(value, 100),
+                  ],
                 ),
-                Flexible(
-                  flex: 1,
-                  child: VoleepTextFormField(
-                    controller: _telephoneControl,
-                    placeholder: "Telefone",
-                    icon: isMobile ? Icons.phone_rounded : null,
-                    validator: (value) => Validators.maxLength(value, 20),
-                    keyboardType: TextInputType.phone,
-                  ),
+              ),
+              VoleepTextFormField(
+                width: 195,
+                controller: _telephoneControl,
+                placeholder: "Telefone",
+                icon: isMobile ? Icons.phone_rounded : null,
+                validator: (value) => Validators.maxLength(value, 20),
+                keyboardType: TextInputType.phone,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, TelefoneInputFormatter()],
+              ),
+              Visibility(
+                visible: mode == FormMode.update,
+                child: VoleepTextFormField(
+                  width: 200,
+                  enabled: false,
+                  controller: _registrationDateControl,
+                  placeholder: "Data do cadastro",
+                  icon: isMobile ? Icons.event_rounded : null,
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Flex(
-                    direction: Axis.horizontal,
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+              Consumer(
+                builder: (context, ref, widget) {
+                  final situation = ref.watch(situationSwitchState);
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Flexible(
-                        flex: 3,
-                        child: Visibility(
-                          visible: mode == FormMode.update,
-                          child: VoleepTextFormField(
-                            enabled: false,
-                            controller: _registrationDateControl,
-                            placeholder: "Data de cadastro",
-                            icon: isMobile ? Icons.event_rounded : null,
-                          ),
-                        ),
+                      Text(
+                        "Situação ",
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(color: Theme.of(context).colorScheme.outline),
                       ),
-                      Flexible(
-                        flex: 2,
-                        child: Consumer(
-                          builder: (context, ref, widget) {
-                            final situation = ref.watch(situationSwitchState);
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 18),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "Situação ",
-                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-                                  ),
-                                  Switch(
-                                    value: situation.boolean,
-                                    onChanged: (value) => ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                      Switch(
+                        value: situation.boolean,
+                        onChanged: (value) =>
+                            ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
                       ),
                     ],
-                  ),
-                ),
-              ],
-            ),
+                  );
+                },
+              ),
+            ],
           ),
+          onWillPop: () async {
+            final canDeactivate = await showDialog(
+              context: context,
+              builder: (context) => const CanDeactivateDialog(),
+            );
+            return canDeactivate;
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_form/employee_form_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';

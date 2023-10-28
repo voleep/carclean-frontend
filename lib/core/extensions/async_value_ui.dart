@@ -13,7 +13,7 @@ extension AsyncValueUI on VoidAsyncValue {
           String errorMessage = error.toString();
 
           if (error is Exception) {
-            errorMessage = error.getMessage;
+            errorMessage = error.message;
           }
 
           ScaffoldMessenger.of(context).showSnackBar(

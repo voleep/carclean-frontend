@@ -6,8 +6,8 @@ part of 'customer_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
-    CustomerModel(
+_$_CustomerModel _$$_CustomerModelFromJson(Map<String, dynamic> json) =>
+    _$_CustomerModel(
       customerId: json['customerId'] as String,
       dsName: json['dsName'] as String,
       dsTelephone: json['dsTelephone'] as String?,
@@ -17,7 +17,7 @@ CustomerModel _$CustomerModelFromJson(Map<String, dynamic> json) =>
       stCustomer: $enumDecode(_$DisabledEnabledEnumMap, json['stCustomer']),
     );
 
-Map<String, dynamic> _$CustomerModelToJson(CustomerModel instance) =>
+Map<String, dynamic> _$$_CustomerModelToJson(_$_CustomerModel instance) =>
     <String, dynamic>{
       'customerId': instance.customerId,
       'dsName': instance.dsName,

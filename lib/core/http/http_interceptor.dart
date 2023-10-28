@@ -2,9 +2,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/http/constants.dart';
 import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/repositories/providers/user_repository_provider.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
+
+part 'http_interceptor.g.dart';
+
+@Riverpod(keepAlive: true)
+HttpInterceptor httpInterceptor(HttpInterceptorRef ref) => HttpInterceptor(ref: ref);
 
 class HttpInterceptor extends QueuedInterceptor {
   final Ref ref;
@@ -16,25 +23,11 @@ class HttpInterceptor extends QueuedInterceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final String? contentType = options.headers[Headers.contentTypeHeader];
+    final AuthModel? authModel = ref.read(oAuthStateProvider).value;
 
-    final List<String> noJsonTypes = [
-      'application/octet-stream',
-      'multipart/form-data',
-      Headers.formUrlEncodedContentType
-    ];
-
-    if (!noJsonTypes.contains(contentType)) {
+    if (options.extra[Constants.dioAuthKey] == true && authModel != null) {
       options.headers.addAll({
-        HttpHeaders.contentTypeHeader: 'application/json',
-      });
-    }
-
-    final authModel = ref.read(oAuthStateProvider);
-
-    if (authModel.value != null) {
-      options.headers.addAll({
-        HttpHeaders.authorizationHeader: 'Bearer ${authModel.value!.token}'
+        HttpHeaders.authorizationHeader: 'Bearer ${authModel.token}',
       });
     }
 
@@ -47,8 +40,10 @@ class HttpInterceptor extends QueuedInterceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final DioException(:response, :requestOptions) = err;
+
+    if (response?.statusCode == HttpStatus.unauthorized) {
       try {
         final AuthModel? authModel = ref.read(oAuthStateProvider).value;
 
@@ -56,38 +51,40 @@ class HttpInterceptor extends QueuedInterceptor {
           return handler.reject(err);
         }
 
-        final AuthModel newAuthModel = await ref
-            .read(userRepositoryProvider)
-            .refreshToken(
-                token: authModel.token, refreshToken: authModel.refreshToken);
+        final AuthModel(:token, :refreshToken) = authModel;
 
-        ref
-            .read(oAuthStateProvider.notifier)
-            .saveAuthInfo(authModel: newAuthModel);
+        final userRepository = ref.read(userRepositoryProvider);
 
-        err.requestOptions.headers.addAll(
-            {HttpHeaders.authorizationHeader: 'Bearer ${newAuthModel.token}'});
+        final AuthModel newAuthModel = await userRepository.refreshToken(token: token, refreshToken: refreshToken);
 
-        return handler.resolve(await _retry(err.requestOptions));
-      } on DioError catch (dioError) {
+        ref.read(oAuthStateProvider.notifier).saveAuthInfo(authModel: newAuthModel);
+
+        requestOptions.headers.addAll({HttpHeaders.authorizationHeader: 'Bearer ${newAuthModel.token}'});
+
+        return handler.resolve(await _retry(requestOptions));
+      } on DioException catch (dioError) {
         return handler.reject(dioError);
       } catch (error) {
-        return handler.reject(DioError(requestOptions: err.requestOptions));
+        return handler.reject(DioException(requestOptions: requestOptions));
       }
     }
 
     return handler.next(err);
   }
 
-  Future<Response> _retry(RequestOptions requestOptions) {
-    final opts =
-        Options(method: requestOptions.method, headers: requestOptions.headers);
+  Future<Response> _retry(RequestOptions options) {
+    final RequestOptions(:path, :method, :headers, :cancelToken, :onReceiveProgress, :queryParameters, :data) = options;
 
-    return Dio().request(requestOptions.path,
-        options: opts,
-        cancelToken: requestOptions.cancelToken,
-        onReceiveProgress: requestOptions.onReceiveProgress,
-        data: requestOptions.data,
-        queryParameters: requestOptions.queryParameters);
+    return Dio().request(
+      path,
+      options: Options(
+        method: method,
+        headers: headers,
+      ),
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      data: data,
+      queryParameters: queryParameters,
+    );
   }
 }
