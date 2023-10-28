@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
@@ -31,7 +31,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
     final customer = useState<CustomerModel?>(null);
     final customerNameController = useTextEditingController();
 
-    final vehicle = useState<VehicleModel?>(null);
+    final vehicle = useState<Vehicle?>(null);
     final vehicleNameController = useTextEditingController();
 
     final serviceItemList = useState<List<ServiceOrderItemModel>>([]);
@@ -49,7 +49,7 @@ class ServiceOrderFormPage extends HookConsumerWidget {
 
     handleVehicleClick() {
       GoRouter.of(context).push(Routes.app.serviceOrder.selectVehicle).then((value) {
-        if (value != null && value is VehicleModel) {
+        if (value != null && value is Vehicle) {
           //vehicle.value = selectedVehicle;
           vehicleNameController.text = value.description;
         }

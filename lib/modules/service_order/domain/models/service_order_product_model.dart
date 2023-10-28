@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
-import 'package:voleep_carclean_frontend/modules/product/domain/models/product_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
 
 part 'service_order_product_model.freezed.dart';

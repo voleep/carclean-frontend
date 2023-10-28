@@ -1,8 +1,6 @@
 name: voleep_carclean_frontend
 description: Sistema de gestão para lava-rápidos.
-
 publish_to: "none"
-
 version: 1.0.0+31
 
 environment:
@@ -30,8 +28,6 @@ dependencies:
   intl: ^0.18.0
   collection: ^1.17.1
   number_text_input_formatter: ^1.0.0+6
-  graphql_flutter: ^5.1.2
-  gql_dio_link: ^0.3.0
   assorted_layout_widgets: ^8.0.4
   brasil_fields: ^1.13.1
   freezed_annotation: ^2.4.1

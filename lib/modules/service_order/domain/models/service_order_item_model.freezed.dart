@@ -43,9 +43,6 @@ abstract class $ServiceOrderItemModelCopyWith<$Res> {
       ServiceModel service,
       EmployeeModel? employee,
       double price});
-
-  $ServiceModelCopyWith<$Res> get service;
-  $EmployeeModelCopyWith<$Res>? get employee;
 }
 
 /// @nodoc
@@ -86,26 +83,6 @@ class _$ServiceOrderItemModelCopyWithImpl<$Res,
               as double,
     ) as $Val);
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ServiceModelCopyWith<$Res> get service {
-    return $ServiceModelCopyWith<$Res>(_value.service, (value) {
-      return _then(_value.copyWith(service: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $EmployeeModelCopyWith<$Res>? get employee {
-    if (_value.employee == null) {
-      return null;
-    }
-
-    return $EmployeeModelCopyWith<$Res>(_value.employee!, (value) {
-      return _then(_value.copyWith(employee: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -121,11 +98,6 @@ abstract class _$$_ServiceOrderItemModelCopyWith<$Res>
       ServiceModel service,
       EmployeeModel? employee,
       double price});
-
-  @override
-  $ServiceModelCopyWith<$Res> get service;
-  @override
-  $EmployeeModelCopyWith<$Res>? get employee;
 }
 
 /// @nodoc

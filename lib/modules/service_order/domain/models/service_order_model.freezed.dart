@@ -55,7 +55,6 @@ abstract class $ServiceOrderModelCopyWith<$Res> {
       List<ServiceOrderProductModel> serviceOrderProductList});
 
   $CustomerModelCopyWith<$Res> get customer;
-  $VehicleModelCopyWith<$Res> get vehicle;
 }
 
 /// @nodoc
@@ -123,14 +122,6 @@ class _$ServiceOrderModelCopyWithImpl<$Res, $Val extends ServiceOrderModel>
       return _then(_value.copyWith(customer: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $VehicleModelCopyWith<$Res> get vehicle {
-    return $VehicleModelCopyWith<$Res>(_value.vehicle, (value) {
-      return _then(_value.copyWith(vehicle: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -153,8 +144,6 @@ abstract class _$$_ServiceOrderModelCopyWith<$Res>
 
   @override
   $CustomerModelCopyWith<$Res> get customer;
-  @override
-  $VehicleModelCopyWith<$Res> get vehicle;
 }
 
 /// @nodoc

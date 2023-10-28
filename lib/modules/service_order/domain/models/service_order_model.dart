@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_product_model.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/shared/converters/timestamp_converter.dart';
 
 part 'service_order_model.freezed.dart';

@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/models/employee_model.dart';
-import 'package:voleep_carclean_frontend/modules/service/domain/models/service_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/go_router_provider.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
