@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 
-class ServiceOrderProductListPage extends HookConsumerWidget {
+class ServiceOrderProductListPage extends ConsumerWidget {
   const ServiceOrderProductListPage({super.key});
 
   @override

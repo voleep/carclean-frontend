@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
@@ -61,21 +61,6 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
               EnumOption(title: "Inativo", value: 0),
             ]),
           ],
-          columns: const [
-            ColumnOption(title: "Nome", width: 200),
-            ColumnOption(title: "Email", width: 500),
-            ColumnOption(title: "Telefone", width: 500),
-            ColumnOption(title: "Observação", width: 500),
-          ],
-          cellsBuilder: (context, index, item) {
-            return [
-              Text(item.dsName),
-              Text(item.dsEmail ?? ""),
-              Text(item.dsTelephone ?? ""),
-              Text(item.dsNote ?? ""),
-            ];
-          },
-          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item, isSelected) => ListTile(
             title: Text(item.dsName),
             subtitle: Column(

@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_account/providers/create_account_view_controller_provider.dart';
@@ -44,17 +44,17 @@ class CreateAccountView extends StatelessWidget {
                 controller: usernameController,
                 placeholder: "Usuário",
                 icon: Icons.person_outline_rounded,
-                validator: (value) => Validators.listOf(
-                  [() => Validators.required(value), () => Validators.maxLength(value, 100)],
-                ),
+                validator: [Validators.required(), Validators.maxLength(100)].compose,
               ),
               VoleepTextFormField(
                 controller: emailController,
                 placeholder: "Email",
                 icon: Icons.alternate_email_rounded,
-                validator: (value) => Validators.listOf(
-                  [() => Validators.required(value), () => Validators.maxLength(value, 100), () => Validators.email(value)],
-                ),
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(100),
+                  Validators.email(),
+                ].compose,
               ),
               VoleepTextFormField(
                 controller: passwordController,
@@ -62,23 +62,22 @@ class CreateAccountView extends StatelessWidget {
                 icon: Icons.lock_outline_rounded,
                 enableSuggestions: false,
                 obscureText: true,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 250),
-                ]),
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(250),
+                ].compose,
               ),
               VoleepTextFormField(
-                controller: confirmPasswordController,
-                placeholder: "Confirmar senha",
-                icon: Icons.lock_person_outlined,
-                enableSuggestions: false,
-                obscureText: true,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 250),
-                  () => Validators.match(value, passwordController.text, "Senhas não coincidem"),
-                ]),
-              ),
+                  controller: confirmPasswordController,
+                  placeholder: "Confirmar senha",
+                  icon: Icons.lock_person_outlined,
+                  enableSuggestions: false,
+                  obscureText: true,
+                  validator: [
+                    Validators.required(),
+                    Validators.maxLength(250),
+                    Validators.compare(passwordController, "Senhas não conferem."),
+                  ].compose),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -150,7 +149,8 @@ class CreateAccountView extends StatelessWidget {
                   builder: (context, ref, widget) {
                     final controller = ref.watch(createAccountViewControllerProvider);
 
-                    ref.listen<AsyncValue<void>>(createAccountViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
+                    ref.listen<AsyncValue<void>>(
+                        createAccountViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
 
                     return VoleepButton(
                       disabled: controller.isLoading,
@@ -182,12 +182,14 @@ class CreateAccountView extends StatelessWidget {
                 children: [
                   Text(
                     "Já tem uma conta?",
-                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.outline, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontSize: 14, color: Theme.of(context).colorScheme.outline, fontWeight: FontWeight.w500),
                   ),
                   GestureDetector(
                     child: Text(
                       " Entrar",
-                      style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                     ),
                     onTap: () => context.pop(),
                   ),

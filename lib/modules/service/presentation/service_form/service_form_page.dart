@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:number_text_input_formatter/number_text_input_formatter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_form/service_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
@@ -80,26 +80,22 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
               controller: _descriptionControl,
               placeholder: "Descrição",
               icon: isMobile ? Icons.description_rounded : null,
-              validator: (value) => Validators.listOf(
-                [
-                  () => Validators.required(value),
-                  () => Validators.minLength(value, 3),
-                  () => Validators.maxLength(value, 250),
-                ],
-              ),
+              validator: [
+                Validators.required(),
+                Validators.minLength(3),
+                Validators.maxLength(250),
+              ].compose,
             ),
             VoleepTextFormField(
               width: 550,
               controller: _fullDescriptionControl,
               placeholder: "Descrição completa",
               icon: isMobile ? Icons.subject_rounded : null,
-              validator: (value) => Validators.listOf(
-                [
-                  () => Validators.required(value),
-                  () => Validators.minLength(value, 3),
-                  () => Validators.maxLength(value, 999),
-                ],
-              ),
+              validator: [
+                Validators.required(),
+                Validators.minLength(3),
+                Validators.maxLength(999),
+              ].compose,
             ),
             VoleepTextFormField(
               width: 160,
@@ -110,16 +106,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                 decimal: true,
                 signed: false,
               ),
-              validator: (value) => Validators.required(value),
-              inputFormatters: [
-                NumberTextInputFormatter(
-                  integerDigits: 16,
-                  decimalDigits: 2,
-                  decimalSeparator: '.',
-                  insertDecimalDigits: true,
-                  prefix: "R\$ ",
-                ),
-              ],
+              validator: Validators.required(),
+              formatters: [RealInputFormatter()],
             ),
             VoleepTextFormField(
               width: 260,
@@ -130,16 +118,6 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                 decimal: true,
                 signed: false,
               ),
-              inputFormatters: [
-                NumberTextInputFormatter(
-                  integerDigits: 3,
-                  decimalDigits: 2,
-                  maxValue: '100.00',
-                  decimalSeparator: '.',
-                  insertDecimalDigits: true,
-                  suffix: " %",
-                ),
-              ],
             ),
           ]),
           onWillPop: () async {

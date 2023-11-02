@@ -35,9 +35,7 @@ class _ForgetPasswordState extends State<ForgetPasswordPage> {
         return SingleChildScrollView(
           reverse: true,
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: constraints.maxWidth,
-                minHeight: constraints.maxHeight),
+            constraints: BoxConstraints(minWidth: constraints.maxWidth, minHeight: constraints.maxHeight),
             child: IntrinsicHeight(
               child: SafeArea(
                   child: Container(
@@ -57,10 +55,7 @@ class _ForgetPasswordState extends State<ForgetPasswordPage> {
                     const Spacer(),
                     const Text(
                       "Esqueceu sua senha?",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 35,
-                          height: 1.3),
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 35, height: 1.3),
                     ),
                     const SizedBox(
                       height: 10,
@@ -81,10 +76,10 @@ class _ForgetPasswordState extends State<ForgetPasswordPage> {
                           VoleepTextFormField(
                             placeholder: "Email",
                             icon: Icons.alternate_email_rounded,
-                            validator: (value) => Validators.listOf([
-                              () => Validators.required(value),
-                              () => Validators.email(value)
-                            ]),
+                            validator: [
+                              Validators.required(),
+                              Validators.email(),
+                            ].compose,
                           ),
                           const SizedBox(
                             height: 40,
@@ -95,16 +90,14 @@ class _ForgetPasswordState extends State<ForgetPasswordPage> {
                             child: VoleepButton(
                               child: const Text(
                                 'Recuperar',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   // If the form is valid, display a snackbar. In the real world,
                                   // you'd often call a server or save the information in a database.
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Processing Data')),
+                                    const SnackBar(content: Text('Processing Data')),
                                   );
                                 }
                               },

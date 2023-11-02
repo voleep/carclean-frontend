@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_data_table/selected_data_row_provider.dart';
 
 class VoleepDataTable<T> extends ConsumerWidget {
@@ -13,8 +13,7 @@ class VoleepDataTable<T> extends ConsumerWidget {
 
   final List<DataColumn> columns;
   final List<T> data;
-  final List<DataCell> Function(BuildContext context, int index, T item)
-      cellsBuilder;
+  final List<DataCell> Function(BuildContext context, int index, T item) cellsBuilder;
   final Function(int index, T item, bool? selected)? onRowSelected;
 
   @override
@@ -30,8 +29,7 @@ class VoleepDataTable<T> extends ConsumerWidget {
             .entries
             .map((entry) => DataRow(
                 color: MaterialStateColor.resolveWith((states) {
-                  if (states.contains(MaterialState.hovered) &&
-                      !states.contains(MaterialState.pressed)) {
+                  if (states.contains(MaterialState.hovered) && !states.contains(MaterialState.pressed)) {
                     return Theme.of(context).colorScheme.onInverseSurface;
                   }
 
@@ -43,8 +41,7 @@ class VoleepDataTable<T> extends ConsumerWidget {
                 }),
                 selected: selectedIndex == entry.key,
                 onSelectChanged: (selected) {
-                  final notifier =
-                      ref.read(selectedDataRowIndexProvider(key!).notifier);
+                  final notifier = ref.read(selectedDataRowIndexProvider(key!).notifier);
 
                   notifier.state = selected == true ? entry.key : null;
 

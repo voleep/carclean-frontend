@@ -11,8 +11,6 @@ import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_login_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_user_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
-import 'package:voleep_carclean_frontend/modules/oauth/domain/typedefs/user_refresh_token.dart';
-import 'package:voleep_carclean_frontend/modules/oauth/domain/typedefs/user_token.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 class UserRepository {
@@ -73,8 +71,8 @@ class UserRepository {
   }
 
   Future<AuthModel> refreshToken({
-    required UserToken token,
-    required UserRefreshToken refreshToken,
+    required String token,
+    required String refreshToken,
   }) async {
     dio.options.headers["Expired-Token"] = token;
     dio.options.headers["Refresh-Token"] = refreshToken;

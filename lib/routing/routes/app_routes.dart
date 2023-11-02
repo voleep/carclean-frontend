@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
 import 'package:voleep_carclean_frontend/routing/routes/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/routing/routes/employee/employee_routes.dart';
@@ -22,8 +22,7 @@ class AppRoutes {
   ProductRoutes get product => ProductRoutes.forChild(parentPath: root);
   EmployeeRoutes get employee => EmployeeRoutes.forChild(parentPath: root);
   ServiceRoutes get service => ServiceRoutes.forChild(parentPath: root);
-  ServiceOrderRoutes get serviceOrder =>
-      ServiceOrderRoutes.forChild(parentPath: root);
+  ServiceOrderRoutes get serviceOrder => ServiceOrderRoutes.forChild(parentPath: root);
 
   AppRoutes.forChild({
     required String parentPath,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ServiceOrderProductItem extends HookConsumerWidget {
+class ServiceOrderProductItem extends ConsumerWidget {
   const ServiceOrderProductItem({super.key});
 
   @override

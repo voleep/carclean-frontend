@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/core/http/constants.dart';
-import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:voleep_carclean_frontend/core/http/http_client.dart';
+import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/repositories/providers/user_repository_provider.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
 
@@ -23,9 +23,9 @@ class HttpInterceptor extends QueuedInterceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final AuthModel? authModel = ref.read(oAuthStateProvider).value;
+    final AuthModel? authModel = ref.read(oAuthSessionProvider).value;
 
-    if (options.extra[Constants.dioAuthKey] == true && authModel != null) {
+    if (options.extra[HttpClient.dioAuthKey] == true && authModel != null) {
       options.headers.addAll({
         HttpHeaders.authorizationHeader: 'Bearer ${authModel.token}',
       });
@@ -45,7 +45,7 @@ class HttpInterceptor extends QueuedInterceptor {
 
     if (response?.statusCode == HttpStatus.unauthorized) {
       try {
-        final AuthModel? authModel = ref.read(oAuthStateProvider).value;
+        final AuthModel? authModel = ref.read(oAuthSessionProvider).value;
 
         if (authModel == null) {
           return handler.reject(err);
@@ -57,7 +57,7 @@ class HttpInterceptor extends QueuedInterceptor {
 
         final AuthModel newAuthModel = await userRepository.refreshToken(token: token, refreshToken: refreshToken);
 
-        ref.read(oAuthStateProvider.notifier).saveAuthInfo(authModel: newAuthModel);
+        ref.read(oAuthSessionProvider.notifier).set(authModel: newAuthModel);
 
         requestOptions.headers.addAll({HttpHeaders.authorizationHeader: 'Bearer ${newAuthModel.token}'});
 

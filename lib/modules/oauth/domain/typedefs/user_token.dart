@@ -1,1 +1,0 @@
-typedef UserToken = String;

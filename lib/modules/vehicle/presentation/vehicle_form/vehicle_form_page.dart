@@ -1,11 +1,11 @@
-import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_form/vehicle_form_page_controller.dart';
+import 'package:voleep_carclean_frontend/shared/formatters/placa_veiculo_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
@@ -58,28 +58,28 @@ class VehicleFormPage extends ConsumerWidget {
                 controller: _descriptionControl,
                 placeholder: "Descrição",
                 icon: isMobile ? Icons.description_outlined : null,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 100),
-                ]),
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(100),
+                ].compose,
               ),
               VoleepTextFormField(
                 width: 150,
                 controller: _licensePlateControl,
                 placeholder: "Placa",
                 icon: isMobile ? Icons.money_rounded : null,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 7),
-                ]),
-                inputFormatters: [PlacaVeiculoInputFormatter()],
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(7),
+                ].compose,
+                formatters: [PlacaVeiculoInputFormatter()],
               ),
               VoleepTextFormField(
                 width: 150,
                 controller: _modelYearControl,
                 placeholder: "Ano",
                 icon: isMobile ? Icons.event_rounded : null,
-                validator: (value) => Validators.maxLength(value, 20),
+                validator: Validators.maxLength(20),
               ),
             ],
           ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
@@ -49,19 +48,6 @@ class VehicleSearchPage extends ConsumerWidget {
               type: FilterType.text,
             ),
           ],
-          columns: const [
-            ColumnOption(title: "Veículo", width: 200),
-            ColumnOption(title: "Placa", width: 500),
-            ColumnOption(title: "Ano", width: 500),
-          ],
-          cellsBuilder: (context, index, item) {
-            return [
-              Text(item.description),
-              Text(item.licensePlate),
-              Text(item.modelYear ?? ""),
-            ];
-          },
-          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.description),
             subtitle: Text("Placa: ${item.licensePlate} ${item.modelYear != null ? '- Ano: ${item.modelYear}' : ''}"),

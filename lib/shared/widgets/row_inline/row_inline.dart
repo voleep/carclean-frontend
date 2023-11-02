@@ -1,12 +1,15 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/wrap_super.dart';
 
 class RowInline extends StatelessWidget {
-  const RowInline(
-      {super.key, this.wrapFit = WrapFit.proportional, required this.children});
-
   final List<Widget> children;
   final WrapFit wrapFit;
+
+  const RowInline({
+    super.key,
+    this.wrapFit = WrapFit.proportional,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,6 @@
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer_divider.dart';
 import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
@@ -80,7 +79,7 @@ class MenuDrawer extends ConsumerWidget {
           ),
           NavigationDrawerDestination(
             label: GestureDetector(
-              onTap: () => ref.read(oAuthStateProvider.notifier).logout(),
+              onTap: () => ref.read(oAuthSessionProvider.notifier).clear(),
               child: SizedBox(
                 height: 55,
                 child: Row(children: [

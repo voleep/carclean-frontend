@@ -19,7 +19,7 @@ class VoleepTextFormField extends StatefulWidget {
     this.enableSuggestions = true,
     this.validator,
     this.controller,
-    this.inputFormatters,
+    this.formatters,
     this.keyboardType,
     this.autofillHints,
     this.autofocus = false,
@@ -41,7 +41,7 @@ class VoleepTextFormField extends StatefulWidget {
   final bool enableSuggestions;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
-  final List<TextInputFormatter>? inputFormatters;
+  final List<TextInputFormatter>? formatters;
   final TextInputType? keyboardType;
   final Iterable<String>? autofillHints;
   final bool autofocus;
@@ -85,9 +85,8 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
           height: 1.2,
         ),
         decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context).colorScheme.outlineVariant)),
+          enabledBorder:
+              UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
           icon: widget.icon != null
               ? Padding(
                   padding: const EdgeInsets.only(top: 25),
@@ -105,8 +104,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
               : null,
           suffixIcon: widget.obscureText
               ? IconButton(
-                  icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -133,7 +131,7 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
         enableSuggestions: widget.enableSuggestions,
         validator: widget.validator,
         controller: widget.controller,
-        inputFormatters: widget.inputFormatters,
+        inputFormatters: widget.formatters,
         keyboardType: widget.keyboardType,
         autofillHints: widget.autofillHints,
         scrollPadding: const EdgeInsets.only(bottom: 95),

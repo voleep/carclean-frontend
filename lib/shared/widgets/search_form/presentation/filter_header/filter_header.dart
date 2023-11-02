@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_query.dart';
 
@@ -17,19 +17,16 @@ class FilterHeader extends ConsumerWidget {
         children: [
           Text(
             "Filtros",
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
           TextButton(
-            onPressed: () =>
-                ref.read(filterQueryProvider(config).notifier).clear(),
+            onPressed: () => ref.read(filterQueryProvider(config).notifier).clear(),
             child: Text(
               "Limpar",
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.primary),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.primary),
             ),
           ),
         ],

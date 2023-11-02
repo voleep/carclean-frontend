@@ -1,6 +1,6 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
-import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/repositories/providers/user_repository_provider.dart';
 
 class LoginViewController extends StateNotifier<AsyncValue<void>> {
@@ -16,7 +16,7 @@ class LoginViewController extends StateNotifier<AsyncValue<void>> {
 
       switch (sigInResponse) {
         case Success(value: final authModel):
-          ref.read(oAuthStateProvider.notifier).saveAuthInfo(authModel: authModel);
+          ref.read(oAuthSessionProvider.notifier).set(authModel: authModel);
 
         case Failure(:final exception):
           {}

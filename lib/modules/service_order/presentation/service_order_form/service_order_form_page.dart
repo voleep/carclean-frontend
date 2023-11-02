@@ -1,9 +1,6 @@
-import 'package:brasil_fields/brasil_fields.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
@@ -18,150 +15,158 @@ import 'package:voleep_carclean_frontend/shared/widgets/voleep_expansion_panel/v
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_tile/voleep_form_tile.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
-class ServiceOrderFormPage extends HookConsumerWidget {
-  ServiceOrderFormPage({super.key, this.serviceOrderId, required this.mode});
+class ServiceOrderFormPage extends ConsumerStatefulWidget {
+  const ServiceOrderFormPage({
+    super.key,
+    this.serviceOrderId,
+    required this.mode,
+  });
 
   final ServiceOrderId? serviceOrderId;
   final FormMode mode;
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceOrderFormPageState();
+}
+
+class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
   final _formKey = GlobalKey<FormState>();
 
+  final customerNameController = TextEditingController();
+
+  final vehicleNameController = TextEditingController();
+
+  var serviceItemList = <ServiceOrderItemModel>[];
+
+  final serviceTotal = 0;
+
+  handleCustomerClick() {
+    GoRouter.of(context).push(Routes.app.serviceOrder.selectCustomer).then((value) {
+      if (value != null && value is CustomerModel) {
+        //customer.value = selectedCustomer;
+        customerNameController.text = value.dsName;
+      }
+    });
+  }
+
+  handleVehicleClick() {
+    GoRouter.of(context).push(Routes.app.serviceOrder.selectVehicle).then((value) {
+      if (value != null && value is Vehicle) {
+        //vehicle.value = selectedVehicle;
+        vehicleNameController.text = value.description;
+      }
+    });
+  }
+
+  handleServiceClick() {
+    context.push(Routes.app.serviceOrder.serviceList, extra: serviceItemList).then((value) {
+      if (value != null && value is List<ServiceOrderItemModel>) {
+        serviceItemList = value;
+      }
+    });
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final customer = useState<CustomerModel?>(null);
-    final customerNameController = useTextEditingController();
-
-    final vehicle = useState<Vehicle?>(null);
-    final vehicleNameController = useTextEditingController();
-
-    final serviceItemList = useState<List<ServiceOrderItemModel>>([]);
-
-    final serviceTotal = serviceItemList.value.map((item) => item.price).sum;
-
-    handleCustomerClick() {
-      GoRouter.of(context).push(Routes.app.serviceOrder.selectCustomer).then((value) {
-        if (value != null && value is CustomerModel) {
-          //customer.value = selectedCustomer;
-          customerNameController.text = value.dsName;
-        }
-      });
-    }
-
-    handleVehicleClick() {
-      GoRouter.of(context).push(Routes.app.serviceOrder.selectVehicle).then((value) {
-        if (value != null && value is Vehicle) {
-          //vehicle.value = selectedVehicle;
-          vehicleNameController.text = value.description;
-        }
-      });
-    }
-
-    handleServiceClick() {
-      context.push(Routes.app.serviceOrder.serviceList, extra: serviceItemList.value).then((value) {
-        if (value != null && value is List<ServiceOrderItemModel>) {
-          serviceItemList.value = value;
-        }
-      });
-    }
-
+  Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const VoleepAppBar(
-          title: Text("Ordem de serviço"),
-        ),
-        body: ScrollableView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                RowInline(
-                  children: [
-                    VoleepTextFormField(
-                      width: 550,
-                      controller: customerNameController,
-                      readOnly: true,
-                      placeholder: "Cliente",
-                      icon: Icons.person_rounded,
-                      onTap: handleCustomerClick,
-                    ),
-                    VoleepTextFormField(
-                      width: 550,
-                      controller: vehicleNameController,
-                      readOnly: true,
-                      placeholder: "Veículo",
-                      icon: Icons.drive_eta_rounded,
-                      onTap: handleVehicleClick,
-                    ),
-                  ],
+      appBar: const VoleepAppBar(
+        title: Text("Ordem de serviço"),
+      ),
+      body: ScrollableView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              RowInline(
+                children: [
+                  VoleepTextFormField(
+                    width: 550,
+                    controller: customerNameController,
+                    readOnly: true,
+                    placeholder: "Cliente",
+                    icon: Icons.person_rounded,
+                    onTap: handleCustomerClick,
+                  ),
+                  VoleepTextFormField(
+                    width: 550,
+                    controller: vehicleNameController,
+                    readOnly: true,
+                    placeholder: "Veículo",
+                    icon: Icons.drive_eta_rounded,
+                    onTap: handleVehicleClick,
+                  ),
+                ],
+              ),
+              VoleepExpansionPanel("Itens", initiallyExpanded: true, children: [
+                VoleepFormTile(
+                  icon: Icons.playlist_add_rounded,
+                  title: "Serviços",
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(serviceTotal.toString()),
+                      const Icon(
+                        Icons.navigate_next_rounded,
+                      )
+                    ],
+                  ),
+                  onTap: handleServiceClick,
                 ),
-                VoleepExpansionPanel("Itens", initiallyExpanded: true, children: [
-                  VoleepFormTile(
-                    icon: Icons.playlist_add_rounded,
-                    title: "Serviços",
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(UtilBrasilFields.obterReal(serviceTotal)),
-                        const Icon(
-                          Icons.navigate_next_rounded,
-                        )
-                      ],
-                    ),
-                    onTap: handleServiceClick,
+                VoleepFormTile(
+                  icon: Icons.add_shopping_cart_rounded,
+                  title: "Produtos",
+                  trailing: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("0.0"),
+                      Icon(
+                        Icons.navigate_next_rounded,
+                      )
+                    ],
                   ),
-                  VoleepFormTile(
-                    icon: Icons.add_shopping_cart_rounded,
-                    title: "Produtos",
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(UtilBrasilFields.obterReal(0.0)),
-                        const Icon(
-                          Icons.navigate_next_rounded,
-                        )
-                      ],
-                    ),
-                    onTap: () => context.push(Routes.app.serviceOrder.productList),
+                  onTap: () => context.push(Routes.app.serviceOrder.productList),
+                ),
+                VoleepFormTile(
+                  icon: Icons.percent_rounded,
+                  title: "Desconto",
+                  trailing: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("0"),
+                      Icon(
+                        Icons.navigate_next_rounded,
+                      )
+                    ],
                   ),
-                  VoleepFormTile(
-                    icon: Icons.percent_rounded,
-                    title: "Desconto",
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(UtilBrasilFields.obterReal(0)),
-                        const Icon(
-                          Icons.navigate_next_rounded,
-                        )
-                      ],
-                    ),
-                    onTap: () {},
+                  onTap: () {},
+                ),
+              ]),
+              VoleepExpansionPanel("Detalhes", initiallyExpanded: true, children: [
+                VoleepFormTile(
+                  icon: Icons.attach_money_rounded,
+                  title: "Meio de pagamento",
+                  trailing: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.navigate_next_rounded,
+                      )
+                    ],
                   ),
-                ]),
-                VoleepExpansionPanel("Detalhes", initiallyExpanded: true, children: [
-                  VoleepFormTile(
-                    icon: Icons.attach_money_rounded,
-                    title: "Meio de pagamento",
-                    trailing: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.navigate_next_rounded,
-                        )
-                      ],
-                    ),
-                    onTap: () {},
-                  ),
-                ])
-              ],
-            ),
-            onWillPop: () async {
-              final canDeactivate = await showDialog(
-                context: context,
-                builder: (context) => CanDeactivateDialog(),
-              );
-              return canDeactivate;
-            },
+                  onTap: () {},
+                ),
+              ])
+            ],
           ),
-        ));
+          onWillPop: () async {
+            final canDeactivate = await showDialog(
+              context: context,
+              builder: (context) => const CanDeactivateDialog(),
+            );
+            return canDeactivate;
+          },
+        ),
+      ),
+    );
   }
 }

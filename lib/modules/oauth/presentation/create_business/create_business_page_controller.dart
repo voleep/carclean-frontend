@@ -1,6 +1,6 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
-import 'package:voleep_carclean_frontend/core/oauth/oauth_state_provider.dart';
+import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
 import 'package:voleep_carclean_frontend/modules/business/data/repositories/business_repository.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_business_dto.dart';
 
@@ -16,7 +16,7 @@ class CreateBusinessPageController extends StateNotifier<AsyncValue<void>> {
 
     switch (createBusinessResult) {
       case Success(:final value):
-        ref.read(oAuthStateProvider.notifier).saveAuthInfo(authModel: value);
+        ref.read(oAuthSessionProvider.notifier).set(authModel: value);
         state = const AsyncValue.data(null);
       case Failure(:final exception, :final stackTrace):
         state = AsyncValue.error(exception, stackTrace);

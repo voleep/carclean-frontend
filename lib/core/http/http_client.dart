@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/extensions/dio_exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
-import 'package:voleep_carclean_frontend/core/http/constants.dart';
 import 'package:voleep_carclean_frontend/core/http/http_interceptor.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
@@ -18,17 +17,19 @@ HttpClient httpClient(HttpClientRef ref) {
 }
 
 class HttpClient {
+  static const dioAuthKey = "DIO_AUTH_KEY";
+
   final Dio dio;
 
   HttpClient({required this.dio});
 
   HttpClient get auth {
-    dio.options.extra[Constants.dioAuthKey] = true;
+    dio.options.extra[dioAuthKey] = true;
     return this;
   }
 
   HttpClient get unAuth {
-    dio.options.extra[Constants.dioAuthKey] = false;
+    dio.options.extra[dioAuthKey] = false;
     return this;
   }
 

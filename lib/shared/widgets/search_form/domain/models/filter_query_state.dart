@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 

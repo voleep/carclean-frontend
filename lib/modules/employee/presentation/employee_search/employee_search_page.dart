@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
@@ -8,7 +8,6 @@ import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employ
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
@@ -54,19 +53,6 @@ class EmployeeSearchPage extends ConsumerWidget {
               ],
             ),
           ],
-          columns: const [
-            ColumnOption(title: "Nome", width: 40),
-            ColumnOption(title: "Telefone", width: 300),
-            ColumnOption(title: "Data de cadastro", width: 100),
-          ],
-          cellsBuilder: (context, index, item) {
-            return [
-              Text(item.name),
-              Text(item.telephone ?? ""),
-              Text(item.registrationDate.toString()),
-            ];
-          },
-          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.name),
             subtitle: Text("${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),

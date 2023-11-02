@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
 import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/typedefs/product_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
@@ -57,19 +56,6 @@ class ProductSearchPage extends ConsumerWidget {
               ],
             ),
           ],
-          columns: const [
-            ColumnOption(title: "Código", width: 50),
-            ColumnOption(title: "Descrição", width: 700),
-            ColumnOption(title: "Valor", width: 50),
-          ],
-          cellsBuilder: (context, index, item) {
-            return [
-              Text(item.code.toString()),
-              Text(item.description),
-              Text(item.price.toStringAsFixed(2)),
-            ];
-          },
-          actionsBuilder: (_, index, item) => [],
           itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.description),
             subtitle: Text("R\$ ${item.price.toStringAsFixed(2)} - ${item.availableStock}"),

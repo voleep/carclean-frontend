@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item.dart';
@@ -14,35 +13,41 @@ import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollab
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
 
-class ServiceOrderItemListPage extends HookConsumerWidget {
-  ServiceOrderItemListPage({super.key, this.modelList = const []});
+class ServiceOrderItemListPage extends ConsumerStatefulWidget {
+  const ServiceOrderItemListPage({super.key, this.modelList = const []});
 
   final List<ServiceOrderItemModel> modelList;
 
-  final GlobalKey<FormState> _formKey = GlobalKey();
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceOrderItemListPageState();
+}
+
+class _ServiceOrderItemListPageState extends ConsumerState<ServiceOrderItemListPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  handleSelectService() async {
+    final selectedService = await context.push(Routes.app.serviceOrder.selectService);
+    if (selectedService != null && selectedService is List<ServiceModel>) {
+      ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(selectedService);
+    }
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final serviceLength = ref.watch(serviceOrderItemControllerProvider.select((value) => value.length));
+  void initState() {
+    super.initState();
 
-    handleSelectService() async {
-      final selectedService = await context.push(Routes.app.serviceOrder.selectService);
-      if (selectedService != null && selectedService is List<ServiceModel>) {
-        ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(selectedService);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (widget.modelList.isEmpty) {
+        handleSelectService();
+      } else {
+        ref.read(serviceOrderItemControllerProvider.notifier).setState(widget.modelList);
       }
-    }
+    });
+  }
 
-    useEffect(() {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        if (modelList.isEmpty) {
-          handleSelectService();
-        } else {
-          ref.read(serviceOrderItemControllerProvider.notifier).setState(modelList);
-        }
-      });
-
-      return () {};
-    }, []);
+  @override
+  Widget build(BuildContext context) {
+    final serviceLength = ref.watch(serviceOrderItemControllerProvider.select((value) => value.length));
 
     return Scaffold(
       appBar: const VoleepAppBar(
@@ -57,7 +62,7 @@ class ServiceOrderItemListPage extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               ...Iterable.generate(serviceLength).mapIndexed((_, index) {
-                return ServiceOrderItemView(index: index);
+                return ServiceOrderItem(index: index);
               }).toList(),
               Padding(
                 padding: const EdgeInsets.only(top: 24, right: 12, bottom: 50, left: 12),

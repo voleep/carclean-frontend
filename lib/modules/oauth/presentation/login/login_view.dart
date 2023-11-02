@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/providers/login_view_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
@@ -23,7 +23,8 @@ class LoginView extends StatelessWidget {
       children: [
         SizedBox(
           width: double.infinity,
-          child: SvgPicture.asset("assets/illustrations/login.svg", semanticsLabel: "Startup", height: 300, fit: BoxFit.fitHeight),
+          child: SvgPicture.asset("assets/illustrations/login.svg",
+              semanticsLabel: "Startup", height: 300, fit: BoxFit.fitHeight),
         ),
         const Spacer(),
         const Text(
@@ -47,7 +48,10 @@ class LoginView extends StatelessWidget {
                       controller: emailController,
                       placeholder: "Email",
                       icon: Icons.alternate_email_rounded,
-                      validator: (value) => Validators.listOf([() => Validators.required(value), () => Validators.email(value)]),
+                      validator: [
+                        Validators.required(),
+                        Validators.email(),
+                      ].compose,
                     ),
                     VoleepTextFormField(
                       autofillHints: const [AutofillHints.password],
@@ -57,7 +61,7 @@ class LoginView extends StatelessWidget {
                       enableSuggestions: false,
                       obscureText: true,
                       keyboardType: TextInputType.visiblePassword,
-                      validator: Validators.required,
+                      validator: Validators.required(),
                     ),
                   ],
                 ),
@@ -68,7 +72,8 @@ class LoginView extends StatelessWidget {
                 child: GestureDetector(
                   child: Text(
                     "Esqueci a senha?",
-                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                   ),
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
@@ -86,7 +91,8 @@ class LoginView extends StatelessWidget {
                   builder: (context, ref, widget) {
                     final controller = ref.watch(loginViewControllerProvider);
 
-                    ref.listen<AsyncValue<void>>(loginViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
+                    ref.listen<AsyncValue<void>>(
+                        loginViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
 
                     return VoleepButton(
                       disabled: controller.isLoading,
@@ -97,7 +103,9 @@ class LoginView extends StatelessWidget {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          await ref.read(loginViewControllerProvider.notifier).doLogin(emailController.text, passwordController.text);
+                          await ref
+                              .read(loginViewControllerProvider.notifier)
+                              .doLogin(emailController.text, passwordController.text);
                           if (!ref.read(loginViewControllerProvider).hasError) {
                             TextInput.finishAutofillContext();
                           }
@@ -124,7 +132,8 @@ class LoginView extends StatelessWidget {
             GestureDetector(
                 child: Text(
                   " Criar conta",
-                  style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
                 ),
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();

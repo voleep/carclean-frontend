@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_query_state.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/filter/filter_query.dart';
 
 class FilterChipsView extends ConsumerWidget {
-  const FilterChipsView(
-      {super.key,
-      required this.config,
-      required this.field,
-      required this.onPressed});
+  const FilterChipsView({super.key, required this.config, required this.field, required this.onPressed});
 
   final SearchConfig config;
   final String field;
@@ -32,18 +28,14 @@ class FilterChipsView extends ConsumerWidget {
                   .map(
                     (query) => InputChip(
                       visualDensity: VisualDensity.compact,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primaryContainer,
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      side: BorderSide(
-                          color: Theme.of(context).colorScheme.primary),
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
                       label: Text(query.valueLabel),
                       onPressed: () => onPressed(query),
-                      onDeleted: () => ref
-                          .read(filterQueryProvider(config).notifier)
-                          .remove(query),
+                      onDeleted: () => ref.read(filterQueryProvider(config).notifier).remove(query),
                     ),
                   )
                   .toList() ??

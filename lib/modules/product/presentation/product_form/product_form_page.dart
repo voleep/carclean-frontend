@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_form/product_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
@@ -11,7 +12,6 @@ import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.da
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
-import 'package:number_text_input_formatter/number_text_input_formatter.dart';
 
 final situationSwitchState = AutoDisposeStateProvider<bool>((ref) => true);
 
@@ -22,8 +22,7 @@ class ProductFormPage extends ConsumerStatefulWidget {
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ProductFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductFormPageState();
 }
 
 class _ProductFormPageState extends ConsumerState<ProductFormPage> {
@@ -38,9 +37,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(
-        productFormControllerProvider(widget.productId, widget.mode),
-        (_, value) {
+    ref.listenManual(productFormControllerProvider(widget.productId, widget.mode), (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -50,14 +47,12 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
       }
 
       if (value.hasValue && !value.hasError) {
-        ref.read(situationSwitchState.notifier).state =
-            value.value!.situation == 1 ? true : false;
+        ref.read(situationSwitchState.notifier).state = value.value!.situation == 1 ? true : false;
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
         _availableStockControl.text = value.value!.availableStock.toString();
-        _pcComissionControl.text =
-            "${value.value!.pcCommission.toStringAsFixed(2)} %";
+        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -76,15 +71,11 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         children: [
           Text(
             "Situação ",
-            style: Theme.of(context)
-                .textTheme
-                .labelLarge
-                ?.copyWith(color: Theme.of(context).colorScheme.outline),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
           ),
           Switch(
             value: value,
-            onChanged: (value) =>
-                ref.read(situationSwitchState.notifier).state = value,
+            onChanged: (value) => ref.read(situationSwitchState.notifier).state = value,
           ),
         ],
       );
@@ -116,12 +107,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                 controller: _descriptionControl,
                 placeholder: "Produto",
                 icon: isMobile ? Icons.description_rounded : null,
-                validator: (value) => Validators.listOf(
-                  [
-                    () => Validators.required(value),
-                    () => Validators.maxLength(value, 250),
-                  ],
-                ),
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(250),
+                ].compose,
               ),
               VoleepTextFormField(
                 width: 160,
@@ -132,15 +121,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   decimal: true,
                   signed: false,
                 ),
-                inputFormatters: [
-                  NumberTextInputFormatter(
-                    integerDigits: 16,
-                    decimalDigits: 2,
-                    decimalSeparator: '.',
-                    insertDecimalDigits: true,
-                    prefix: "R\$ ",
-                  ),
-                ],
+                formatters: [RealInputFormatter()],
               ),
               VoleepTextFormField(
                 width: 180,
@@ -151,14 +132,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   decimal: true,
                   signed: false,
                 ),
-                inputFormatters: [
-                  NumberTextInputFormatter(
-                    integerDigits: 16,
-                    decimalDigits: 3,
-                    allowNegative: true,
-                    decimalSeparator: '.',
-                  ),
-                ],
               ),
               VoleepTextFormField(
                 width: 210,
@@ -169,16 +142,6 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   decimal: true,
                   signed: false,
                 ),
-                inputFormatters: [
-                  NumberTextInputFormatter(
-                    integerDigits: 3,
-                    decimalDigits: 2,
-                    maxValue: '100.00',
-                    decimalSeparator: '.',
-                    insertDecimalDigits: true,
-                    suffix: " %",
-                  ),
-                ],
               ),
               Visibility(visible: !isMobile, child: situationSwitcher),
             ],
@@ -195,23 +158,17 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(
-                productFormControllerProvider(widget.productId, widget.mode)
-                    .notifier);
+            final notifier = ref.read(productFormControllerProvider(widget.productId, widget.mode).notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price = _priceControl.text.isNotEmpty
-                ? double.parse(
-                    doubleRE.firstMatch(_priceControl.text)!.group(0)!)
-                : 0.0;
+            final price =
+                _priceControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!) : 0.0;
             final availableStock = _availableStockControl.text.isNotEmpty
-                ? double.parse(
-                    doubleRE.firstMatch(_availableStockControl.text)!.group(0)!)
+                ? double.parse(doubleRE.firstMatch(_availableStockControl.text)!.group(0)!)
                 : 0.0;
             final pcCommission = _pcComissionControl.text.isNotEmpty
-                ? double.parse(
-                    doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
+                ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
                 : 0.0;
 
             await notifier
@@ -223,10 +180,7 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               situation: ref.read(situationSwitchState) ? 1 : 0,
             )
                 .then((value) {
-              if (!ref
-                  .read(productFormControllerProvider(
-                      widget.productId, widget.mode))
-                  .hasError) {
+              if (!ref.read(productFormControllerProvider(widget.productId, widget.mode)).hasError) {
                 context.pop(true);
               }
             });

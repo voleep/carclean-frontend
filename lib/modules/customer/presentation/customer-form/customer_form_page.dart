@@ -1,8 +1,7 @@
-import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
@@ -10,6 +9,8 @@ import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/custom
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer-form/customer_form_controller.dart';
 import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/shared/formatters/compound/cpf_cpnj_formatter.dart';
+import 'package:voleep_carclean_frontend/shared/formatters/telefone_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
@@ -17,12 +18,10 @@ import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollab
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
-final situationSwitchState =
-    AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
+final situationSwitchState = AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
 
 class CustomerFormPage extends ConsumerStatefulWidget {
-  const CustomerFormPage({Key? key, this.customerId, required this.mode})
-      : super(key: key);
+  const CustomerFormPage({Key? key, this.customerId, required this.mode}) : super(key: key);
 
   final CustomerId? customerId;
   final FormMode mode;
@@ -53,9 +52,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
   void initState() {
     super.initState();
 
-    ref.listenManual(
-        customerFormControllerProvider(widget.customerId, widget.mode),
-        (previosData, data) {
+    ref.listenManual(customerFormControllerProvider(widget.customerId, widget.mode), (previosData, data) {
       if (data.hasError) {
         data.showSnackBarOnError(context);
       }
@@ -89,10 +86,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 controller: _dsNameController,
                 placeholder: "Nome",
                 icon: Icons.person_outline_rounded,
-                validator: (value) => Validators.listOf([
-                  () => Validators.required(value),
-                  () => Validators.maxLength(value, 100)
-                ]),
+                validator: Validators.compose([Validators.required(), Validators.maxLength(100)]),
               ),
               VoleepTextFormField(
                 width: 175,
@@ -100,11 +94,8 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 placeholder: "CPF/CNPJ",
                 icon: Icons.badge_outlined,
                 keyboardType: TextInputType.phone,
-                validator: (value) => Validators.maxLength(value, 20),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  CpfOuCnpjFormatter()
-                ],
+                validator: Validators.maxLength(20),
+                formatters: [FilteringTextInputFormatter.digitsOnly, CpfCnpjFormatter()],
               ),
               VoleepTextFormField(
                 width: 195,
@@ -112,11 +103,8 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 placeholder: "Telefone",
                 keyboardType: TextInputType.phone,
                 icon: Icons.phone_outlined,
-                validator: (value) => Validators.maxLength(value, 20),
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  TelefoneInputFormatter()
-                ],
+                validator: Validators.maxLength(20),
+                formatters: [FilteringTextInputFormatter.digitsOnly, TelefoneInputFormatter()],
               ),
               VoleepTextFormField(
                 width: 380,
@@ -124,7 +112,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 placeholder: "Email",
                 keyboardType: TextInputType.emailAddress,
                 icon: Icons.email_outlined,
-                validator: (value) => Validators.maxLength(value, 100),
+                validator: Validators.maxLength(100),
               ),
               VoleepTextFormField(
                 width: 380,
@@ -133,7 +121,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                 placeholder: "Observações",
                 keyboardType: TextInputType.multiline,
                 icon: Icons.description_outlined,
-                validator: (value) => Validators.maxLength(value, 250),
+                validator: Validators.maxLength(250),
               ),
               Consumer(
                 builder: (context, ref, widget) {
@@ -149,14 +137,12 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge
-                              ?.copyWith(
-                                  color: Theme.of(context).colorScheme.outline),
+                              ?.copyWith(color: Theme.of(context).colorScheme.outline),
                         ),
                         Switch(
                           value: situation.boolean,
-                          onChanged: (value) => ref
-                              .read(situationSwitchState.notifier)
-                              .state = DisabledEnabled.fromBool(value),
+                          onChanged: (value) =>
+                              ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
                         ),
                       ],
                     ),
@@ -178,9 +164,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             await ref
-                .read(customerFormControllerProvider(
-                        widget.customerId, widget.mode)
-                    .notifier)
+                .read(customerFormControllerProvider(widget.customerId, widget.mode).notifier)
                 .saveOrUpdateCustomer(
                   name: _dsNameController.text,
                   telephone: _dsTelephoneController.text.notEmptyOrNull,
@@ -190,10 +174,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                   situation: ref.read(situationSwitchState),
                 );
 
-            final hasError = ref
-                .read(customerFormControllerProvider(
-                    widget.customerId, widget.mode))
-                .hasError;
+            final hasError = ref.read(customerFormControllerProvider(widget.customerId, widget.mode)).hasError;
 
             if (!hasError && context.mounted) {
               context.pop(true);
