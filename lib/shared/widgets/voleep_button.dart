@@ -50,10 +50,10 @@ class VoleepButton extends StatelessWidget {
       onPressed: disabled || isLoading ? null : onPressed,
       child: isLoading
           ? SizedBox(
-              height: 22,
-              width: 22,
+              height: 20,
+              width: 20,
               child: CircularProgressIndicator(
-                strokeWidth: 3.0,
+                strokeWidth: 2.7,
                 color: context.colorScheme.onPrimary,
               ),
             )

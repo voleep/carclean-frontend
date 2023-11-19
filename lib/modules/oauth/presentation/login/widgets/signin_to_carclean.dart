@@ -14,7 +14,6 @@ class SignInToCarclean extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 12),
         Image.asset(
           Images.carCleanLogo,
           height: 65,

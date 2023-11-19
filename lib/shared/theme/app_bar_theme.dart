@@ -5,10 +5,11 @@ final _lightAppBarTheme = AppBarTheme(
   backgroundColor: _lightColorScheme.background.withOpacity(0.9),
   elevation: 0,
   titleTextStyle: TextStyle(
-      fontFamily: 'Montserrat',
-      fontSize: 20,
-      color: _lightColorScheme.primary,
-      fontWeight: FontWeight.w600),
+    fontFamily: 'RobotoSans',
+    fontSize: 20,
+    color: _lightColorScheme.primary,
+    fontWeight: FontWeight.w500,
+  ),
   systemOverlayStyle: const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
@@ -21,10 +22,11 @@ final _darkAppBarTheme = AppBarTheme(
   backgroundColor: _darkColorScheme.background.withOpacity(0.9),
   elevation: 0,
   titleTextStyle: TextStyle(
-      fontFamily: 'Montserrat',
-      fontSize: 20,
-      color: _darkColorScheme.primary,
-      fontWeight: FontWeight.w600),
+    fontFamily: 'RobotoSans',
+    fontSize: 20,
+    color: _darkColorScheme.primary,
+    fontWeight: FontWeight.w500,
+  ),
   systemOverlayStyle: const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,

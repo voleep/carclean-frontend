@@ -8,9 +8,10 @@ extension ComposeValidator on List<FormFieldValidator<String>> {
 }
 
 abstract class Validators {
-  static FormFieldValidator<String> required([String message = Messages.required]) {
+  static FormFieldValidator<String> required(
+      [String message = Messages.required]) {
     return (value) {
-      if (value?.isEmpty ?? true) return message;
+      if (value?.trim().isEmpty ?? true) return message;
       return null;
     };
   }
@@ -47,7 +48,8 @@ abstract class Validators {
     };
   }
 
-  static FormFieldValidator<String> minLength(int minLength, [String? message]) {
+  static FormFieldValidator<String> minLength(int minLength,
+      [String? message]) {
     return (value) {
       if (value?.isEmpty ?? true) return null;
       if ((value?.length ?? 0) < minLength) {
@@ -57,7 +59,8 @@ abstract class Validators {
     };
   }
 
-  static FormFieldValidator<String> maxLength(int maxLength, [String? message]) {
+  static FormFieldValidator<String> maxLength(int maxLength,
+      [String? message]) {
     return (value) {
       if (value?.isEmpty ?? true) return null;
       if ((value?.length ?? 0) > maxLength) {
@@ -75,7 +78,8 @@ abstract class Validators {
     };
   }
 
-  static FormFieldValidator<String> email([String message = Messages.invalidEmail]) {
+  static FormFieldValidator<String> email(
+      [String message = Messages.invalidEmail]) {
     return (value) {
       if (value?.isEmpty ?? true) return null;
       final emailRegex = RegExp(
@@ -116,7 +120,8 @@ abstract class Validators {
     };
   }
 
-  static FormFieldValidator<String> compose(List<FormFieldValidator<String>> validators) {
+  static FormFieldValidator<String> compose(
+      List<FormFieldValidator<String>> validators) {
     return (value) {
       for (final validator in validators) {
         final result = validator(value);
@@ -136,7 +141,8 @@ abstract class Validators {
     };
   }
 
-  static FormFieldValidator<String> compare(TextEditingController? controller, String message) {
+  static FormFieldValidator<String> compare(
+      TextEditingController? controller, String message) {
     return (value) {
       final textCompare = controller?.text ?? '';
       if (value == null || textCompare != value) {

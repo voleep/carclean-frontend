@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
-import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/widgets/login_form_vm.dart';
+import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/viewmodels/login_form_vm.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/widgets/new_account.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
