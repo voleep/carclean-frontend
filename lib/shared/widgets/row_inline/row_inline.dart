@@ -16,6 +16,7 @@ class RowInline extends StatelessWidget {
     return WrapSuper(
       wrapFit: wrapFit,
       spacing: 8.0,
+      lineSpacing: 5,
       children: children,
     );
   }

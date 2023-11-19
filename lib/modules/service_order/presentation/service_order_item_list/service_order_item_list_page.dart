@@ -19,16 +19,21 @@ class ServiceOrderItemListPage extends ConsumerStatefulWidget {
   final List<ServiceOrderItemModel> modelList;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceOrderItemListPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceOrderItemListPageState();
 }
 
-class _ServiceOrderItemListPageState extends ConsumerState<ServiceOrderItemListPage> {
+class _ServiceOrderItemListPageState
+    extends ConsumerState<ServiceOrderItemListPage> {
   final _formKey = GlobalKey<FormState>();
 
   handleSelectService() async {
-    final selectedService = await context.push(Routes.app.serviceOrder.selectService);
+    final selectedService =
+        await context.push(Routes.app.serviceOrder.selectService);
     if (selectedService != null && selectedService is List<ServiceModel>) {
-      ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(selectedService);
+      ref
+          .read(serviceOrderItemControllerProvider.notifier)
+          .addServiceList(selectedService);
     }
   }
 
@@ -40,21 +45,23 @@ class _ServiceOrderItemListPageState extends ConsumerState<ServiceOrderItemListP
       if (widget.modelList.isEmpty) {
         handleSelectService();
       } else {
-        ref.read(serviceOrderItemControllerProvider.notifier).setState(widget.modelList);
+        ref
+            .read(serviceOrderItemControllerProvider.notifier)
+            .setState(widget.modelList);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final serviceLength = ref.watch(serviceOrderItemControllerProvider.select((value) => value.length));
+    final serviceLength = ref.watch(
+        serviceOrderItemControllerProvider.select((value) => value.length));
 
     return Scaffold(
       appBar: const VoleepAppBar(
         title: Text("Serviços da OS"),
       ),
       body: ScrollableView(
-        padding: const EdgeInsets.only(top: 24),
         child: Form(
           key: _formKey,
           child: Column(
@@ -65,7 +72,8 @@ class _ServiceOrderItemListPageState extends ConsumerState<ServiceOrderItemListP
                 return ServiceOrderItem(index: index);
               }).toList(),
               Padding(
-                padding: const EdgeInsets.only(top: 24, right: 12, bottom: 50, left: 12),
+                padding: const EdgeInsets.only(
+                    top: 24, right: 12, bottom: 50, left: 12),
                 child: VoleepButton(
                   onPressed: handleSelectService,
                   child: const Text(
@@ -76,7 +84,9 @@ class _ServiceOrderItemListPageState extends ConsumerState<ServiceOrderItemListP
               )
             ],
           ),
-          onWillPop: () async => await showDialog(context: context, builder: (context) => const CanDeactivateDialog()),
+          onWillPop: () async => await showDialog(
+              context: context,
+              builder: (context) => const CanDeactivateDialog()),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

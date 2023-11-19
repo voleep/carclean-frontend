@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class VoleepButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
-  final Widget? child;
+  final Widget child;
   final void Function()? onPressed;
   final bool disabled;
 
@@ -11,7 +11,7 @@ class VoleepButton extends StatelessWidget {
     Key? key,
     this.backgroundColor,
     this.foregroundColor,
-    this.child,
+    required this.child,
     required this.onPressed,
     this.disabled = false,
   }) : super(key: key);
@@ -22,10 +22,10 @@ class VoleepButton extends StatelessWidget {
       style: ButtonStyle(
         shape: MaterialStateProperty.resolveWith(
             (states) => RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.0),
+                  borderRadius: BorderRadius.circular(8.0),
                 )),
         minimumSize: MaterialStateProperty.resolveWith(
-            (states) => const Size.fromHeight(52)),
+            (states) => const Size.fromHeight(48)),
         backgroundColor: MaterialStateColor.resolveWith((states) {
           final Color backColor = backgroundColor != null
               ? backgroundColor!
@@ -43,7 +43,8 @@ class VoleepButton extends StatelessWidget {
                 : Theme.of(context).colorScheme.surface),
       ),
       onPressed: disabled == true ? null : onPressed,
-      child: child,
+      child:
+          DefaultTextStyle(style: const TextStyle(fontSize: 15), child: child),
     );
   }
 }

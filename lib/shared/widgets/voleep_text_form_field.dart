@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
 
 class VoleepTextFormField extends StatefulWidget {
   static const double defaultHeight = 75;
@@ -55,56 +56,98 @@ class VoleepTextFormField extends StatefulWidget {
 
 class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
   bool _obscureText = false;
+  bool _touched = false;
+  late FocusNode _focusNode;
+  late GlobalKey<FormFieldState<String>> _fieldKey;
 
   @override
   void initState() {
-    _obscureText = widget.obscureText;
-
     super.initState();
+    _obscureText = widget.obscureText;
+    _focusNode = widget.focusNode ?? FocusNode();
+    _fieldKey = GlobalKey();
+
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus && !_touched) {
+        _fieldKey.currentState?.validate();
+
+        setState(() {
+          _touched = true;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final Color outlineColor = Theme.of(context).colorScheme.outline;
+    final labelColor = context.colorScheme.outline.withOpacity(0.8);
 
-    return Container(
-      padding: const EdgeInsets.only(right: 5, bottom: 5, left: 5),
+    final labelStyle = MaterialStateTextStyle.resolveWith((states) {
+      final style = TextStyle(
+        color: labelColor,
+        fontSize: 16,
+        overflow: TextOverflow.ellipsis,
+      );
+
+      if (states.contains(MaterialState.error)) {
+        return style.copyWith(
+          color: context.colorScheme.error,
+        );
+      }
+      if (states.contains(MaterialState.focused)) {
+        return style.copyWith(
+          color: context.colorScheme.tertiary,
+        );
+      }
+
+      return style;
+    });
+
+    return SizedBox(
       height: VoleepTextFormField.defaultHeight,
       width: widget.width,
       child: TextFormField(
+        key: _fieldKey,
         initialValue: widget.initialValue,
         autofocus: widget.autofocus,
         enabled: widget.enabled,
         readOnly: widget.readOnly,
         onTap: widget.onTap,
         textAlignVertical: TextAlignVertical.top,
-        focusNode: widget.focusNode,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-          height: 1.2,
-        ),
+        focusNode: _focusNode,
         decoration: InputDecoration(
-          enabledBorder:
-              UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant)),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: labelColor.withOpacity(0.5),
+            ),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              width: 1.8,
+              color: context.colorScheme.tertiary,
+            ),
+          ),
           icon: widget.icon != null
               ? Padding(
-                  padding: const EdgeInsets.only(top: 25),
+                  padding: const EdgeInsets.only(top: 28),
                   child: Align(
-                    alignment: Alignment.topLeft,
-                    widthFactor: 1.0,
-                    heightFactor: 10.0,
+                    alignment: Alignment.bottomLeft,
+                    heightFactor: 0.5,
+                    widthFactor: 0.8,
                     child: Icon(
                       widget.icon,
                       size: 25,
-                      color: outlineColor,
+                      color: labelColor,
                     ),
                   ),
                 )
               : null,
           suffixIcon: widget.obscureText
               ? IconButton(
-                  icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                  iconSize: 21,
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                  ),
                   onPressed: () {
                     setState(() {
                       _obscureText = !_obscureText;
@@ -112,21 +155,24 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
                   },
                 )
               : widget.suffixIcon,
-          suffixIconConstraints: const BoxConstraints(maxHeight: 35),
-          suffixIconColor: outlineColor,
-          alignLabelWithHint: true,
-          label: Text(
-            widget.placeholder,
-            style: TextStyle(
-              color: outlineColor,
-              fontWeight: FontWeight.w500,
-              overflow: TextOverflow.ellipsis,
-            ),
+          suffixIconColor: labelColor,
+          suffixIconConstraints: const BoxConstraints(
+            maxHeight: 38,
+            maxWidth: 38,
           ),
-          contentPadding: const EdgeInsets.only(bottom: 3),
+          alignLabelWithHint: true,
+          labelText: widget.placeholder,
+          labelStyle: labelStyle,
+          floatingLabelStyle: labelStyle,
+          contentPadding: const EdgeInsets.only(
+            bottom: 1,
+          ),
           errorStyle: const TextStyle(fontSize: 12, height: 0.6),
         ),
-        cursorHeight: 18,
+        style: const TextStyle(
+          height: 1.3,
+          fontSize: 16,
+        ),
         obscureText: _obscureText,
         enableSuggestions: widget.enableSuggestions,
         validator: widget.validator,
@@ -137,8 +183,23 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
         scrollPadding: const EdgeInsets.only(bottom: 95),
         minLines: widget.minLines,
         maxLines: widget.maxLines,
-        onChanged: widget.onChanged,
+        onChanged: (value) {
+          if (_touched) {
+            _fieldKey.currentState?.validate();
+          }
+
+          widget.onChanged?.call(value);
+        },
+        onTapOutside: (_) {
+          _focusNode.unfocus();
+        },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 }

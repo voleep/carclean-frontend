@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_account/create_account_view.dart';
-import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/welcome_view.dart';
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 
 class CreateAccountPage extends StatelessWidget {
@@ -20,21 +19,13 @@ class CreateAccountPage extends StatelessWidget {
         return SingleChildScrollView(
           reverse: true,
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-                minWidth: constraints.maxWidth,
-                minHeight: constraints.maxHeight),
+            constraints: BoxConstraints(minWidth: constraints.maxWidth, minHeight: constraints.maxHeight),
             child: IntrinsicHeight(
               child: SafeArea(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Visibility(
-                      visible: Responsive.isDesktop(context),
-                      child: const Flexible(
-                        child: WelcomeView(),
-                      ),
-                    ),
                     Flexible(
                       child: Container(
                         alignment: Alignment.center,

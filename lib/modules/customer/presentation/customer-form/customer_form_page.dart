@@ -18,10 +18,12 @@ import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollab
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
 
-final situationSwitchState = AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
+final situationSwitchState =
+    AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
 
 class CustomerFormPage extends ConsumerStatefulWidget {
-  const CustomerFormPage({Key? key, this.customerId, required this.mode}) : super(key: key);
+  const CustomerFormPage({Key? key, this.customerId, required this.mode})
+      : super(key: key);
 
   final CustomerId? customerId;
   final FormMode mode;
@@ -52,7 +54,9 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
   void initState() {
     super.initState();
 
-    ref.listenManual(customerFormControllerProvider(widget.customerId, widget.mode), (previosData, data) {
+    ref.listenManual(
+        customerFormControllerProvider(widget.customerId, widget.mode),
+        (previosData, data) {
       if (data.hasError) {
         data.showSnackBarOnError(context);
       }
@@ -77,94 +81,109 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
         title: Text(isCreateMode ? "Novo cliente" : "Cliente"),
       ),
       body: ScrollableView(
-        child: Form(
-          key: _formKey,
-          child: RowInline(
-            children: [
-              VoleepTextFormField(
-                width: 380,
-                controller: _dsNameController,
-                placeholder: "Nome",
-                icon: Icons.person_outline_rounded,
-                validator: Validators.compose([Validators.required(), Validators.maxLength(100)]),
-              ),
-              VoleepTextFormField(
-                width: 175,
-                controller: _dsDocumentController,
-                placeholder: "CPF/CNPJ",
-                icon: Icons.badge_outlined,
-                keyboardType: TextInputType.phone,
-                validator: Validators.maxLength(20),
-                formatters: [FilteringTextInputFormatter.digitsOnly, CpfCnpjFormatter()],
-              ),
-              VoleepTextFormField(
-                width: 195,
-                controller: _dsTelephoneController,
-                placeholder: "Telefone",
-                keyboardType: TextInputType.phone,
-                icon: Icons.phone_outlined,
-                validator: Validators.maxLength(20),
-                formatters: [FilteringTextInputFormatter.digitsOnly, TelefoneInputFormatter()],
-              ),
-              VoleepTextFormField(
-                width: 380,
-                controller: _dsEmailController,
-                placeholder: "Email",
-                keyboardType: TextInputType.emailAddress,
-                icon: Icons.email_outlined,
-                validator: Validators.maxLength(100),
-              ),
-              VoleepTextFormField(
-                width: 380,
-                maxLines: null,
-                controller: _dsNoteController,
-                placeholder: "Observações",
-                keyboardType: TextInputType.multiline,
-                icon: Icons.description_outlined,
-                validator: Validators.maxLength(250),
-              ),
-              Consumer(
-                builder: (context, ref, widget) {
-                  final situation = ref.watch(situationSwitchState);
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 18),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          "Situação ",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge
-                              ?.copyWith(color: Theme.of(context).colorScheme.outline),
-                        ),
-                        Switch(
-                          value: situation.boolean,
-                          onChanged: (value) =>
-                              ref.read(situationSwitchState.notifier).state = DisabledEnabled.fromBool(value),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: RowInline(
+              children: [
+                VoleepTextFormField(
+                  width: 380,
+                  controller: _dsNameController,
+                  placeholder: "Nome",
+                  icon: Icons.person_outline_rounded,
+                  validator: Validators.compose(
+                      [Validators.required(), Validators.maxLength(100)]),
+                ),
+                VoleepTextFormField(
+                  width: 175,
+                  controller: _dsDocumentController,
+                  placeholder: "CPF/CNPJ",
+                  icon: Icons.badge_outlined,
+                  keyboardType: TextInputType.phone,
+                  validator: Validators.maxLength(20),
+                  formatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CpfCnpjFormatter()
+                  ],
+                ),
+                VoleepTextFormField(
+                  width: 195,
+                  controller: _dsTelephoneController,
+                  placeholder: "Telefone",
+                  keyboardType: TextInputType.phone,
+                  icon: Icons.phone_outlined,
+                  validator: Validators.maxLength(20),
+                  formatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    TelefoneInputFormatter()
+                  ],
+                ),
+                VoleepTextFormField(
+                  width: 380,
+                  controller: _dsEmailController,
+                  placeholder: "Email",
+                  keyboardType: TextInputType.emailAddress,
+                  icon: Icons.email_outlined,
+                  validator: Validators.maxLength(100),
+                ),
+                VoleepTextFormField(
+                  width: 380,
+                  maxLines: null,
+                  controller: _dsNoteController,
+                  placeholder: "Observações",
+                  keyboardType: TextInputType.multiline,
+                  icon: Icons.description_outlined,
+                  validator: Validators.maxLength(250),
+                ),
+                Consumer(
+                  builder: (context, ref, widget) {
+                    final situation = ref.watch(situationSwitchState);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 18),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Situação ",
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.outline),
+                          ),
+                          Switch(
+                            value: situation.boolean,
+                            onChanged: (value) => ref
+                                .read(situationSwitchState.notifier)
+                                .state = DisabledEnabled.fromBool(value),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => const CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
           ),
-          onWillPop: () async {
-            final canDeactivate = await showDialog(
-              context: context,
-              builder: (context) => const CanDeactivateDialog(),
-            );
-            return canDeactivate;
-          },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             await ref
-                .read(customerFormControllerProvider(widget.customerId, widget.mode).notifier)
+                .read(customerFormControllerProvider(
+                        widget.customerId, widget.mode)
+                    .notifier)
                 .saveOrUpdateCustomer(
                   name: _dsNameController.text,
                   telephone: _dsTelephoneController.text.notEmptyOrNull,
@@ -174,7 +193,10 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                   situation: ref.read(situationSwitchState),
                 );
 
-            final hasError = ref.read(customerFormControllerProvider(widget.customerId, widget.mode)).hasError;
+            final hasError = ref
+                .read(customerFormControllerProvider(
+                    widget.customerId, widget.mode))
+                .hasError;
 
             if (!hasError && context.mounted) {
               context.pop(true);
