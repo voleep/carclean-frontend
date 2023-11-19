@@ -14,10 +14,12 @@ extension DioExceptionExtension on DioException {
 
     if (data != null) {
       try {
-        final GenericResponse<dynamic>(:errorMessage) = GenericResponse.fromJsonT(data, (json) => json);
+        final GenericResponse<dynamic>(:errorMessage) =
+            GenericResponse.fromJson(data);
         return errorMessage;
       } catch (e, s) {
-        log('Erro ao desserializar resposta de erro da API', error: e, stackTrace: s);
+        log('Erro ao desserializar resposta de erro da API',
+            error: e, stackTrace: s);
       }
     }
 

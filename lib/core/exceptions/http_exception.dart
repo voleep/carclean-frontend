@@ -1,36 +1,39 @@
 sealed class HttpException implements Exception {
-  final String? message;
-  HttpException({this.message});
+  final String message;
+  HttpException({required this.message});
+
+  @override
+  String toString() => message;
 }
 
 class HttpConnectionTimeoutException extends HttpException {
-  HttpConnectionTimeoutException({super.message});
+  HttpConnectionTimeoutException({required super.message});
 }
 
 class HttpSendTimeoutException extends HttpException {
-  HttpSendTimeoutException({super.message});
+  HttpSendTimeoutException({required super.message});
 }
 
 class HttpReceiveTimeoutException extends HttpException {
-  HttpReceiveTimeoutException({super.message});
+  HttpReceiveTimeoutException({required super.message});
 }
 
 class HttpBadCertificateException extends HttpException {
-  HttpBadCertificateException({super.message});
+  HttpBadCertificateException({required super.message});
 }
 
 class HttpBadResponseException extends HttpException {
-  HttpBadResponseException({super.message});
+  HttpBadResponseException({required super.message});
 }
 
 class HttpCancelException extends HttpException {
-  HttpCancelException({super.message});
+  HttpCancelException({required super.message});
 }
 
 class HttpConnectionErrorException extends HttpException {
-  HttpConnectionErrorException({super.message});
+  HttpConnectionErrorException({required super.message});
 }
 
 class HttpUnknownException extends HttpException {
-  HttpUnknownException({super.message});
+  HttpUnknownException({required super.message});
 }

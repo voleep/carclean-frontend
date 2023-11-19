@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
 
 class VoleepTextFormField extends StatefulWidget {
-  static const double defaultHeight = 75;
+  static const double defaultHeight = 70;
 
   const VoleepTextFormField({
     Key? key,
@@ -116,8 +116,15 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
         textAlignVertical: TextAlignVertical.top,
         focusNode: _focusNode,
         decoration: InputDecoration(
+          errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              width: 0.7,
+              color: context.colorScheme.error,
+            ),
+          ),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
+              width: 0.7,
               color: labelColor.withOpacity(0.5),
             ),
           ),
@@ -143,22 +150,25 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
                 )
               : null,
           suffixIcon: widget.obscureText
-              ? IconButton(
-                  iconSize: 21,
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
+              ? Align(
+                  alignment: Alignment.bottomRight,
+                  child: IconButton(
+                    iconSize: 20,
+                    icon: Icon(
+                      _obscureText ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
                 )
               : widget.suffixIcon,
           suffixIconColor: labelColor,
           suffixIconConstraints: const BoxConstraints(
-            maxHeight: 38,
-            maxWidth: 38,
+            maxHeight: 35,
+            maxWidth: 35,
           ),
           alignLabelWithHint: true,
           labelText: widget.placeholder,

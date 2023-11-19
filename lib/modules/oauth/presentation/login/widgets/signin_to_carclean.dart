@@ -38,12 +38,12 @@ class SignInToCarclean extends StatelessWidget {
         const SizedBox(height: 25),
         Padding(
           padding: const EdgeInsets.only(
-            left: 35,
-            right: 35,
+            left: 15,
+            right: 15,
             bottom: 50,
           ),
           child: Text(
-            "Bem vindo(a) ao CarClean! Por favor, preencha os campos abaixo para usar o app.",
+            "Bem vindo(a) ao CarClean! Faça login para acessar suas ferramentas de controle de agendamentos, relatórios e muito mais. Sua eficiência começa aqui!",
             textAlign: TextAlign.center,
             style: TextStyle(
               height: 1.3,

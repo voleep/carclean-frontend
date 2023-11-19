@@ -44,7 +44,10 @@ class CreateAccountView extends StatelessWidget {
                 controller: usernameController,
                 placeholder: "Usuário",
                 icon: Icons.person_outline_rounded,
-                validator: [Validators.required(), Validators.maxLength(100)].compose,
+                validator: [
+                  Validators.required(),
+                  Validators.maxLength(100),
+                ].compose,
               ),
               VoleepTextFormField(
                 controller: emailController,
@@ -76,21 +79,24 @@ class CreateAccountView extends StatelessWidget {
                   validator: [
                     Validators.required(),
                     Validators.maxLength(250),
-                    Validators.compare(passwordController, "Senhas não conferem."),
+                    Validators.compare(
+                      passwordController,
+                      "Senhas não conferem.",
+                    ),
                   ].compose),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(
-                        style: TextStyle(
-                          height: 1.5,
-                          color: Theme.of(context).colorScheme.outline,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          fontFamily: "Montserrat",
-                        ),
-                        text: "Ao criar uma conta, você concorda com os nossos "),
+                      style: TextStyle(
+                        height: 1.5,
+                        color: Theme.of(context).colorScheme.outline,
+                        fontSize: 12,
+                        fontFamily: "Montserrat",
+                      ),
+                      text: "Ao criar uma conta, você concorda com os nossos ",
+                    ),
                     TextSpan(
                         style: TextStyle(
                           height: 1.5,
@@ -110,14 +116,14 @@ class CreateAccountView extends StatelessWidget {
                             }
                           }),
                     TextSpan(
-                        style: TextStyle(
-                          height: 1.5,
-                          color: Theme.of(context).colorScheme.outline,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          fontFamily: "Montserrat",
-                        ),
-                        text: " e "),
+                      style: TextStyle(
+                        height: 1.5,
+                        color: Theme.of(context).colorScheme.outline,
+                        fontSize: 12,
+                        fontFamily: "Montserrat",
+                      ),
+                      text: " e ",
+                    ),
                     TextSpan(
                         style: TextStyle(
                           height: 1.5,
@@ -147,21 +153,23 @@ class CreateAccountView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Consumer(
                   builder: (context, ref, widget) {
-                    final controller = ref.watch(createAccountViewControllerProvider);
+                    final controller =
+                        ref.watch(createAccountViewControllerProvider);
 
                     ref.listen<AsyncValue<void>>(
-                        createAccountViewControllerProvider, (_, state) => state.showSnackBarOnError(context));
+                        createAccountViewControllerProvider,
+                        (_, state) => state.showSnackBarOnError(context));
 
                     return VoleepButton(
                       disabled: controller.isLoading,
-                      child: const Text(
-                        'Continuar',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
+                      child: const Text('CRIAR CONTA'),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           FocusManager.instance.primaryFocus?.unfocus();
-                          ref.read(createAccountViewControllerProvider.notifier).signUp(
+                          ref
+                              .read(
+                                  createAccountViewControllerProvider.notifier)
+                              .signUp(
                                 nmUser: usernameController.text,
                                 dsEmail: emailController.text,
                                 dsPassword: passwordController.text,
@@ -183,13 +191,18 @@ class CreateAccountView extends StatelessWidget {
                   Text(
                     "Já tem uma conta?",
                     style: TextStyle(
-                        fontSize: 14, color: Theme.of(context).colorScheme.outline, fontWeight: FontWeight.w500),
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                   ),
                   GestureDetector(
                     child: Text(
                       " Entrar",
                       style: TextStyle(
-                          fontSize: 14, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     onTap: () => context.pop(),
                   ),

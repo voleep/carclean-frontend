@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
 
 class VoleepButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
-  final Widget child;
+  final Widget? child;
   final void Function()? onPressed;
   final bool disabled;
+  final bool isLoading;
 
   const VoleepButton({
     Key? key,
     this.backgroundColor,
     this.foregroundColor,
-    required this.child,
-    required this.onPressed,
+    this.child,
+    this.onPressed,
     this.disabled = false,
+    this.isLoading = false,
   }) : super(key: key);
+
+  static VoleepButton loading() => const VoleepButton(isLoading: true);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,7 @@ class VoleepButton extends StatelessWidget {
               ? backgroundColor!
               : Theme.of(context).colorScheme.surfaceTint;
 
-          if (disabled == true) {
+          if (disabled) {
             return backColor.withOpacity(0.9);
           }
 
@@ -42,9 +47,20 @@ class VoleepButton extends StatelessWidget {
                 ? foregroundColor!
                 : Theme.of(context).colorScheme.surface),
       ),
-      onPressed: disabled == true ? null : onPressed,
-      child:
-          DefaultTextStyle(style: const TextStyle(fontSize: 15), child: child),
+      onPressed: disabled || isLoading ? null : onPressed,
+      child: isLoading
+          ? SizedBox(
+              height: 22,
+              width: 22,
+              child: CircularProgressIndicator(
+                strokeWidth: 3.0,
+                color: context.colorScheme.onPrimary,
+              ),
+            )
+          : DefaultTextStyle(
+              style: const TextStyle(fontSize: 15),
+              child: child ?? const SizedBox.shrink(),
+            ),
     );
   }
 }

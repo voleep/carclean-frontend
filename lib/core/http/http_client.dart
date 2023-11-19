@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/constants/error_messages.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/extensions/dio_exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
@@ -54,7 +55,8 @@ class HttpClient {
     } on DioException catch (exception, stackTrace) {
       return Failure(_handleDioException(exception), stackTrace);
     } catch (error, stackTrace) {
-      return Failure(HttpUnknownException(message: error.toString()), stackTrace);
+      return Failure(
+          HttpUnknownException(message: error.toString()), stackTrace);
     }
   }
 
@@ -81,7 +83,8 @@ class HttpClient {
     } on DioException catch (exception, stackTrace) {
       return Failure(_handleDioException(exception), stackTrace);
     } catch (error, stackTrace) {
-      return Failure(HttpUnknownException(message: error.toString()), stackTrace);
+      return Failure(
+          HttpUnknownException(message: error.toString()), stackTrace);
     }
   }
 
@@ -108,28 +111,50 @@ class HttpClient {
     } on DioException catch (exception, stackTrace) {
       return Failure(_handleDioException(exception), stackTrace);
     } catch (error, stackTrace) {
-      return Failure(HttpUnknownException(message: error.toString()), stackTrace);
+      return Failure(
+          HttpUnknownException(message: error.toString()), stackTrace);
     }
   }
 
   HttpException _handleDioException(DioException exception) {
-    switch (exception.type) {
+    final DioException(:type, :message) = exception;
+
+    switch (type) {
       case DioExceptionType.connectionTimeout:
-        return HttpConnectionErrorException(message: exception.message);
+        return HttpConnectionErrorException(
+          message: message ?? ErrorMessages.connectionTimeout,
+        );
       case DioExceptionType.sendTimeout:
-        return HttpSendTimeoutException(message: exception.message);
+        return HttpSendTimeoutException(
+          message: message ?? ErrorMessages.sendTimeout,
+        );
       case DioExceptionType.receiveTimeout:
-        return HttpReceiveTimeoutException(message: exception.message);
+        return HttpReceiveTimeoutException(
+          message: message ?? ErrorMessages.receiveTimeout,
+        );
       case DioExceptionType.badCertificate:
-        return HttpBadCertificateException(message: exception.message);
+        return HttpBadCertificateException(
+          message: message ?? ErrorMessages.badCertificate,
+        );
       case DioExceptionType.badResponse:
-        return HttpBadResponseException(message: exception.responseMessage ?? exception.message);
+        {
+          const defautMessage = ErrorMessages.badResponse;
+          return HttpBadResponseException(
+            message: exception.responseMessage ?? message ?? defautMessage,
+          );
+        }
       case DioExceptionType.cancel:
-        return HttpCancelException(message: exception.message);
+        return HttpCancelException(
+          message: message ?? ErrorMessages.cancel,
+        );
       case DioExceptionType.connectionError:
-        return HttpConnectionErrorException(message: exception.message);
+        return HttpConnectionErrorException(
+          message: message ?? ErrorMessages.connectionError,
+        );
       case DioExceptionType.unknown:
-        return HttpUnknownException(message: exception.message);
+        return HttpUnknownException(
+          message: message ?? ErrorMessages.unknown,
+        );
     }
   }
 }
