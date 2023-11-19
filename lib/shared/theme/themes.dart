@@ -5,7 +5,12 @@ part 'color_schemes.g.dart';
 part 'app_bar_theme.dart';
 
 final lightTheme = ThemeData(
-  fontFamily: 'Montserrat',
+  fontFamily: 'RobotoSans',
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(
+      fontSize: 16,
+    ),
+  ),
   appBarTheme: _lightAppBarTheme,
   colorScheme: _lightColorScheme,
   pageTransitionsTheme: const PageTransitionsTheme(
@@ -16,7 +21,12 @@ final lightTheme = ThemeData(
 );
 
 final darkTheme = ThemeData(
-  fontFamily: 'Montserrat',
+  fontFamily: 'RobotoSans',
+  textTheme: const TextTheme(
+    bodyMedium: TextStyle(
+      fontSize: 16,
+    ),
+  ),
   appBarTheme: _darkAppBarTheme,
   colorScheme: _darkColorScheme,
   pageTransitionsTheme: const PageTransitionsTheme(
