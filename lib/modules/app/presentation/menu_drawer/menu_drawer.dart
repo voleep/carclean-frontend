@@ -19,7 +19,9 @@ class MenuDrawer extends ConsumerWidget {
         surfaceTintColor: Theme.of(context).colorScheme.surface,
         selectedIndex: ref.watch(selectedMenuIndexProvider),
         onDestinationSelected: (selectedIndex) {
-          ref.read(menuControllerProvider.notifier).onMenuSelected(selectedIndex: selectedIndex);
+          ref
+              .read(menuControllerProvider.notifier)
+              .onMenuSelected(selectedIndex: selectedIndex);
           Scaffold.of(context).closeEndDrawer();
         },
         children: [
@@ -27,7 +29,10 @@ class MenuDrawer extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(28, 20, 16, 20),
             child: Text(
               'CarClean',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary),
             ),
           ),
           ...ref
