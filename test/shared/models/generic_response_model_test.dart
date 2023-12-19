@@ -16,7 +16,8 @@ class _DataModel {
 
 void main() {
   group('Generic Response Model', () {
-    test('Deve ser possível desserializar uma resposta com data do tipo JSON', () {
+    test('Deve ser possível desserializar uma resposta com data do tipo JSON',
+        () {
       const expectedId = 123;
       const expectedName = "Voleep test";
 
@@ -28,46 +29,67 @@ void main() {
         'errorMessage': null
       };
 
-      final response = GenericResponse<_DataModel>.fromJsonT(json, _DataModel.fromJson);
+      final response =
+          GenericResponse<_DataModel>.fromJsonT(json, _DataModel.fromJson);
 
       expect(expectedId, response.data!.id);
       expect(expectedName, response.data!.name);
     });
 
-    test('Deve ser possível desserializar uma resposta com data do tipo boolean', () {
+    test(
+        'Deve ser possível desserializar uma resposta com data do tipo boolean',
+        () {
       const expectedData = false;
 
-      final json = <String, dynamic>{'data': expectedData, 'errorMessage': null};
+      final json = <String, dynamic>{
+        'data': expectedData,
+        'errorMessage': null
+      };
 
       final response = GenericResponse<bool>.fromJson(json);
 
       expect(expectedData, response.data);
     });
 
-    test('Deve ser possível desserializar uma resposta com data do tipo string', () {
+    test('Deve ser possível desserializar uma resposta com data do tipo string',
+        () {
       const expectedData = "Voleep CarClean Test";
 
-      final json = <String, dynamic>{'data': expectedData, 'errorMessage': null};
+      final json = <String, dynamic>{
+        'data': expectedData,
+        'errorMessage': null
+      };
 
       final response = GenericResponse<String>.fromJson(json);
 
       expect(expectedData, response.data);
     });
 
-    test('Deve ser possível desserializar uma resposta com data do tipo integer', () {
+    test(
+        'Deve ser possível desserializar uma resposta com data do tipo integer',
+        () {
       const expectedData = 1234567890;
 
-      final json = <String, dynamic>{'data': expectedData, 'errorMessage': null};
+      final json = <String, dynamic>{
+        'data': expectedData,
+        'errorMessage': null
+      };
 
       final response = GenericResponse<int>.fromJson(json);
 
       expect(expectedData, response.data);
     });
 
-    test('Deve ser possível desserializar uma resposta com campo errorMessage preenchido', () {
-      const expectedErrorMessage = "Infelizmente não conseguimos obter uma resposta";
+    test(
+        'Deve ser possível desserializar uma resposta com campo errorMessage preenchido',
+        () {
+      const expectedErrorMessage =
+          "Infelizmente não conseguimos obter uma resposta";
 
-      final json = <String, dynamic>{'data': null, 'errorMessage': expectedErrorMessage};
+      final json = <String, dynamic>{
+        'data': null,
+        'errorMessage': expectedErrorMessage
+      };
 
       final response = GenericResponse.fromJson(json);
 
