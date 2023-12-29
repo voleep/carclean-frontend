@@ -8,13 +8,14 @@ import 'package:voleep_carclean_frontend/modules/service/data/models/create_serv
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'service_repository.g.dart';
 
 @riverpod
-ServiceRepository serviceRepository(ServiceRepositoryRef ref) => ServiceRepository(
+ServiceRepository serviceRepository(ServiceRepositoryRef ref) =>
+    ServiceRepository(
       http: ref.read(httpClientProvider),
     );
 
@@ -25,7 +26,8 @@ class ServiceRepository {
 
   ServiceRepository({required this.http});
 
-  Future<Either<RepositoryException, Service>> findById(ServiceId serviceId) async {
+  Future<Either<RepositoryException, Service>> findById(
+      ServiceId serviceId) async {
     final getServiceResult = await http.get<ServiceModel>(
       "$endpoint/$serviceId",
       fromJsonT: ServiceModel.fromJson,
@@ -53,7 +55,8 @@ class ServiceRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoCarregarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
@@ -65,14 +68,16 @@ class ServiceRepository {
     }
   }
 
-  Future<Either<RepositoryException, Service>> saveOrUpdate(CreateServiceModel createServiceModel) async {
+  Future<Either<RepositoryException, Service>> saveOrUpdate(
+      CreateServiceModel createServiceModel) async {
     if (createServiceModel.serviceId != null) {
       return update(createServiceModel);
     }
     return save(createServiceModel);
   }
 
-  Future<Either<RepositoryException, Service>> save(CreateServiceModel createServiceModel) async {
+  Future<Either<RepositoryException, Service>> save(
+      CreateServiceModel createServiceModel) async {
     final createServiceResult = await http.post<ServiceModel>(
       endpoint,
       data: createServiceModel.toJson(),
@@ -101,7 +106,8 @@ class ServiceRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
@@ -113,7 +119,8 @@ class ServiceRepository {
     }
   }
 
-  Future<Either<RepositoryException, Service>> update(CreateServiceModel createServiceModel) async {
+  Future<Either<RepositoryException, Service>> update(
+      CreateServiceModel createServiceModel) async {
     final updateServiceResult = await http.put<ServiceModel>(
       endpoint,
       data: createServiceModel.toJson(),
@@ -142,7 +149,8 @@ class ServiceRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/auth_exception.dart';
 import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';

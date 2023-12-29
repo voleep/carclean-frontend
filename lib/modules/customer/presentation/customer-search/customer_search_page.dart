@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
@@ -14,7 +14,8 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class CustomerSearchPage extends ConsumerStatefulWidget {
-  const CustomerSearchPage({Key? key, this.selectionMode = false}) : super(key: key);
+  const CustomerSearchPage({Key? key, this.selectionMode = false})
+      : super(key: key);
 
   final bool selectionMode;
 
@@ -25,8 +26,10 @@ class CustomerSearchPage extends ConsumerStatefulWidget {
 class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
   final dataTableKey = GlobalKey();
 
-  final searchConfig =
-      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer", orderField: "dsName", filterOnInit: true);
+  final searchConfig = SearchConfig(
+      endpoint: "${ApiConfig.CARCLEAN_API_URL}/customer",
+      orderField: "dsName",
+      filterOnInit: true);
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +59,14 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
               field: "dsEmail",
               type: FilterType.text,
             ),
-            FilterOption(title: "Situação", field: "stCustomer", type: FilterType.enumeration, enumOptions: [
-              EnumOption(title: "Ativo", value: 1),
-              EnumOption(title: "Inativo", value: 0),
-            ]),
+            FilterOption(
+                title: "Situação",
+                field: "stCustomer",
+                type: FilterType.enumeration,
+                enumOptions: [
+                  EnumOption(title: "Ativo", value: 1),
+                  EnumOption(title: "Inativo", value: 0),
+                ]),
           ],
           itemBuilder: (context, index, item, isSelected) => ListTile(
             title: Text(item.dsName),
@@ -84,7 +91,10 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceTint
+                          .withOpacity(0.5),
                       child: isSelected
                           ? const Icon(Icons.check_rounded)
                           : Text(item.dsName.substring(0, 1).toUpperCase()),
@@ -100,7 +110,9 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                 Routes.app.customer.update(item.customerId),
               );
               if (shouldRefresh == true) {
-                ref.read(searchControllerProvider(searchConfig).notifier).refreshByIndex(index);
+                ref
+                    .read(searchControllerProvider(searchConfig).notifier)
+                    .refreshByIndex(index);
               }
             },
           ),
@@ -114,9 +126,12 @@ class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
                 Icons.add_rounded,
               ),
               onPressed: () async {
-                final shouldReload = await context.push(Routes.app.customer.create);
+                final shouldReload =
+                    await context.push(Routes.app.customer.create);
                 if (shouldReload == true) {
-                  ref.read(searchControllerProvider(searchConfig).notifier).refresh();
+                  ref
+                      .read(searchControllerProvider(searchConfig).notifier)
+                      .refresh();
                 }
               }),
         ),

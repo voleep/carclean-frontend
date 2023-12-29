@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
@@ -14,7 +14,8 @@ import 'package:voleep_carclean_frontend/shared/models/generic_response_model.da
 part 'employee_repository.g.dart';
 
 @riverpod
-EmployeeRepository employeeRepository(EmployeeRepositoryRef ref) => EmployeeRepository(
+EmployeeRepository employeeRepository(EmployeeRepositoryRef ref) =>
+    EmployeeRepository(
       http: ref.watch(httpClientProvider),
     );
 
@@ -25,7 +26,8 @@ class EmployeeRepository {
 
   const EmployeeRepository({required this.http});
 
-  Future<Either<RepositoryException, Employee>> findById(EmployeeId emplyeeId) async {
+  Future<Either<RepositoryException, Employee>> findById(
+      EmployeeId emplyeeId) async {
     final getEmployeeResult = await http.get<EmployeeModel>(
       "$endpoint/$emplyeeId",
       fromJsonT: EmployeeModel.fromJson,
@@ -53,7 +55,8 @@ class EmployeeRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoCarregarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
@@ -65,14 +68,16 @@ class EmployeeRepository {
     }
   }
 
-  Future<Either<RepositoryException, Employee>> saveOrUpdate(CreateEmployeeModel createEmployeeModel) async {
+  Future<Either<RepositoryException, Employee>> saveOrUpdate(
+      CreateEmployeeModel createEmployeeModel) async {
     if (createEmployeeModel.employeeId != null) {
       return update(createEmployeeModel);
     }
     return save(createEmployeeModel);
   }
 
-  Future<Either<RepositoryException, Employee>> save(CreateEmployeeModel createEmployeeModel) async {
+  Future<Either<RepositoryException, Employee>> save(
+      CreateEmployeeModel createEmployeeModel) async {
     final createEmployeeResult = await http.post<EmployeeModel>(
       endpoint,
       data: createEmployeeModel.toJson(),
@@ -101,7 +106,8 @@ class EmployeeRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
@@ -113,7 +119,8 @@ class EmployeeRepository {
     }
   }
 
-  Future<Either<RepositoryException, Employee>> update(CreateEmployeeModel createEmployeeModel) async {
+  Future<Either<RepositoryException, Employee>> update(
+      CreateEmployeeModel createEmployeeModel) async {
     final updateEmployeeResult = await http.put<EmployeeModel>(
       endpoint,
       data: createEmployeeModel.toJson(),
@@ -141,7 +148,8 @@ class EmployeeRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }

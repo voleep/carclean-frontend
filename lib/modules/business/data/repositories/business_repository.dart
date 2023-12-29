@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
@@ -22,22 +22,29 @@ class BusinessRepository {
 
   BusinessRepository({required this.http});
 
-  Future<Either<RepositoryException, AuthModel>> createBusiness({required CreateBusinessDTO createBusinessDTO}) async {
-    final postResult = await http.post(endpoint, data: createBusinessDTO.toJson());
+  Future<Either<RepositoryException, AuthModel>> createBusiness(
+      {required CreateBusinessDTO createBusinessDTO}) async {
+    final postResult =
+        await http.post(endpoint, data: createBusinessDTO.toJson());
 
     switch (postResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(RepositoryException(message: Strings.erroCriarEmpresa), StackTrace.current);
+          return Failure(RepositoryException(message: Strings.erroCriarEmpresa),
+              StackTrace.current);
         }
 
         return Success(AuthModel.fromJson(data));
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
-          return Failure(RepositoryException(message: exception.message ?? Strings.erroCriarEmpresa), stackTrace);
+          return Failure(
+              RepositoryException(
+                  message: exception.message ?? Strings.erroCriarEmpresa),
+              stackTrace);
         }
 
-        return Failure(RepositoryException(message: Strings.erroCriarEmpresa), stackTrace);
+        return Failure(
+            RepositoryException(message: Strings.erroCriarEmpresa), stackTrace);
     }
   }
 }

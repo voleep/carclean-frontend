@@ -7,13 +7,14 @@ import 'package:voleep_carclean_frontend/core/http/http_client.dart';
 import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/data/models/create_product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/entities/product.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'product_repository.g.dart';
 
 @riverpod
-ProductRepository productRepository(ProductRepositoryRef ref) => ProductRepository(
+ProductRepository productRepository(ProductRepositoryRef ref) =>
+    ProductRepository(
       http: ref.read(httpClientProvider),
     );
 
@@ -24,7 +25,8 @@ class ProductRepository {
 
   ProductRepository({required this.http});
 
-  Future<Either<RepositoryException, Product>> findById(String productId) async {
+  Future<Either<RepositoryException, Product>> findById(
+      String productId) async {
     final getProductResult = await http.get<ProductModel>(
       "$endpoint/$productId",
       fromJsonT: ProductModel.fromJson,
@@ -33,7 +35,9 @@ class ProductRepository {
     switch (getProductResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(RepositoryException(message: Strings.produtoNaoEncontrado), StackTrace.current);
+          return Failure(
+              RepositoryException(message: Strings.produtoNaoEncontrado),
+              StackTrace.current);
         }
 
         return Success(
@@ -51,7 +55,8 @@ class ProductRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoCarregarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
@@ -63,14 +68,16 @@ class ProductRepository {
     }
   }
 
-  Future<Either<RepositoryException, Product>> saveOrUpdate(CreateProductModel createProductModel) async {
+  Future<Either<RepositoryException, Product>> saveOrUpdate(
+      CreateProductModel createProductModel) async {
     if (createProductModel.productId != null) {
       return update(createProductModel);
     }
     return save(createProductModel);
   }
 
-  Future<Either<RepositoryException, Product>> save(CreateProductModel createProductModel) async {
+  Future<Either<RepositoryException, Product>> save(
+      CreateProductModel createProductModel) async {
     final createProdutResult = await http.post<ProductModel>(
       endpoint,
       data: createProductModel.toJson(),
@@ -80,7 +87,9 @@ class ProductRepository {
     switch (createProdutResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(RepositoryException(message: Strings.erroAoSalvarDados), StackTrace.current);
+          return Failure(
+              RepositoryException(message: Strings.erroAoSalvarDados),
+              StackTrace.current);
         }
 
         return Success(
@@ -98,7 +107,8 @@ class ProductRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
@@ -110,7 +120,8 @@ class ProductRepository {
     }
   }
 
-  Future<Either<RepositoryException, Product>> update(CreateProductModel createProductModel) async {
+  Future<Either<RepositoryException, Product>> update(
+      CreateProductModel createProductModel) async {
     final updateProdutResult = await http.put<ProductModel>(
       endpoint,
       data: createProductModel.toJson(),
@@ -120,7 +131,9 @@ class ProductRepository {
     switch (updateProdutResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(RepositoryException(message: Strings.erroAoSalvarDados), StackTrace.current);
+          return Failure(
+              RepositoryException(message: Strings.erroAoSalvarDados),
+              StackTrace.current);
         }
 
         return Success(
@@ -138,7 +151,8 @@ class ProductRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }

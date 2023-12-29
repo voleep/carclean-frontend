@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
@@ -15,7 +15,8 @@ import 'package:voleep_carclean_frontend/shared/models/generic_response_model.da
 part 'vehicle_repository.g.dart';
 
 @riverpod
-VehicleRepository vehicleRepository(VehicleRepositoryRef ref) => VehicleRepository(
+VehicleRepository vehicleRepository(VehicleRepositoryRef ref) =>
+    VehicleRepository(
       http: ref.read(httpClientProvider),
     );
 
@@ -26,7 +27,8 @@ class VehicleRepository {
 
   VehicleRepository({required this.http});
 
-  Future<Either<RepositoryException, Vehicle>> findById(VehicleId vehicleId) async {
+  Future<Either<RepositoryException, Vehicle>> findById(
+      VehicleId vehicleId) async {
     final getVehicleResult = await http.get<VehicleModel>(
       "$endpoint/$vehicleId",
       fromJsonT: VehicleModel.fromJson,
@@ -51,7 +53,8 @@ class VehicleRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoCarregarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
@@ -63,14 +66,16 @@ class VehicleRepository {
     }
   }
 
-  Future<Either<RepositoryException, Vehicle>> saveOrUpdate(CreateVehicleModel createVehicleModel) async {
+  Future<Either<RepositoryException, Vehicle>> saveOrUpdate(
+      CreateVehicleModel createVehicleModel) async {
     if (createVehicleModel.vehicleId != null) {
       return update(createVehicleModel);
     }
     return save(createVehicleModel);
   }
 
-  Future<Either<RepositoryException, Vehicle>> save(CreateVehicleModel createVehicleModel) async {
+  Future<Either<RepositoryException, Vehicle>> save(
+      CreateVehicleModel createVehicleModel) async {
     final createVehicleResult = await http.post<VehicleModel>(
       endpoint,
       data: createVehicleModel.toJson(),
@@ -96,7 +101,8 @@ class VehicleRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
@@ -108,7 +114,8 @@ class VehicleRepository {
     }
   }
 
-  Future<Either<RepositoryException, Vehicle>> update(CreateVehicleModel createVehicleModel) async {
+  Future<Either<RepositoryException, Vehicle>> update(
+      CreateVehicleModel createVehicleModel) async {
     final updateVehicleResult = await http.put<VehicleModel>(
       endpoint,
       data: createVehicleModel.toJson(),
@@ -134,7 +141,8 @@ class VehicleRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(
+                message: exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
@@ -161,7 +169,9 @@ class VehicleRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(message: exception.message ?? Strings.erroVerificarDuplicidadePlaca),
+            RepositoryException(
+                message:
+                    exception.message ?? Strings.erroVerificarDuplicidadePlaca),
             stackTrace,
           );
         }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
@@ -20,12 +20,14 @@ class ServiceSearchPage extends ConsumerStatefulWidget {
   final SelectionMode selectionMode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceSearchPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceSearchPageState();
 }
 
 class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
   late SearchConfig searchConfig;
-  final searchFilter = const FilterOption(title: "Descrição", field: "description", type: FilterType.text);
+  final searchFilter = const FilterOption(
+      title: "Descrição", field: "description", type: FilterType.text);
 
   @override
   void initState() {
@@ -45,7 +47,9 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
         Routes.app.service.update(item.serviceId),
       );
       if (shouldReload == true) {
-        ref.read(searchControllerProvider(searchConfig).notifier).refreshByIndex(index);
+        ref
+            .read(searchControllerProvider(searchConfig).notifier)
+            .refreshByIndex(index);
       }
     }
 
@@ -74,7 +78,8 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
       itemBuilder: (context, index, item, isSelected) => VoleepSearchTile(
         selected: isSelected,
         title: item.description,
-        subtitle: "${item.fullDescription}\nValor: R\$ ${item.price.toStringAsFixed(2)}",
+        subtitle:
+            "${item.fullDescription}\nValor: R\$ ${item.price.toStringAsFixed(2)}",
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -103,7 +108,10 @@ class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
                         width: 40,
                         height: 40,
                         alignment: AlignmentDirectional.center,
-                        color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surfaceTint
+                            .withOpacity(0.5),
                         child: Text(item.code.toString()),
                       ),
                     ),

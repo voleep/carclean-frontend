@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:voleep_carclean_frontend/core/config/ApiConfig.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
@@ -19,9 +19,12 @@ class EmployeeSearchPage extends ConsumerWidget {
 
   final SelectionMode selectionMode;
 
-  final _searchConfig =
-      SearchConfig(endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee", orderField: "name", filterOnInit: true);
-  final _searchFilter = const FilterOption(title: "Nome", field: "name", type: FilterType.text);
+  final _searchConfig = SearchConfig(
+      endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee",
+      orderField: "name",
+      filterOnInit: true);
+  final _searchFilter =
+      const FilterOption(title: "Nome", field: "name", type: FilterType.text);
   final _dateFormat = DateFormat("dd/MM/yyyy");
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,7 +58,8 @@ class EmployeeSearchPage extends ConsumerWidget {
           ],
           itemBuilder: (context, index, item, selected) => ListTile(
             title: Text(item.name),
-            subtitle: Text("${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
+            subtitle: Text(
+                "${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +70,10 @@ class EmployeeSearchPage extends ConsumerWidget {
                       width: 40,
                       height: 40,
                       alignment: AlignmentDirectional.center,
-                      color: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.5),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .surfaceTint
+                          .withOpacity(0.5),
                       child: Text(item.name.substring(0, 1).toUpperCase()),
                     )),
               ],
@@ -81,7 +88,9 @@ class EmployeeSearchPage extends ConsumerWidget {
                 Routes.app.employee.update(item.employeeId),
               );
               if (shouldReload == true) {
-                ref.read(searchControllerProvider(_searchConfig).notifier).refreshByIndex(index);
+                ref
+                    .read(searchControllerProvider(_searchConfig).notifier)
+                    .refreshByIndex(index);
               }
             },
           ),
@@ -93,9 +102,12 @@ class EmployeeSearchPage extends ConsumerWidget {
           child: FloatingActionButton(
               child: const Icon(Icons.add_rounded),
               onPressed: () async {
-                final shouldReload = await context.push(Routes.app.employee.create);
+                final shouldReload =
+                    await context.push(Routes.app.employee.create);
                 if (shouldReload == true) {
-                  ref.read(searchControllerProvider(_searchConfig).notifier).refresh();
+                  ref
+                      .read(searchControllerProvider(_searchConfig).notifier)
+                      .refresh();
                 }
               }),
         )
