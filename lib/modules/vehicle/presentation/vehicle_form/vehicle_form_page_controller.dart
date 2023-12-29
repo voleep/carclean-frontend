@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
@@ -24,11 +23,13 @@ class VehicleFormPageController extends _$VehicleFormPageController {
   }
 
   Future<void> findById(VehicleId vehicleId) async {
-    final getVehicleResult = await ref.read(vehicleRepositoryProvider).findById(vehicleId);
+    final getVehicleResult =
+        await ref.read(vehicleRepositoryProvider).findById(vehicleId);
 
     state = switch (getVehicleResult) {
       Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+      Failure(:final exception, :final stackTrace) =>
+        AsyncValue.error(exception, stackTrace)
     };
   }
 
@@ -47,21 +48,25 @@ class VehicleFormPageController extends _$VehicleFormPageController {
       modelYear: modelYear,
     );
 
-    final saveVehicleResult = await ref.read(vehicleRepositoryProvider).saveOrUpdate(createVehicleModel);
+    final saveVehicleResult = await ref
+        .read(vehicleRepositoryProvider)
+        .saveOrUpdate(createVehicleModel);
 
     state = switch (saveVehicleResult) {
       Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+      Failure(:final exception, :final stackTrace) =>
+        AsyncValue.error(exception, stackTrace)
     };
 
     showProgress.state = false;
   }
 
   Future<bool> existsByLicensePlate(String licensePlate) async {
-    final existsResult = await ref.read(vehicleRepositoryProvider).existsByLicensePlate(
-          licensePlate: licensePlate,
-          updatingVehicleId: state.value?.vehicleId,
-        );
+    final existsResult =
+        await ref.read(vehicleRepositoryProvider).existsByLicensePlate(
+              licensePlate: licensePlate,
+              updatingVehicleId: state.value?.vehicleId,
+            );
 
     switch (existsResult) {
       case Success(:final value):

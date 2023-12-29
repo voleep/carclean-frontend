@@ -13,11 +13,7 @@ final lightTheme = ThemeData(
   ),
   appBarTheme: _lightAppBarTheme,
   colorScheme: _lightColorScheme,
-  pageTransitionsTheme: const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-    },
-  ),
+  pageTransitionsTheme: pageTransitionsTheme,
 );
 
 final darkTheme = ThemeData(
@@ -29,9 +25,12 @@ final darkTheme = ThemeData(
   ),
   appBarTheme: _darkAppBarTheme,
   colorScheme: _darkColorScheme,
-  pageTransitionsTheme: const PageTransitionsTheme(
-    builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-    },
-  ),
+  pageTransitionsTheme: pageTransitionsTheme,
+);
+
+const pageTransitionsTheme = PageTransitionsTheme(
+  builders: {
+    TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+    TargetPlatform.iOS: CupertinoPageTransitionsBuilder()
+  },
 );

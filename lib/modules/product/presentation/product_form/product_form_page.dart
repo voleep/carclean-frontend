@@ -22,7 +22,8 @@ class ProductFormPage extends ConsumerStatefulWidget {
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProductFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ProductFormPageState();
 }
 
 class _ProductFormPageState extends ConsumerState<ProductFormPage> {
@@ -37,7 +38,9 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(productFormControllerProvider(widget.productId, widget.mode), (_, value) {
+    ref.listenManual(
+        productFormControllerProvider(widget.productId, widget.mode),
+        (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -47,12 +50,14 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
       }
 
       if (value.hasValue && !value.hasError) {
-        ref.read(situationSwitchState.notifier).state = value.value!.situation == 1 ? true : false;
+        ref.read(situationSwitchState.notifier).state =
+            value.value!.situation == 1 ? true : false;
         _codeControl.text = value.value!.code.toString();
         _descriptionControl.text = value.value!.description;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
         _availableStockControl.text = value.value!.availableStock.toString();
-        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
+        _pcComissionControl.text =
+            "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -71,11 +76,15 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         children: [
           Text(
             "Situação ",
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge
+                ?.copyWith(color: Theme.of(context).colorScheme.outline),
           ),
           Switch(
             value: value,
-            onChanged: (value) => ref.read(situationSwitchState.notifier).state = value,
+            onChanged: (value) =>
+                ref.read(situationSwitchState.notifier).state = value,
           ),
         ],
       );
@@ -86,89 +95,98 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
         title: Text(isCreateMode ? "Novo produto" : "Produto"),
       ),
       body: ScrollableView(
-        child: Form(
-          key: _formKey,
-          child: RowInline(
-            children: [
-              Visibility(
-                visible: isUpdateMode,
-                child: VoleepTextFormField(
-                  width: 130,
-                  controller: _codeControl,
-                  enabled: false,
-                  placeholder: "Código",
-                  icon: isMobile ? Icons.qr_code_rounded : null,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: RowInline(
+              children: [
+                Visibility(
+                  visible: isUpdateMode,
+                  child: VoleepTextFormField(
+                    width: 130,
+                    controller: _codeControl,
+                    enabled: false,
+                    placeholder: "Código",
+                    icon: isMobile ? Icons.qr_code_rounded : null,
+                  ),
                 ),
-              ),
-              Visibility(visible: isMobile, child: situationSwitcher),
-              VoleepTextFormField(
-                width: 550,
-                autofocus: widget.mode == FormMode.create ? true : false,
-                controller: _descriptionControl,
-                placeholder: "Produto",
-                icon: isMobile ? Icons.description_rounded : null,
-                validator: [
-                  Validators.required(),
-                  Validators.maxLength(250),
-                ].compose,
-              ),
-              VoleepTextFormField(
-                width: 160,
-                controller: _priceControl,
-                placeholder: "Preço",
-                icon: isMobile ? Icons.request_quote_rounded : null,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
+                Visibility(visible: isMobile, child: situationSwitcher),
+                VoleepTextFormField(
+                  width: 550,
+                  autofocus: widget.mode == FormMode.create ? true : false,
+                  controller: _descriptionControl,
+                  placeholder: "Produto",
+                  icon: isMobile ? Icons.description_rounded : null,
+                  validator: [
+                    Validators.required(),
+                    Validators.maxLength(250),
+                  ].compose,
                 ),
-                formatters: [RealInputFormatter()],
-              ),
-              VoleepTextFormField(
-                width: 180,
-                controller: _availableStockControl,
-                placeholder: "Estoque disponível",
-                icon: isMobile ? Icons.inventory_rounded : null,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
+                VoleepTextFormField(
+                  width: 160,
+                  controller: _priceControl,
+                  placeholder: "Preço",
+                  icon: isMobile ? Icons.request_quote_rounded : null,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: false,
+                  ),
+                  formatters: [RealInputFormatter()],
                 ),
-              ),
-              VoleepTextFormField(
-                width: 210,
-                controller: _pcComissionControl,
-                placeholder: "Comissão por vendedor",
-                icon: isMobile ? Icons.payments_rounded : null,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
+                VoleepTextFormField(
+                  width: 180,
+                  controller: _availableStockControl,
+                  placeholder: "Estoque disponível",
+                  icon: isMobile ? Icons.inventory_rounded : null,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: false,
+                  ),
                 ),
-              ),
-              Visibility(visible: !isMobile, child: situationSwitcher),
-            ],
+                VoleepTextFormField(
+                  width: 210,
+                  controller: _pcComissionControl,
+                  placeholder: "Comissão por vendedor",
+                  icon: isMobile ? Icons.payments_rounded : null,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: false,
+                  ),
+                ),
+                Visibility(visible: !isMobile, child: situationSwitcher),
+              ],
+            ),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => const CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
           ),
-          onWillPop: () async {
-            final canDeactivate = await showDialog(
-              context: context,
-              builder: (context) => const CanDeactivateDialog(),
-            );
-            return canDeactivate;
-          },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(productFormControllerProvider(widget.productId, widget.mode).notifier);
+            final notifier = ref.read(
+                productFormControllerProvider(widget.productId, widget.mode)
+                    .notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price =
-                _priceControl.text.isNotEmpty ? double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!) : 0.0;
+            final price = _priceControl.text.isNotEmpty
+                ? double.parse(
+                    doubleRE.firstMatch(_priceControl.text)!.group(0)!)
+                : 0.0;
             final availableStock = _availableStockControl.text.isNotEmpty
-                ? double.parse(doubleRE.firstMatch(_availableStockControl.text)!.group(0)!)
+                ? double.parse(
+                    doubleRE.firstMatch(_availableStockControl.text)!.group(0)!)
                 : 0.0;
             final pcCommission = _pcComissionControl.text.isNotEmpty
-                ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
+                ? double.parse(
+                    doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
                 : 0.0;
 
             await notifier
@@ -180,7 +198,10 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
               situation: ref.read(situationSwitchState) ? 1 : 0,
             )
                 .then((value) {
-              if (!ref.read(productFormControllerProvider(widget.productId, widget.mode)).hasError) {
+              if (!ref
+                  .read(productFormControllerProvider(
+                      widget.productId, widget.mode))
+                  .hasError) {
                 context.pop(true);
               }
             });

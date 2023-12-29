@@ -49,55 +49,60 @@ class VehicleFormPage extends ConsumerWidget {
         title: Text("Veículo"),
       ),
       body: ScrollableView(
-        child: Form(
-          key: _formKey,
-          child: RowInline(
-            children: [
-              VoleepTextFormField(
-                width: 550,
-                controller: _descriptionControl,
-                placeholder: "Descrição",
-                icon: isMobile ? Icons.description_outlined : null,
-                validator: [
-                  Validators.required(),
-                  Validators.maxLength(100),
-                ].compose,
-              ),
-              VoleepTextFormField(
-                width: 150,
-                controller: _licensePlateControl,
-                placeholder: "Placa",
-                icon: isMobile ? Icons.money_rounded : null,
-                validator: [
-                  Validators.required(),
-                  Validators.maxLength(7),
-                ].compose,
-                formatters: [PlacaVeiculoInputFormatter()],
-              ),
-              VoleepTextFormField(
-                width: 150,
-                controller: _modelYearControl,
-                placeholder: "Ano",
-                icon: isMobile ? Icons.event_rounded : null,
-                validator: Validators.maxLength(20),
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: RowInline(
+              children: [
+                VoleepTextFormField(
+                  width: 550,
+                  controller: _descriptionControl,
+                  placeholder: "Descrição",
+                  icon: isMobile ? Icons.description_outlined : null,
+                  validator: [
+                    Validators.required(),
+                    Validators.maxLength(100),
+                  ].compose,
+                ),
+                VoleepTextFormField(
+                  width: 150,
+                  controller: _licensePlateControl,
+                  placeholder: "Placa",
+                  icon: isMobile ? Icons.money_rounded : null,
+                  validator: [
+                    Validators.required(),
+                    Validators.maxLength(7),
+                  ].compose,
+                  formatters: [PlacaVeiculoInputFormatter()],
+                ),
+                VoleepTextFormField(
+                  width: 150,
+                  controller: _modelYearControl,
+                  placeholder: "Ano",
+                  icon: isMobile ? Icons.event_rounded : null,
+                  validator: Validators.maxLength(20),
+                ),
+              ],
+            ),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => const CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
           ),
-          onWillPop: () async {
-            final canDeactivate = await showDialog(
-              context: context,
-              builder: (context) => const CanDeactivateDialog(),
-            );
-            return canDeactivate;
-          },
         ),
       ),
       floatingActionButton: controller.whenOrNull(
         data: (value) => FloatingActionButton.extended(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-              final notifier = ref.read(vehicleFormPageControllerProvider(vehicleId).notifier);
-              final existsByLicensePlate = await notifier.existsByLicensePlate(_licensePlateControl.text);
+              final notifier = ref
+                  .read(vehicleFormPageControllerProvider(vehicleId).notifier);
+              final existsByLicensePlate = await notifier
+                  .existsByLicensePlate(_licensePlateControl.text);
 
               if (existsByLicensePlate) {
                 if (context.mounted) {

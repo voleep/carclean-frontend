@@ -21,7 +21,8 @@ class ServiceFormPage extends ConsumerStatefulWidget {
   final FormMode mode;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceFormPageState();
 }
 
 class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
@@ -36,7 +37,9 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
   @override
   void initState() {
     super.initState();
-    ref.listenManual(ServiceFormControllerProvider(widget.serviceId, widget.mode), (_, value) {
+    ref.listenManual(
+        ServiceFormControllerProvider(widget.serviceId, widget.mode),
+        (_, value) {
       if (value.hasError) {
         value.showSnackBarOnError(context);
       }
@@ -50,7 +53,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
         _descriptionControl.text = value.value!.description;
         _fullDescriptionControl.text = value.value!.fullDescription;
         _priceControl.text = "R\$ ${value.value!.price.toStringAsFixed(2)}";
-        _pcComissionControl.text = "${value.value!.pcCommission.toStringAsFixed(2)} %";
+        _pcComissionControl.text =
+            "${value.value!.pcCommission.toStringAsFixed(2)} %";
       }
     }, fireImmediately: true);
   }
@@ -61,84 +65,92 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
 
     return Scaffold(
       appBar: VoleepAppBar(
-        title: Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
+        title:
+            Text(widget.mode == FormMode.update ? "Serviço" : "Novo serviço"),
       ),
       body: ScrollableView(
-        child: Form(
-          key: _formKey,
-          child: RowInline(children: [
-            VoleepTextFormField(
-              width: 130,
-              controller: _codeControl,
-              enabled: false,
-              placeholder: "Código",
-              icon: isMobile ? Icons.qr_code_rounded : null,
-            ),
-            VoleepTextFormField(
-              width: 550,
-              autofocus: widget.mode == FormMode.create ? true : false,
-              controller: _descriptionControl,
-              placeholder: "Descrição",
-              icon: isMobile ? Icons.description_rounded : null,
-              validator: [
-                Validators.required(),
-                Validators.minLength(3),
-                Validators.maxLength(250),
-              ].compose,
-            ),
-            VoleepTextFormField(
-              width: 550,
-              controller: _fullDescriptionControl,
-              placeholder: "Descrição completa",
-              icon: isMobile ? Icons.subject_rounded : null,
-              validator: [
-                Validators.required(),
-                Validators.minLength(3),
-                Validators.maxLength(999),
-              ].compose,
-            ),
-            VoleepTextFormField(
-              width: 160,
-              controller: _priceControl,
-              placeholder: "Valor",
-              icon: isMobile ? Icons.attach_money_rounded : null,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: false,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: RowInline(children: [
+              VoleepTextFormField(
+                width: 130,
+                controller: _codeControl,
+                enabled: false,
+                placeholder: "Código",
+                icon: isMobile ? Icons.qr_code_rounded : null,
               ),
-              validator: Validators.required(),
-              formatters: [RealInputFormatter()],
-            ),
-            VoleepTextFormField(
-              width: 260,
-              controller: _pcComissionControl,
-              placeholder: "Comissão por vendedor",
-              icon: isMobile ? Icons.payments_rounded : null,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-                signed: false,
+              VoleepTextFormField(
+                width: 550,
+                autofocus: widget.mode == FormMode.create ? true : false,
+                controller: _descriptionControl,
+                placeholder: "Descrição",
+                icon: isMobile ? Icons.description_rounded : null,
+                validator: [
+                  Validators.required(),
+                  Validators.minLength(3),
+                  Validators.maxLength(250),
+                ].compose,
               ),
-            ),
-          ]),
-          onWillPop: () async {
-            final canDeactivate = await showDialog(
-              context: context,
-              builder: (context) => const CanDeactivateDialog(),
-            );
-            return canDeactivate;
-          },
+              VoleepTextFormField(
+                width: 550,
+                controller: _fullDescriptionControl,
+                placeholder: "Descrição completa",
+                icon: isMobile ? Icons.subject_rounded : null,
+                validator: [
+                  Validators.required(),
+                  Validators.minLength(3),
+                  Validators.maxLength(999),
+                ].compose,
+              ),
+              VoleepTextFormField(
+                width: 160,
+                controller: _priceControl,
+                placeholder: "Valor",
+                icon: isMobile ? Icons.attach_money_rounded : null,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
+                ),
+                validator: Validators.required(),
+                formatters: [RealInputFormatter()],
+              ),
+              VoleepTextFormField(
+                width: 260,
+                controller: _pcComissionControl,
+                placeholder: "Comissão por vendedor",
+                icon: isMobile ? Icons.payments_rounded : null,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
+                ),
+              ),
+            ]),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => const CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final notifier = ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode).notifier);
+            final notifier = ref.read(
+                serviceFormControllerProvider(widget.serviceId, widget.mode)
+                    .notifier);
 
             var doubleRE = RegExp(r"\b\d[\d,.]*\b");
 
-            final price = double.parse(doubleRE.firstMatch(_priceControl.text)!.group(0)!);
+            final price = double.parse(
+                doubleRE.firstMatch(_priceControl.text)!.group(0)!);
             final pcCommission = _pcComissionControl.text.isNotEmpty
-                ? double.parse(doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
+                ? double.parse(
+                    doubleRE.firstMatch(_pcComissionControl.text)!.group(0)!)
                 : 0.0;
 
             await notifier
@@ -149,7 +161,10 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
               pcCommission: pcCommission,
             )
                 .then((value) {
-              if (!ref.read(serviceFormControllerProvider(widget.serviceId, widget.mode)).hasError) {
+              if (!ref
+                  .read(serviceFormControllerProvider(
+                      widget.serviceId, widget.mode))
+                  .hasError) {
                 context.pop(true);
               }
             });
