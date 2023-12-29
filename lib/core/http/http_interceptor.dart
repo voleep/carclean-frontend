@@ -54,10 +54,11 @@ class HttpInterceptor extends QueuedInterceptor {
 
       final AuthModel(:token, :refreshToken) = authModel;
 
-      final refreshResponse = ref.read(userRepositoryProvider).refreshToken(
-            token: token,
-            refreshToken: refreshToken,
-          );
+      final refreshResponse =
+          await ref.read(userRepositoryProvider).refreshToken(
+                token: token,
+                refreshToken: refreshToken,
+              );
 
       switch (refreshResponse) {
         case Success(:final value):
