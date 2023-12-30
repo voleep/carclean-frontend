@@ -6,24 +6,23 @@ import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer
 import 'package:voleep_carclean_frontend/modules/customer/domain/typedefs/customer_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/column_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
-class CustomerSearchPage extends ConsumerStatefulWidget {
-  const CustomerSearchPage({Key? key, this.selectionMode = false})
+class CustomerListPage extends ConsumerStatefulWidget {
+  const CustomerListPage({Key? key, this.selectionMode = false})
       : super(key: key);
 
   final bool selectionMode;
 
   @override
-  ConsumerState<CustomerSearchPage> createState() => _CustomerSearchPageState();
+  ConsumerState<CustomerListPage> createState() => _CustomerSearchPageState();
 }
 
-class _CustomerSearchPageState extends ConsumerState<CustomerSearchPage> {
+class _CustomerSearchPageState extends ConsumerState<CustomerListPage> {
   final dataTableKey = GlobalKey();
 
   final searchConfig = SearchConfig(

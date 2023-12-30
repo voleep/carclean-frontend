@@ -7,8 +7,6 @@ import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/ca
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 
-final _isLoadingProvider = AutoDisposeStateProvider((ref) => false);
-
 class ScaffoldWithForm extends StatefulWidget {
   const ScaffoldWithForm({
     super.key,
@@ -17,7 +15,6 @@ class ScaffoldWithForm extends StatefulWidget {
     required this.onSubmit,
     this.formKey,
     this.onValidate,
-    this.onReset,
   });
 
   final String title;
@@ -30,14 +27,13 @@ class ScaffoldWithForm extends StatefulWidget {
 
   final FutureOr<bool> Function()? onValidate;
 
-  final FutureOr<void> Function()? onReset;
-
   @override
   State<ScaffoldWithForm> createState() => _ScaffoldWithFormState();
 }
 
 class _ScaffoldWithFormState extends State<ScaffoldWithForm> {
   late GlobalKey<FormState> formKey;
+  final isLoadingVN = ValueNotifier(false);
 
   @override
   void initState() {
@@ -63,34 +59,31 @@ class _ScaffoldWithFormState extends State<ScaffoldWithForm> {
             ),
           ),
         ),
-        floatingActionButton: Consumer(
+        floatingActionButton: ValueListenableBuilder(
+          valueListenable: isLoadingVN,
           builder: buildActionButton,
         ),
       ),
     );
   }
 
-  Widget buildActionButton(context, ref, child) {
-    final isLoading = ref.watch(_isLoadingProvider);
-
+  Widget buildActionButton(BuildContext context, bool isLoading, Widget? _) {
     return FloatingActionButton.extended(
       onPressed: () async {
         final formState = formKey.currentState!;
 
         if (isLoading || !formState.validate()) return;
 
-        final loadingProvider = ref.read(_isLoadingProvider.notifier);
-
         try {
-          loadingProvider.state = true;
+          isLoadingVN.value = true;
 
-          if (!(await widget.onValidate?.call() ?? false)) return;
+          if (await widget.onValidate?.call() == false) {
+            return;
+          }
 
           await widget.onSubmit();
-          formState.reset();
-          await widget.onReset?.call();
         } finally {
-          loadingProvider.state = false;
+          isLoadingVN.value = false;
         }
       },
       label: const Text("Salvar"),
@@ -114,5 +107,12 @@ class _ScaffoldWithFormState extends State<ScaffoldWithForm> {
     if (canPop && context.mounted) {
       context.pop();
     }
+  }
+
+  @override
+  void dispose() {
+    isLoadingVN.dispose();
+
+    super.dispose();
   }
 }

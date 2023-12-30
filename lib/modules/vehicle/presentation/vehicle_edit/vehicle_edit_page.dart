@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
@@ -32,7 +31,7 @@ class _VehicleEditPageState extends ConsumerState<VehicleEditPage> {
     ref.listen(vehicleEditVmProvider(widget.vehicleId), (previous, next) {
       next.showSnackBarOnError(context);
       next.popOnFirstError(context, previous);
-      next.runIfData((vehicle) {
+      next.runOnData((vehicle) {
         descriptionEC.text = vehicle.description;
         licensePlateEC.text = vehicle.licensePlate;
         modelYearEC.text = vehicle.modelYear ?? "";
@@ -75,11 +74,6 @@ class _VehicleEditPageState extends ConsumerState<VehicleEditPage> {
           ),
         ],
       ),
-      onReset: () {
-        final hasError =
-            ref.read(vehicleEditVmProvider(widget.vehicleId)).hasError;
-        if (!hasError) context.pop(true);
-      },
     );
   }
 
@@ -113,6 +107,10 @@ class _VehicleEditPageState extends ConsumerState<VehicleEditPage> {
       licensePlate: licensePlateEC.text,
       modelYear: modelYearEC.text.notEmptyOrNull,
     );
+
+    if (context.mounted) {
+      ref.read(vehicleEditVmProvider(widget.vehicleId)).onFormSaved(context);
+    }
   }
 
   @override

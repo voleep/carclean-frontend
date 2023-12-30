@@ -27,15 +27,28 @@ extension AsyncValueUI<T> on AsyncValue<T> {
         },
       );
 
-  void popOnFirstError(BuildContext context, AsyncValue? prev) => whenOrNull(
+  void popOnFirstError(BuildContext context, AsyncValue? previous) =>
+      whenOrNull(
         error: (_, __) {
-          if (prev?.value == null) {
+          if (previous?.value == null) {
             context.pop();
           }
         },
       );
 
-  void runIfData(void Function(T value) fn) {
+  void onFormSaved(BuildContext context) => whenOrNull(
+        data: (_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Salvo com sucesso!'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          context.pop();
+        },
+      );
+
+  void runOnData(void Function(T value) fn) {
     if (value != null && hasValue && !isLoading && !hasError) {
       fn(value!);
     }

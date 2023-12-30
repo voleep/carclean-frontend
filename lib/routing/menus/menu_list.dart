@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
-import 'package:voleep_carclean_frontend/modules/customer/presentation/customer-search/customer_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_search/employee_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
@@ -52,7 +52,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorCustomerKey,
         label: 'Clientes',
         icon: Icons.group_outlined,
-        child: const CustomerSearchPage(),
+        child: const CustomerListPage(),
       ),
       MenuModel(
         group: MenuGroup.register,
