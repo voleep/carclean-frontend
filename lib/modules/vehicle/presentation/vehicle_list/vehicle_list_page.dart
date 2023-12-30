@@ -11,8 +11,8 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/model
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
-class VehicleSearchPage extends ConsumerWidget {
-  VehicleSearchPage({super.key, this.selectionMode = false});
+class VehicleListPage extends ConsumerWidget {
+  VehicleListPage({super.key, this.selectionMode = false});
 
   final bool selectionMode;
 
@@ -54,25 +54,6 @@ class VehicleSearchPage extends ConsumerWidget {
             title: Text(item.description),
             subtitle: Text(
                 "Placa: ${item.licensePlate} ${item.modelYear != null ? '- Ano: ${item.modelYear}' : ''}"),
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
-                      child:
-                          Text(item.description.substring(0, 1).toUpperCase()),
-                    )),
-              ],
-            ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
               if (selectionMode) {

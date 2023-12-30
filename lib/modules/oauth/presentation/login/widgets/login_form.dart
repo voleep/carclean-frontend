@@ -7,7 +7,7 @@ import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/viewmo
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/widgets/new_account.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
@@ -47,7 +47,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           AutofillGroup(
             child: Column(
               children: [
-                VoleepTextFormField(
+                VoleepFormField(
                   autofillHints: const [AutofillHints.email],
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailEC,
@@ -59,7 +59,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   ].compose,
                 ),
                 const SizedBox(height: 10),
-                VoleepTextFormField(
+                VoleepFormField(
                   autofillHints: const [AutofillHints.password],
                   controller: _passwordEC,
                   placeholder: "Senha",

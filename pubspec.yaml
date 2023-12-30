@@ -19,6 +19,7 @@ dependencies:
   flutter_svg: ^2.0.1
   url_launcher: ^6.1.9
   intl: ^0.18.0
+  uuid: ^3.0.7
 
   # Code generation related
   json_annotation: ^4.8.0
@@ -38,7 +39,7 @@ dev_dependencies:
 
   # Testing related
   build_test: ^2.1.0
-  mockito: ^5.4.2
+  mocktail: ^1.0.2
 
 flutter:
   uses-material-design: true

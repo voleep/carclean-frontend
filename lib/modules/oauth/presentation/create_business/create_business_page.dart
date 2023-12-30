@@ -5,7 +5,7 @@ import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_business/providers/create_business_page_controller_provider.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class CreateBusinessPage extends StatelessWidget {
   const CreateBusinessPage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class CreateBusinessPage extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          VoleepTextFormField(
+                          VoleepFormField(
                             controller: businessNameController,
                             placeholder: "Nome da empresa",
                             icon: Icons.business_rounded,

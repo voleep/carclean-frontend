@@ -6,20 +6,27 @@ import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/domain/models/menu_model.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 
 part 'menu_list.g.dart';
 
-final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
-final _shellNavigatorProductKey = GlobalKey<NavigatorState>(debugLabel: 'shellProduct');
-final _shellNavigatorServiceKey = GlobalKey<NavigatorState>(debugLabel: 'shellService');
-final _shellNavigatorVehicleKey = GlobalKey<NavigatorState>(debugLabel: 'shellVehicle');
-final _shellNavigatorCustomerKey = GlobalKey<NavigatorState>(debugLabel: 'shellCustomer');
-final _shellNavigatorEmployeeKey = GlobalKey<NavigatorState>(debugLabel: 'shellEmployee');
-final _shellNavigatorServiceOrderKey = GlobalKey<NavigatorState>(debugLabel: 'shellServiceOrder');
+final _shellNavigatorHomeKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+final _shellNavigatorProductKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellProduct');
+final _shellNavigatorServiceKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellService');
+final _shellNavigatorVehicleKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellVehicle');
+final _shellNavigatorCustomerKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellCustomer');
+final _shellNavigatorEmployeeKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellEmployee');
+final _shellNavigatorServiceOrderKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellServiceOrder');
 
 @Riverpod(keepAlive: true)
 List<MenuModel> menuList(MenuListRef ref) => [
@@ -69,7 +76,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorVehicleKey,
         label: 'Veículos',
         icon: Icons.local_car_wash_rounded,
-        child: VehicleSearchPage(),
+        child: VehicleListPage(),
       ),
       MenuModel(
         group: MenuGroup.register,

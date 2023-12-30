@@ -6,7 +6,7 @@ import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_accou
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_account/widgets/legal_agreement%20.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class CreateAccountForm extends ConsumerStatefulWidget {
   const CreateAccountForm({super.key});
@@ -46,7 +46,7 @@ class _CreateAccountFormState extends ConsumerState<CreateAccountForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              VoleepTextFormField(
+              VoleepFormField(
                 controller: _usernameEC,
                 placeholder: "Usuário",
                 icon: Icons.person_outline_rounded,
@@ -56,7 +56,7 @@ class _CreateAccountFormState extends ConsumerState<CreateAccountForm> {
                   Validators.maxLength(100),
                 ].compose,
               ),
-              VoleepTextFormField(
+              VoleepFormField(
                 controller: _emailEC,
                 placeholder: "E-mail",
                 icon: Icons.alternate_email_rounded,
@@ -66,7 +66,7 @@ class _CreateAccountFormState extends ConsumerState<CreateAccountForm> {
                   Validators.email(),
                 ].compose,
               ),
-              VoleepTextFormField(
+              VoleepFormField(
                 controller: _passwordEC,
                 placeholder: "Senha",
                 icon: Icons.lock_outline_rounded,
@@ -78,7 +78,7 @@ class _CreateAccountFormState extends ConsumerState<CreateAccountForm> {
                   Validators.maxLength(250),
                 ].compose,
               ),
-              VoleepTextFormField(
+              VoleepFormField(
                   controller: _confirmPasswordEC,
                   placeholder: "Confirmar senha",
                   icon: Icons.lock_person_outlined,

@@ -8,10 +8,10 @@ import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 final situationSwitchState = AutoDisposeStateProvider<bool>((ref) => true);
 
@@ -99,12 +99,12 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
-            child: RowInline(
+            child: RowWrap(
               children: [
                 Visibility(
                   visible: isUpdateMode,
-                  child: VoleepTextFormField(
-                    width: 130,
+                  child: VoleepFormField(
+                    minWidth: 130,
                     controller: _codeControl,
                     enabled: false,
                     placeholder: "Código",
@@ -112,8 +112,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   ),
                 ),
                 Visibility(visible: isMobile, child: situationSwitcher),
-                VoleepTextFormField(
-                  width: 550,
+                VoleepFormField(
+                  minWidth: 550,
                   autofocus: widget.mode == FormMode.create ? true : false,
                   controller: _descriptionControl,
                   placeholder: "Produto",
@@ -123,8 +123,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                     Validators.maxLength(250),
                   ].compose,
                 ),
-                VoleepTextFormField(
-                  width: 160,
+                VoleepFormField(
+                  minWidth: 160,
                   controller: _priceControl,
                   placeholder: "Preço",
                   icon: isMobile ? Icons.request_quote_rounded : null,
@@ -134,8 +134,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                   ),
                   formatters: [RealInputFormatter()],
                 ),
-                VoleepTextFormField(
-                  width: 180,
+                VoleepFormField(
+                  minWidth: 180,
                   controller: _availableStockControl,
                   placeholder: "Estoque disponível",
                   icon: isMobile ? Icons.inventory_rounded : null,
@@ -144,8 +144,8 @@ class _ProductFormPageState extends ConsumerState<ProductFormPage> {
                     signed: false,
                   ),
                 ),
-                VoleepTextFormField(
-                  width: 210,
+                VoleepFormField(
+                  minWidth: 210,
                   controller: _pcComissionControl,
                   placeholder: "Comissão por vendedor",
                   icon: isMobile ? Icons.payments_rounded : null,

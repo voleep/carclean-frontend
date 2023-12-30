@@ -9,10 +9,10 @@ import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class ServiceFormPage extends ConsumerStatefulWidget {
   const ServiceFormPage({super.key, this.serviceId, required this.mode});
@@ -73,16 +73,16 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
-            child: RowInline(children: [
-              VoleepTextFormField(
-                width: 130,
+            child: RowWrap(children: [
+              VoleepFormField(
+                minWidth: 130,
                 controller: _codeControl,
                 enabled: false,
                 placeholder: "Código",
                 icon: isMobile ? Icons.qr_code_rounded : null,
               ),
-              VoleepTextFormField(
-                width: 550,
+              VoleepFormField(
+                minWidth: 550,
                 autofocus: widget.mode == FormMode.create ? true : false,
                 controller: _descriptionControl,
                 placeholder: "Descrição",
@@ -93,8 +93,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                   Validators.maxLength(250),
                 ].compose,
               ),
-              VoleepTextFormField(
-                width: 550,
+              VoleepFormField(
+                minWidth: 550,
                 controller: _fullDescriptionControl,
                 placeholder: "Descrição completa",
                 icon: isMobile ? Icons.subject_rounded : null,
@@ -104,8 +104,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                   Validators.maxLength(999),
                 ].compose,
               ),
-              VoleepTextFormField(
-                width: 160,
+              VoleepFormField(
+                minWidth: 160,
                 controller: _priceControl,
                 placeholder: "Valor",
                 icon: isMobile ? Icons.attach_money_rounded : null,
@@ -116,8 +116,8 @@ class _ServiceFormPageState extends ConsumerState<ServiceFormPage> {
                 validator: Validators.required(),
                 formatters: [RealInputFormatter()],
               ),
-              VoleepTextFormField(
-                width: 260,
+              VoleepFormField(
+                minWidth: 260,
                 controller: _pcComissionControl,
                 placeholder: "Comissão por vendedor",
                 icon: isMobile ? Icons.payments_rounded : null,

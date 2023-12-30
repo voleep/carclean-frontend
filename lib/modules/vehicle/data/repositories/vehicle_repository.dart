@@ -10,6 +10,7 @@ import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_mod
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/license_plate.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
+import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'vehicle_repository.g.dart';
@@ -29,12 +30,12 @@ class VehicleRepository {
 
   Future<Either<RepositoryException, Vehicle>> findById(
       VehicleId vehicleId) async {
-    final getVehicleResult = await http.get<VehicleModel>(
+    final getResponse = await http.get<VehicleModel>(
       "$endpoint/$vehicleId",
       fromJsonT: VehicleModel.fromJson,
     );
 
-    switch (getVehicleResult) {
+    switch (getResponse) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
@@ -66,23 +67,16 @@ class VehicleRepository {
     }
   }
 
-  Future<Either<RepositoryException, Vehicle>> saveOrUpdate(
-      CreateVehicleModel createVehicleModel) async {
-    if (createVehicleModel.vehicleId != null) {
-      return update(createVehicleModel);
-    }
-    return save(createVehicleModel);
-  }
-
   Future<Either<RepositoryException, Vehicle>> save(
-      CreateVehicleModel createVehicleModel) async {
-    final createVehicleResult = await http.post<VehicleModel>(
+      CreateVehicleModel createVehicleModel, bool isNew) async {
+    final saveResponse = await http.request<VehicleModel>(
       endpoint,
+      method: isNew ? HttpMethod.post : HttpMethod.put,
       data: createVehicleModel.toJson(),
       fromJsonT: VehicleModel.fromJson,
     );
 
-    switch (createVehicleResult) {
+    switch (saveResponse) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
@@ -114,56 +108,16 @@ class VehicleRepository {
     }
   }
 
-  Future<Either<RepositoryException, Vehicle>> update(
-      CreateVehicleModel createVehicleModel) async {
-    final updateVehicleResult = await http.put<VehicleModel>(
-      endpoint,
-      data: createVehicleModel.toJson(),
-      fromJsonT: VehicleModel.fromJson,
-    );
-
-    switch (updateVehicleResult) {
-      case Success(value: GenericResponse(:final data)):
-        if (data == null) {
-          return Failure(
-            RepositoryException(message: Strings.erroAoSalvarDados),
-            StackTrace.current,
-          );
-        }
-
-        return Success(
-          Vehicle(
-            vehicleId: data.vehicleId,
-            licensePlate: data.licensePlate,
-            description: data.description,
-          ),
-        );
-      case Failure(:final exception, :final stackTrace):
-        if (exception is HttpBadResponseException) {
-          return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
-            stackTrace,
-          );
-        }
-
-        return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
-          stackTrace,
-        );
-    }
-  }
-
-  Future<Either<RepositoryException, bool>> existsByLicensePlate({
+  Future<Either<RepositoryException, bool>> existsByPlate({
     required LicensePlate licensePlate,
     VehicleId? updatingVehicleId,
   }) async {
-    final existsResult = await http.post(
+    final existsResponse = await http.post(
       "$endpoint/exists-by-licenseplate/$licensePlate",
       data: updatingVehicleId,
     );
 
-    switch (existsResult) {
+    switch (existsResponse) {
       case Success(value: GenericResponse(:final data)):
         return Success(data ?? false);
       case Failure(:final exception, :final stackTrace):

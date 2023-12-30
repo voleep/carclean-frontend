@@ -1,39 +1,41 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
+import 'package:voleep_carclean_frontend/core/extensions/async_value_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/models/create_vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/repositories/vehicle_repository.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/license_plate.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
 
-part 'vehicle_form_page_controller.g.dart';
+part 'vehicle_edit_vm.g.dart';
 
 @riverpod
-class VehicleFormPageController extends _$VehicleFormPageController {
+class VehicleEditVm extends _$VehicleEditVm {
+  bool get isNew => id == 'new';
+
   @override
-  AsyncValue<Vehicle?> build(VehicleId arg) {
-    if (arg != "new") {
-      findById(arg);
+  FutureOr<Vehicle> build(String id) async {
+    if (isNew) {
+      return Vehicle(
+        vehicleId: const Uuid().v1(),
+        licensePlate: '',
+        description: '',
+      );
     }
 
-    return const AsyncValue.data(null);
-  }
+    final getResult = await ref.read(vehicleRepositoryProvider).findById(id);
 
-  Future<void> findById(VehicleId vehicleId) async {
-    final getVehicleResult =
-        await ref.read(vehicleRepositoryProvider).findById(vehicleId);
-
-    state = switch (getVehicleResult) {
-      Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) =>
-        AsyncValue.error(exception, stackTrace)
+    return switch (getResult) {
+      Success(:final value) => value,
+      Failure(:final exception) => throw Exception(exception.message)
     };
   }
 
-  Future<void> saveOrUpdate({
+  Future<void> save({
     required String description,
     required LicensePlate licensePlate,
     String? modelYear,
@@ -50,31 +52,30 @@ class VehicleFormPageController extends _$VehicleFormPageController {
 
     final saveVehicleResult = await ref
         .read(vehicleRepositoryProvider)
-        .saveOrUpdate(createVehicleModel);
+        .save(createVehicleModel, isNew);
 
     state = switch (saveVehicleResult) {
       Success(:final value) => AsyncValue.data(value),
       Failure(:final exception, :final stackTrace) =>
-        AsyncValue.error(exception, stackTrace)
+        state.mergeWith(AsyncError(exception, stackTrace))
     };
 
     showProgress.state = false;
   }
 
-  Future<bool> existsByLicensePlate(String licensePlate) async {
+  Future<Either<Exception, bool>> existsByPlate(String licensePlate) async {
     final existsResult =
-        await ref.read(vehicleRepositoryProvider).existsByLicensePlate(
+        await ref.read(vehicleRepositoryProvider).existsByPlate(
               licensePlate: licensePlate,
               updatingVehicleId: state.value?.vehicleId,
             );
 
     switch (existsResult) {
-      case Success(:final value):
-        return value;
+      case Success():
+        return existsResult;
       case Failure(:final exception, :final stackTrace):
-        state = AsyncValue.error(exception, stackTrace);
-        return false;
+        state = state.mergeWith(AsyncError(exception, stackTrace));
+        return Failure(exception, stackTrace);
     }
-    ;
   }
 }

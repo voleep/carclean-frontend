@@ -8,7 +8,7 @@ import 'package:voleep_carclean_frontend/modules/service_order/domain/models/ser
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_form/service_order_form_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_product_list/service_order_product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_search/vehicle_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
@@ -62,7 +62,7 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectVehicle,
-          builder: (context, state) => VehicleSearchPage(
+          builder: (context, state) => VehicleListPage(
             selectionMode: true,
           ),
         ),

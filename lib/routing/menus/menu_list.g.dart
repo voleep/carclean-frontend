@@ -6,7 +6,7 @@ part of 'menu_list.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$menuListHash() => r'3987fc40f4249fdc372fd2664b7e456fd9fc0196';
+String _$menuListHash() => r'2c1c1fb070ea50334e9bef175e70ff172b16aeb6';
 
 /// See also [menuList].
 @ProviderFor(menuList)

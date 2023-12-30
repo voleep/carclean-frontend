@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
 
-class VoleepTextFormField extends StatefulWidget {
+class VoleepFormField extends StatefulWidget {
   static const double defaultHeight = 70;
 
-  const VoleepTextFormField({
+  const VoleepFormField({
     Key? key,
     required this.placeholder,
     this.initialValue,
     this.enabled,
     this.readOnly = false,
     this.onTap,
-    this.width,
+    this.minWidth,
     this.focusNode,
     this.icon,
     this.suffixIcon,
@@ -33,7 +33,7 @@ class VoleepTextFormField extends StatefulWidget {
   final bool? enabled;
   final bool readOnly;
   final void Function()? onTap;
-  final double? width;
+  final double? minWidth;
   final FocusNode? focusNode;
   final String placeholder;
   final IconData? icon;
@@ -51,10 +51,10 @@ class VoleepTextFormField extends StatefulWidget {
   final void Function(String)? onChanged;
 
   @override
-  State<VoleepTextFormField> createState() => _VoleepTextFormFieldState();
+  State<VoleepFormField> createState() => _VoleepFormFieldState();
 }
 
-class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
+class _VoleepFormFieldState extends State<VoleepFormField> {
   bool _obscureText = false;
   bool _touched = false;
   late FocusNode _focusNode;
@@ -103,9 +103,12 @@ class _VoleepTextFormFieldState extends State<VoleepTextFormField> {
       return style;
     });
 
-    return SizedBox(
-      height: VoleepTextFormField.defaultHeight,
-      width: widget.width,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: VoleepFormField.defaultHeight,
+        maxHeight: VoleepFormField.defaultHeight,
+        minWidth: widget.minWidth ?? double.infinity,
+      ),
       child: TextFormField(
         key: _fieldKey,
         initialValue: widget.initialValue,

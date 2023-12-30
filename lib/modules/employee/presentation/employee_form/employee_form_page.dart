@@ -13,10 +13,10 @@ import 'package:voleep_carclean_frontend/shared/formatters/telefone_input_format
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 final situationSwitchState =
     AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
@@ -65,10 +65,10 @@ class EmployeeFormPage extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
-            child: RowInline(
+            child: RowWrap(
               children: [
-                VoleepTextFormField(
-                  width: 550,
+                VoleepFormField(
+                  minWidth: 550,
                   autofocus: mode == FormMode.create ? true : false,
                   controller: _nameControl,
                   placeholder: "Nome",
@@ -78,8 +78,8 @@ class EmployeeFormPage extends ConsumerWidget {
                     Validators.maxLength(100),
                   ].compose,
                 ),
-                VoleepTextFormField(
-                  width: 195,
+                VoleepFormField(
+                  minWidth: 195,
                   controller: _telephoneControl,
                   placeholder: "Telefone",
                   icon: isMobile ? Icons.phone_rounded : null,
@@ -92,8 +92,8 @@ class EmployeeFormPage extends ConsumerWidget {
                 ),
                 Visibility(
                   visible: mode == FormMode.update,
-                  child: VoleepTextFormField(
-                    width: 200,
+                  child: VoleepFormField(
+                    minWidth: 200,
                     enabled: false,
                     controller: _registrationDateControl,
                     placeholder: "Data do cadastro",

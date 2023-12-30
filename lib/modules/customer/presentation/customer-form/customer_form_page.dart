@@ -13,10 +13,10 @@ import 'package:voleep_carclean_frontend/shared/formatters/compound/cpf_cpnj_for
 import 'package:voleep_carclean_frontend/shared/formatters/telefone_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 final situationSwitchState =
     AutoDisposeStateProvider<DisabledEnabled>((ref) => DisabledEnabled.enabled);
@@ -85,18 +85,18 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
           padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
-            child: RowInline(
+            child: RowWrap(
               children: [
-                VoleepTextFormField(
-                  width: 380,
+                VoleepFormField(
+                  minWidth: 380,
                   controller: _dsNameController,
                   placeholder: "Nome",
                   icon: Icons.person_outline_rounded,
                   validator: Validators.compose(
                       [Validators.required(), Validators.maxLength(100)]),
                 ),
-                VoleepTextFormField(
-                  width: 175,
+                VoleepFormField(
+                  minWidth: 175,
                   controller: _dsDocumentController,
                   placeholder: "CPF/CNPJ",
                   icon: Icons.badge_outlined,
@@ -107,8 +107,8 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                     CpfCnpjFormatter()
                   ],
                 ),
-                VoleepTextFormField(
-                  width: 195,
+                VoleepFormField(
+                  minWidth: 195,
                   controller: _dsTelephoneController,
                   placeholder: "Telefone",
                   keyboardType: TextInputType.phone,
@@ -119,16 +119,16 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                     TelefoneInputFormatter()
                   ],
                 ),
-                VoleepTextFormField(
-                  width: 380,
+                VoleepFormField(
+                  minWidth: 380,
                   controller: _dsEmailController,
                   placeholder: "Email",
                   keyboardType: TextInputType.emailAddress,
                   icon: Icons.email_outlined,
                   validator: Validators.maxLength(100),
                 ),
-                VoleepTextFormField(
-                  width: 380,
+                VoleepFormField(
+                  minWidth: 380,
                   maxLines: null,
                   controller: _dsNoteController,
                   placeholder: "Observações",

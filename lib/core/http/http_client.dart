@@ -7,6 +7,7 @@ import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/extensions/dio_exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_interceptor.dart';
+import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'http_client.g.dart';
@@ -100,6 +101,38 @@ class HttpClient {
         path,
         data: json.encode(data),
         options: Options(headers: headers),
+        queryParameters: queryParameters,
+      );
+
+      if (fromJsonT != null) {
+        return Success(GenericResponse<T>.fromJsonT(response.data, fromJsonT));
+      }
+
+      return Success(GenericResponse.fromJson(response.data));
+    } on DioException catch (exception, stackTrace) {
+      return Failure(_handleDioException(exception), stackTrace);
+    } catch (error, stackTrace) {
+      return Failure(
+          HttpUnknownException(message: error.toString()), stackTrace);
+    }
+  }
+
+  Future<Either<HttpException, GenericResponse<T>>> request<T>(
+    String path, {
+    required HttpMethod method,
+    Object? data,
+    T Function(Map<String, dynamic>)? fromJsonT,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await dio.request(
+        path,
+        data: json.encode(data),
+        options: Options(
+          headers: headers,
+          method: method.name,
+        ),
         queryParameters: queryParameters,
       );
 

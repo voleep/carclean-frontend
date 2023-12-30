@@ -5,8 +5,8 @@ import 'package:voleep_carclean_frontend/modules/service_order/presentation/serv
 import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/utils/field_util.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/row_inline/row_inline.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_text_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class ServiceOrderItem extends ConsumerStatefulWidget {
   const ServiceOrderItem({super.key, required this.index});
@@ -14,7 +14,8 @@ class ServiceOrderItem extends ConsumerStatefulWidget {
   final int index;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ServiceOrderItemState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ServiceOrderItemState();
 }
 
 class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
@@ -23,7 +24,9 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listenManual(serviceOrderItemControllerProvider.select((value) => value[widget.index]), (prev, current) {
+    ref.listenManual(
+        serviceOrderItemControllerProvider
+            .select((value) => value[widget.index]), (prev, current) {
       _employeeController.text = current.employee?.name ?? '';
       _priceController.text = current.price.toString();
     }, fireImmediately: true);
@@ -35,7 +38,8 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
         child: Material(
           child: ExpansionTile(
             title: Consumer(builder: (context, ref, _) {
-              final service = ref.watch(serviceOrderItemControllerProvider.select((value) => value[widget.index]));
+              final service = ref.watch(serviceOrderItemControllerProvider
+                  .select((value) => value[widget.index]));
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,8 +56,10 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
               );
             }),
             tilePadding: const EdgeInsets.symmetric(horizontal: 15),
-            childrenPadding: const EdgeInsets.only(right: 5, bottom: 5, left: 5),
-            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.05),
+            childrenPadding:
+                const EdgeInsets.only(right: 5, bottom: 5, left: 5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.05),
             shape: const RoundedRectangleBorder(side: BorderSide.none),
             collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
             leading: Container(
@@ -66,8 +72,10 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
               ),
               child: Text(
                 "${widget.index + 1}",
-                style:
-                    TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600),
               ),
             ),
             children: [
@@ -78,9 +86,9 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                 margin: const EdgeInsets.symmetric(vertical: 2.4),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15, right: 12, left: 12),
-                  child: RowInline(children: [
-                    VoleepTextFormField(
-                      width: 300,
+                  child: RowWrap(children: [
+                    VoleepFormField(
+                      minWidth: 300,
                       controller: _employeeController,
                       readOnly: true,
                       placeholder: "Colaborador",
@@ -88,18 +96,20 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                           ? IconButton(
                               icon: const Icon(Icons.clear_rounded),
                               onPressed: () => ref
-                                  .read(serviceOrderItemControllerProvider.notifier)
+                                  .read(serviceOrderItemControllerProvider
+                                      .notifier)
                                   .handleRemoveEmployee(widget.index),
                             )
                           : null,
-                      onTap: () =>
-                          ref.read(serviceOrderItemControllerProvider.notifier).handleSelectEmployee(widget.index),
+                      onTap: () => ref
+                          .read(serviceOrderItemControllerProvider.notifier)
+                          .handleSelectEmployee(widget.index),
                     ),
                     SizedBox(
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: VoleepTextFormField(
-                          width: 120,
+                        child: VoleepFormField(
+                          minWidth: 120,
                           controller: _priceController,
                           placeholder: "Valor",
                           validator: Validators.required(),
@@ -108,9 +118,11 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                             RealInputFormatter(moeda: true),
                           ],
                           onChanged: (value) {
-                            final price = FieldUtil.realToDouble(_priceController.text);
+                            final price =
+                                FieldUtil.realToDouble(_priceController.text);
                             ref
-                                .read(serviceOrderItemControllerProvider.notifier)
+                                .read(
+                                    serviceOrderItemControllerProvider.notifier)
                                 .handlePriceChanged(widget.index, price);
                           },
                         ),
@@ -121,8 +133,10 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: IconButton(
-                            onPressed: () =>
-                                ref.read(serviceOrderItemControllerProvider.notifier).removeService(widget.index),
+                            onPressed: () => ref
+                                .read(
+                                    serviceOrderItemControllerProvider.notifier)
+                                .removeService(widget.index),
                             icon: Icon(
                               Icons.delete_rounded,
                               color: Theme.of(context).colorScheme.error,
