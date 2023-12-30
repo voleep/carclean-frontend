@@ -14,13 +14,13 @@ class MockVehicleRepository extends Mock implements VehicleRepository {}
 
 void main() {
   late ProviderContainer container;
-  late MockVehicleRepository mockVehicleRepository;
+  late MockVehicleRepository repository;
 
   setUp(() {
-    mockVehicleRepository = MockVehicleRepository();
+    repository = MockVehicleRepository();
     container = createContainer(
       overrides: [
-        vehicleRepositoryProvider.overrideWithValue(mockVehicleRepository)
+        vehicleRepositoryProvider.overrideWithValue(repository),
       ],
     );
   });
@@ -53,7 +53,7 @@ void main() {
         modelYear: expectedYear,
       );
 
-      when(() => mockVehicleRepository.findById(expectedId)).thenAnswer(
+      when(() => repository.findById(expectedId)).thenAnswer(
         (_) async => Success(expectedVehicle),
       );
 
@@ -75,7 +75,7 @@ void main() {
         () async {
       const expectedId = 'my_vehicle_id';
 
-      when(() => mockVehicleRepository.findById(expectedId)).thenAnswer(
+      when(() => repository.findById(expectedId)).thenAnswer(
         (_) async =>
             Failure(RepositoryException(message: ''), StackTrace.current),
       );
@@ -105,8 +105,7 @@ void main() {
 
       registerFallbackValue(vehicleModel);
 
-      when(() => mockVehicleRepository.save(any(), true))
-          .thenAnswer((invocation) async {
+      when(() => repository.save(any(), true)).thenAnswer((invocation) async {
         final CreateVehicleModel model = invocation.positionalArguments[0];
         return Success(
           Vehicle(
@@ -145,7 +144,7 @@ void main() {
 
     registerFallbackValue(vehicleModel);
 
-    when(() => mockVehicleRepository.save(any(), true)).thenAnswer((_) async =>
+    when(() => repository.save(any(), true)).thenAnswer((_) async =>
         Failure(RepositoryException(message: ''), StackTrace.current));
 
     await container.read(VehicleEditVmProvider('new').future);
@@ -168,7 +167,7 @@ void main() {
     const expectedPlate = '1234-567';
     const expectedExists = true;
 
-    when(() => mockVehicleRepository.existsByPlate(
+    when(() => repository.existsByPlate(
           licensePlate: expectedPlate,
           updatingVehicleId: any(named: 'updatingVehicleId'),
         )).thenAnswer((_) async => Success(expectedExists));
