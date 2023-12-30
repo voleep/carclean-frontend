@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
@@ -74,7 +74,7 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectProduct,
-          builder: (context, state) => ProductSearchPage(),
+          builder: (context, state) => ProductListPage(),
         ),
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,

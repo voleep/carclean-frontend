@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/product/presentation/product_search/product_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_list/vehicle_list_page.dart';
@@ -60,7 +60,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorProductKey,
         label: 'Produtos',
         icon: Icons.category_rounded,
-        child: ProductSearchPage(),
+        child: ProductListPage(),
       ),
       MenuModel(
         group: MenuGroup.register,

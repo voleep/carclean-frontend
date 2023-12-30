@@ -12,8 +12,8 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/model
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
-class ProductSearchPage extends ConsumerWidget {
-  ProductSearchPage({super.key});
+class ProductListPage extends ConsumerWidget {
+  ProductListPage({super.key});
 
   final _searchConfig = SearchConfig(
       endpoint: "${ApiConfig.CARCLEAN_API_URL}/product",

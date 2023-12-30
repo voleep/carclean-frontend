@@ -11,8 +11,8 @@ class ScaffoldWithForm extends StatefulWidget {
   const ScaffoldWithForm({
     super.key,
     required this.title,
-    required this.child,
     required this.onSubmit,
+    required this.child,
     this.formKey,
     this.onValidate,
   });

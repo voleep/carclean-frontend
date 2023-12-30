@@ -8,6 +8,7 @@ import 'package:voleep_carclean_frontend/modules/product/data/models/product_mod
 import 'package:voleep_carclean_frontend/modules/product/data/models/create_product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/entities/product.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
+import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'product_repository.g.dart';
@@ -68,67 +69,16 @@ class ProductRepository {
     }
   }
 
-  Future<Either<RepositoryException, Product>> saveOrUpdate(
-      CreateProductModel createProductModel) async {
-    if (createProductModel.productId != null) {
-      return update(createProductModel);
-    }
-    return save(createProductModel);
-  }
-
   Future<Either<RepositoryException, Product>> save(
-      CreateProductModel createProductModel) async {
-    final createProdutResult = await http.post<ProductModel>(
+      CreateProductModel dto, bool isNew) async {
+    final saveResult = await http.request<ProductModel>(
       endpoint,
-      data: createProductModel.toJson(),
+      method: isNew ? HttpMethod.post : HttpMethod.put,
+      data: dto.toJson(),
       fromJsonT: ProductModel.fromJson,
     );
 
-    switch (createProdutResult) {
-      case Success(value: GenericResponse(:final data)):
-        if (data == null) {
-          return Failure(
-              RepositoryException(message: Strings.erroAoSalvarDados),
-              StackTrace.current);
-        }
-
-        return Success(
-          Product(
-            productId: data.productId,
-            code: data.code,
-            description: data.description,
-            price: data.price,
-            availableStock: data.availableStock,
-            pcCommission: data.pcCommission,
-            situation: data.situation,
-          ),
-        );
-
-      case Failure(:final exception, :final stackTrace):
-        if (exception is HttpBadResponseException) {
-          return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
-            stackTrace,
-          );
-        }
-
-        return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
-          stackTrace,
-        );
-    }
-  }
-
-  Future<Either<RepositoryException, Product>> update(
-      CreateProductModel createProductModel) async {
-    final updateProdutResult = await http.put<ProductModel>(
-      endpoint,
-      data: createProductModel.toJson(),
-      fromJsonT: ProductModel.fromJson,
-    );
-
-    switch (updateProdutResult) {
+    switch (saveResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
