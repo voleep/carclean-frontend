@@ -9,6 +9,7 @@ import 'package:voleep_carclean_frontend/modules/employee/data/models/create_emp
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
+import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'employee_repository.g.dart';
@@ -68,23 +69,16 @@ class EmployeeRepository {
     }
   }
 
-  Future<Either<RepositoryException, Employee>> saveOrUpdate(
-      CreateEmployeeModel createEmployeeModel) async {
-    if (createEmployeeModel.employeeId != null) {
-      return update(createEmployeeModel);
-    }
-    return save(createEmployeeModel);
-  }
-
   Future<Either<RepositoryException, Employee>> save(
-      CreateEmployeeModel createEmployeeModel) async {
-    final createEmployeeResult = await http.post<EmployeeModel>(
+      CreateEmployeeModel dto, bool isNew) async {
+    final saveResult = await http.request<EmployeeModel>(
       endpoint,
-      data: createEmployeeModel.toJson(),
+      method: isNew ? HttpMethod.post : HttpMethod.put,
+      data: dto.toJson(),
       fromJsonT: EmployeeModel.fromJson,
     );
 
-    switch (createEmployeeResult) {
+    switch (saveResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
@@ -103,48 +97,6 @@ class EmployeeRepository {
           ),
         );
 
-      case Failure(:final exception, :final stackTrace):
-        if (exception is HttpBadResponseException) {
-          return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
-            stackTrace,
-          );
-        }
-
-        return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
-          stackTrace,
-        );
-    }
-  }
-
-  Future<Either<RepositoryException, Employee>> update(
-      CreateEmployeeModel createEmployeeModel) async {
-    final updateEmployeeResult = await http.put<EmployeeModel>(
-      endpoint,
-      data: createEmployeeModel.toJson(),
-      fromJsonT: EmployeeModel.fromJson,
-    );
-
-    switch (updateEmployeeResult) {
-      case Success(value: GenericResponse(:final data)):
-        if (data == null) {
-          return Failure(
-            RepositoryException(message: Strings.erroAoSalvarDados),
-            StackTrace.current,
-          );
-        }
-
-        return Success(
-          Employee(
-            employeeId: data.employeeId,
-            name: data.name,
-            telephone: data.telephone,
-            registrationDate: data.registrationDate,
-            situation: data.situation,
-          ),
-        );
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(

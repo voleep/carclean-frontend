@@ -1,17 +1,14 @@
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
-import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_form/employee_form_page.dart';
+import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_edit/employee_edit_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 
 class EmployeeRoutes {
   final String root;
 
-  get create => "$root/${FormMode.create.name}";
+  get create => "$root/new";
 
-  update(EmployeeId id) => "$root/$id/${FormMode.update.name}";
-
-  copy(EmployeeId id) => "$root/$id/${FormMode.copy.name}";
+  update(EmployeeId id) => "$root/$id";
 
   EmployeeRoutes.forChild({
     required String parentPath,
@@ -20,23 +17,10 @@ class EmployeeRoutes {
   List<RouteBase> get routes => [
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
-          path: "$root/:id/:mode",
+          path: "$root/:id",
           builder: (context, state) {
             final String id = state.pathParameters['id']!;
-            final String mode = state.pathParameters['mode']!;
-            return EmployeeFormPage(
-              employeeId: id,
-              mode: FormMode.valueOf(mode),
-            );
-          },
-        ),
-        GoRoute(
-          parentNavigatorKey: Routes.i.navigationkey,
-          path: create,
-          builder: (context, state) {
-            return EmployeeFormPage(
-              mode: FormMode.create,
-            );
+            return EmployeeEditPage(id: id);
           },
         )
       ];

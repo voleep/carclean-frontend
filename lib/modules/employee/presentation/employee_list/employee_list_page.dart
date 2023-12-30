@@ -14,8 +14,8 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/model
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
-class EmployeeSearchPage extends ConsumerWidget {
-  EmployeeSearchPage({super.key, this.selectionMode = SelectionMode.none});
+class EmployeeListPage extends ConsumerWidget {
+  EmployeeListPage({super.key, this.selectionMode = SelectionMode.none});
 
   final SelectionMode selectionMode;
 
