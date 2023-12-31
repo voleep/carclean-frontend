@@ -19,10 +19,10 @@ class CustomerListPage extends ConsumerStatefulWidget {
   final bool selectionMode;
 
   @override
-  ConsumerState<CustomerListPage> createState() => _CustomerSearchPageState();
+  ConsumerState<CustomerListPage> createState() => _CustomerListPageState();
 }
 
-class _CustomerSearchPageState extends ConsumerState<CustomerListPage> {
+class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   final dataTableKey = GlobalKey();
 
   final searchConfig = SearchConfig(

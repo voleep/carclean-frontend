@@ -14,17 +14,17 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_search_tile/voleep_search_tile.dart';
 
-class ServiceSearchPage extends ConsumerStatefulWidget {
-  const ServiceSearchPage({super.key, this.selectionMode = SelectionMode.none});
+class ServiceListPage extends ConsumerStatefulWidget {
+  const ServiceListPage({super.key, this.selectionMode = SelectionMode.none});
 
   final SelectionMode selectionMode;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ServiceSearchPageState();
+      _ServiceListPageState();
 }
 
-class _ServiceSearchPageState extends ConsumerState<ServiceSearchPage> {
+class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   late SearchConfig searchConfig;
   final searchFilter = const FilterOption(
       title: "Descrição", field: "description", type: FilterType.text);

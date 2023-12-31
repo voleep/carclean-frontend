@@ -3,7 +3,7 @@ import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
-import 'package:voleep_carclean_frontend/modules/service/presentation/service_search/service_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/service/presentation/service_list/service_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_form/service_order_form_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_product_list/service_order_product_list_page.dart';
@@ -88,7 +88,7 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectService,
-          builder: (context, state) => const ServiceSearchPage(
+          builder: (context, state) => const ServiceListPage(
             selectionMode: SelectionMode.multi,
           ),
         ),
