@@ -1,34 +1,41 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
+import 'package:voleep_carclean_frontend/core/extensions/async_value_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/create_service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/repositories/service_repository.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
-import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
 
-part 'service_form_controller.g.dart';
+part 'service_edit_vm.g.dart';
 
 @riverpod
-class ServiceFormController extends _$ServiceFormController {
+class ServiceEditVm extends _$ServiceEditVm {
+  bool get isNew => id == 'new';
+
   @override
-  AsyncValue<Service?> build(ServiceId? arg, FormMode mode) {
-    if (arg != null) {
-      findById(arg);
+  FutureOr<Service> build(ServiceId id) async {
+    if (isNew) {
+      return Service(
+        serviceId: const Uuid().v1(),
+        code: 0,
+        description: '',
+        fullDescription: '',
+        price: 0,
+        pcCommission: 0,
+      );
     }
-    return const AsyncValue.data(null);
-  }
 
-  Future<void> findById(ServiceId serviceId) async {
-    final getServiceResult = await ref.read(serviceRepositoryProvider).findById(serviceId);
+    final getResult = await ref.read(serviceRepositoryProvider).findById(id);
 
-    state = switch (getServiceResult) {
-      Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+    return switch (getResult) {
+      Success(:final value) => value,
+      Failure(:final exception) => throw exception
     };
   }
 
-  Future<void> saveOrUpdate({
+  Future<void> save({
     required String description,
     required String fullDescription,
     required double price,
@@ -38,18 +45,21 @@ class ServiceFormController extends _$ServiceFormController {
     showProgress.state = true;
 
     final createServiceModel = CreateServiceModel(
-      serviceId: mode == FormMode.update ? state.value?.serviceId : null,
+      serviceId: state.value?.serviceId,
       description: description,
       fullDescription: fullDescription,
       price: price,
       pcCommission: pcCommission,
     );
 
-    final saveServiceResult = await ref.read(serviceRepositoryProvider).saveOrUpdate(createServiceModel);
+    final saveServiceResult = await ref
+        .read(serviceRepositoryProvider)
+        .save(createServiceModel, isNew);
 
     state = switch (saveServiceResult) {
       Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) => AsyncValue.error(exception, stackTrace)
+      Failure(:final exception, :final stackTrace) =>
+        state.mergeWith(AsyncError(exception, stackTrace))
     };
 
     showProgress.state = false;

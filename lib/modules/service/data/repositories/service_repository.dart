@@ -9,6 +9,7 @@ import 'package:voleep_carclean_frontend/modules/service/data/models/service_mod
 import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
+import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
 part 'service_repository.g.dart';
@@ -68,66 +69,16 @@ class ServiceRepository {
     }
   }
 
-  Future<Either<RepositoryException, Service>> saveOrUpdate(
-      CreateServiceModel createServiceModel) async {
-    if (createServiceModel.serviceId != null) {
-      return update(createServiceModel);
-    }
-    return save(createServiceModel);
-  }
-
   Future<Either<RepositoryException, Service>> save(
-      CreateServiceModel createServiceModel) async {
-    final createServiceResult = await http.post<ServiceModel>(
+      CreateServiceModel dto, bool isNew) async {
+    final saveResult = await http.request<ServiceModel>(
       endpoint,
-      data: createServiceModel.toJson(),
+      method: isNew ? HttpMethod.post : HttpMethod.put,
+      data: dto.toJson(),
       fromJsonT: ServiceModel.fromJson,
     );
 
-    switch (createServiceResult) {
-      case Success(value: GenericResponse(:final data)):
-        if (data == null) {
-          return Failure(
-            RepositoryException(message: Strings.erroAoSalvarDados),
-            StackTrace.current,
-          );
-        }
-
-        return Success(
-          Service(
-            serviceId: data.serviceId,
-            code: data.code,
-            description: data.description,
-            fullDescription: data.fullDescription,
-            price: data.price,
-            pcCommission: data.pcCommission,
-          ),
-        );
-      case Failure(:final exception, :final stackTrace):
-        if (exception is HttpBadResponseException) {
-          return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
-            stackTrace,
-          );
-        }
-
-        return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
-          stackTrace,
-        );
-    }
-  }
-
-  Future<Either<RepositoryException, Service>> update(
-      CreateServiceModel createServiceModel) async {
-    final updateServiceResult = await http.put<ServiceModel>(
-      endpoint,
-      data: createServiceModel.toJson(),
-      fromJsonT: ServiceModel.fromJson,
-    );
-
-    switch (updateServiceResult) {
+    switch (saveResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
