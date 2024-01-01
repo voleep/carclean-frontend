@@ -6,8 +6,6 @@ import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/models/page_response.dart';
 
-final listScaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
-
 class ScaffoldWithList<T, ID> extends StatefulWidget {
   const ScaffoldWithList({
     super.key,
@@ -55,9 +53,10 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldMessenger(
-      key: listScaffoldMessengerKey,
+    return MediaQuery(
+      data: MediaQuery.of(context).removePadding(removeBottom: true),
       child: Scaffold(
+        extendBody: true,
         body: SafeArea(
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -107,7 +106,9 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add_rounded), onPressed: () async {}),
+          child: const Icon(Icons.add_rounded),
+          onPressed: () async {},
+        ),
       ),
     );
   }

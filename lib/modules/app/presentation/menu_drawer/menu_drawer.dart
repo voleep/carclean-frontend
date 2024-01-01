@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_page.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer_divider.dart';
 import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
 import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
@@ -22,7 +23,7 @@ class MenuDrawer extends ConsumerWidget {
           ref
               .read(menuControllerProvider.notifier)
               .onMenuSelected(selectedIndex: selectedIndex);
-          Scaffold.of(context).closeEndDrawer();
+          drawerKey.currentState?.close();
         },
         children: [
           Padding(

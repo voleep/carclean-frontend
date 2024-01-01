@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:voleep_carclean_frontend/carclean_app.dart';
 import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
+import 'package:voleep_carclean_frontend/core/extensions/message_extension.dart';
 
 extension AsyncValueUI<T> on AsyncValue<T> {
   bool get isLoading => this is AsyncLoading<T>;
@@ -15,9 +16,7 @@ extension AsyncValueUI<T> on AsyncValue<T> {
             errorMessage = error.message;
           }
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMessage)),
-          );
+          messengerKey.currentState?.showMessage(errorMessage);
         },
       );
 
@@ -32,9 +31,7 @@ extension AsyncValueUI<T> on AsyncValue<T> {
 
   void popOnData(BuildContext context) => whenOrNull(
         data: (_) {
-          listScaffoldMessengerKey.currentState?.showSnackBar(
-            const SnackBar(content: Text('Salvo com sucesso!')),
-          );
+          messengerKey.currentState?.showSaveSuccessMessage();
           context.pop();
         },
       );

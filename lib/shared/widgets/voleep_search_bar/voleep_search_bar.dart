@@ -26,8 +26,6 @@ class _VoleepSearchBarState extends State<VoleepSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldState = appScaffoldState.currentState;
-
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -40,12 +38,9 @@ class _VoleepSearchBarState extends State<VoleepSearchBar> {
         onSubmitted: onSearch,
       ),
       actions: [
-        Visibility(
-          visible: scaffoldState?.hasEndDrawer ?? false,
-          child: IconButton(
-            icon: const Icon(Icons.menu_rounded, size: 27),
-            onPressed: () => scaffoldState?.openEndDrawer(),
-          ),
+        IconButton(
+          icon: const Icon(Icons.menu_rounded, size: 27),
+          onPressed: () => drawerKey.currentState?.open(),
         ),
       ],
       bottom: PreferredSize(
