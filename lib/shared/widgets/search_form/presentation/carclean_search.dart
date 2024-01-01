@@ -6,7 +6,7 @@ import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/error_view/error_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/fab_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_query_state.dart';
@@ -47,14 +47,17 @@ class CarCleanSearch<T, I> extends ConsumerStatefulWidget {
   final void Function(List<T> items)? onSelectItems;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CarCleanSearchState<T, I>();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CarCleanSearchState<T, I>();
 }
 
 class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
   final _debounceTime = DebounceTime(milliseconds: 500);
 
   _performSearch(final String value, final WidgetRef ref) {
-    final queryList = [...ref.read(filterQueryProvider(widget.config)) ?? <FilterQueryState>[]];
+    final queryList = [
+      ...ref.read(filterQueryProvider(widget.config)) ?? <FilterQueryState>[]
+    ];
 
     if (value.isNotEmpty) {
       queryList.add(FilterQueryState(
@@ -66,13 +69,21 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
       ));
     }
 
-    ref.read(search_controller.searchControllerProvider(widget.config).notifier).search(queryList);
+    ref
+        .read(
+            search_controller.searchControllerProvider(widget.config).notifier)
+        .search(queryList);
   }
 
   _onScrollNotification(ScrollEndNotification scrollEndNotification) async {
-    if (scrollEndNotification.metrics.pixels > 0 && scrollEndNotification.metrics.atEdge) {
+    if (scrollEndNotification.metrics.pixels > 0 &&
+        scrollEndNotification.metrics.atEdge) {
       ref.read(loadindNextPageState.notifier).state = true;
-      await ref.read(search_controller.searchControllerProvider(widget.config).notifier).nextPage();
+      await ref
+          .read(search_controller
+              .searchControllerProvider(widget.config)
+              .notifier)
+          .nextPage();
       ref.read(loadindNextPageState.notifier).state = false;
     }
   }
@@ -80,9 +91,11 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
   @override
   Widget build(BuildContext context) {
     final scaffoldState = Scaffold.maybeOf(context);
-    final controller = ref.watch(search_controller.searchControllerProvider(widget.config));
-    final isSingleSelection = widget.config.selectionMode == SelectionMode.single;
-    final isMultiSelection = widget.config.selectionMode == SelectionMode.multi;
+    final controller =
+        ref.watch(search_controller.searchControllerProvider(widget.config));
+    final isSingleSelection =
+        widget.config.selectionMode == SelectionType.single;
+    final isMultiSelection = widget.config.selectionMode == SelectionType.multi;
 
     return Scaffold(
       body: NestedScrollView(
@@ -97,7 +110,8 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
               actions: [
                 Consumer(
                   builder: (context, ref, child) {
-                    final queryList = ref.watch(filterQueryProvider(widget.config));
+                    final queryList =
+                        ref.watch(filterQueryProvider(widget.config));
                     final hasFilter = queryList != null && queryList.isNotEmpty;
 
                     return Badge(
@@ -109,13 +123,17 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                         onPressed: () async {
                           final value = await showDialog(
                               context: context,
-                              builder: (context) =>
-                                  FilterView(config: widget.config, filterOptions: widget.filterOptions));
+                              builder: (context) => FilterView(
+                                  config: widget.config,
+                                  filterOptions: widget.filterOptions));
 
                           if (value == true) {
-                            final queryList = ref.read(filterQueryProvider(widget.config));
+                            final queryList =
+                                ref.read(filterQueryProvider(widget.config));
                             ref
-                                .read(search_controller.searchControllerProvider(widget.config).notifier)
+                                .read(search_controller
+                                    .searchControllerProvider(widget.config)
+                                    .notifier)
                                 .search(queryList ?? []);
                           }
                         },
@@ -136,7 +154,9 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                 children: [
                   Consumer(
                     builder: (context, ref, child) {
-                      final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+                      final itemSelectedList = ref.watch(
+                          searchMultiSelectionControllerProvider(
+                              widget.config));
                       final hasSelection = itemSelectedList.isNotEmpty;
 
                       return AnimatedSize(
@@ -156,7 +176,9 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                   ),
                   Expanded(
                     child: VoleepSearchField(
-                      margin: context.canPop() ? null : const EdgeInsets.only(left: 12),
+                      margin: context.canPop()
+                          ? null
+                          : const EdgeInsets.only(left: 12),
                       onChanged: (value) => _debounceTime.run(
                         () => _performSearch(value, ref),
                       ),
@@ -169,7 +191,8 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                   preferredSize: const Size.fromHeight(1),
                   child: Container(
                     height: 1,
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                    color:
+                        Theme.of(context).colorScheme.outline.withOpacity(0.2),
                   )),
             ),
           ];
@@ -178,7 +201,11 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
           error: (error, stackTrace) => ErrorView(
             error: error,
             stackTrace: stackTrace,
-            onTryAgain: () => ref.read(search_controller.searchControllerProvider(widget.config).notifier).reload(),
+            onTryAgain: () => ref
+                .read(search_controller
+                    .searchControllerProvider(widget.config)
+                    .notifier)
+                .reload(),
           ),
           loading: () => const Center(
             child: CircularProgressIndicator(),
@@ -190,7 +217,8 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
               );
             }
 
-            final itemList = data.pageData.map((json) => widget.fromJsonT(json)).toList();
+            final itemList =
+                data.pageData.map((json) => widget.fromJsonT(json)).toList();
 
             return Column(
               children: [
@@ -207,10 +235,13 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                         itemBuilder: (context, index) {
                           final currentItem = itemList[index];
                           return Consumer(builder: (context, ref, child) {
-                            final itemSelectedList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+                            final itemSelectedList = ref.watch(
+                                searchMultiSelectionControllerProvider(
+                                    widget.config));
 
                             final hasSelection = itemSelectedList.isNotEmpty;
-                            final isSelected = itemSelectedList.contains(widget.selectId(currentItem));
+                            final isSelected = itemSelectedList
+                                .contains(widget.selectId(currentItem));
 
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 3),
@@ -221,22 +252,33 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                                     onTap: () {
                                       if (isMultiSelection && hasSelection) {
                                         ref
-                                            .read(searchMultiSelectionControllerProvider(widget.config).notifier)
-                                            .handleItemClicked(widget.selectId(currentItem));
+                                            .read(
+                                                searchMultiSelectionControllerProvider(
+                                                        widget.config)
+                                                    .notifier)
+                                            .handleItemClicked(
+                                                widget.selectId(currentItem));
                                         return;
                                       }
-                                      if (isSingleSelection || isMultiSelection) {
-                                        widget.onSelectItems?.call([currentItem]);
+                                      if (isSingleSelection ||
+                                          isMultiSelection) {
+                                        widget.onSelectItems
+                                            ?.call([currentItem]);
                                         return;
                                       }
 
-                                      widget.onTapItem?.call(currentItem, index);
+                                      widget.onTapItem
+                                          ?.call(currentItem, index);
                                     },
                                     onLongPress: () {
                                       if (isMultiSelection) {
                                         ref
-                                            .read(searchMultiSelectionControllerProvider(widget.config).notifier)
-                                            .handleItemClicked(widget.selectId(currentItem));
+                                            .read(
+                                                searchMultiSelectionControllerProvider(
+                                                        widget.config)
+                                                    .notifier)
+                                            .handleItemClicked(
+                                                widget.selectId(currentItem));
                                       }
                                     },
                                     borderRadius: BorderRadius.circular(12),
@@ -272,7 +314,8 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
       ),
       floatingActionButton: Consumer(
         builder: (context, ref, child) {
-          final selectedIdList = ref.watch(searchMultiSelectionControllerProvider(widget.config));
+          final selectedIdList =
+              ref.watch(searchMultiSelectionControllerProvider(widget.config));
           final hasSelection = selectedIdList.isNotEmpty;
 
           handleSelectItems() {
@@ -283,7 +326,9 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
             final selectedItems = selectedIdList
                 .map((selectedId) {
                   final selectedItem = controller.value!.pageData
-                      .firstWhereOrNull((element) => widget.selectId(widget.fromJsonT(element)) == selectedId);
+                      .firstWhereOrNull((element) =>
+                          widget.selectId(widget.fromJsonT(element)) ==
+                          selectedId);
                   if (selectedItem == null) {
                     return null;
                   }
@@ -300,7 +345,9 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
             return FloatingActionButton.extended(
               extendedIconLabelSpacing: 0,
               extendedPadding: const EdgeInsets.all(16),
-              onPressed: hasSelection ? handleSelectItems : widget.fabOption!.onPressed,
+              onPressed: hasSelection
+                  ? handleSelectItems
+                  : widget.fabOption!.onPressed,
               label: AnimatedSize(
                 duration: const Duration(milliseconds: 200),
                 child: hasSelection
@@ -310,7 +357,9 @@ class _CarCleanSearchState<T, I> extends ConsumerState<CarCleanSearch<T, I>> {
                       )
                     : const SizedBox.shrink(),
               ),
-              icon: hasSelection ? const Icon(Icons.done_rounded) : widget.fabOption!.child,
+              icon: hasSelection
+                  ? const Icon(Icons.done_rounded)
+                  : widget.fabOption!.child,
             );
           }
 

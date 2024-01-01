@@ -4,24 +4,25 @@ import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_p
 import 'package:voleep_carclean_frontend/shared/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
+import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voelep_search_field/voleep_search_field.dart';
 
-class VoleepSearchBar extends StatefulWidget {
+class VoleepSearchBar<T> extends StatefulWidget {
   const VoleepSearchBar({
     super.key,
     required this.field,
-    required this.filterNotifier,
+    required this.controller,
   });
 
   final String field;
 
-  final ValueNotifier<List<Filter>> filterNotifier;
+  final ListController<T> controller;
 
   @override
-  State<VoleepSearchBar> createState() => _VoleepSearchBarState();
+  State<VoleepSearchBar<T>> createState() => _VoleepSearchBarState<T>();
 }
 
-class _VoleepSearchBarState extends State<VoleepSearchBar> {
+class _VoleepSearchBarState<T> extends State<VoleepSearchBar<T>> {
   final debounceTime = DebounceTime(milliseconds: 500);
 
   @override
@@ -54,8 +55,8 @@ class _VoleepSearchBarState extends State<VoleepSearchBar> {
 
   void onSearch(String value) {
     debounceTime.run(() {
-      final filters = List<Filter>.from(widget.filterNotifier.value);
-      final index = widget.filterNotifier.value.indexWhere(
+      final filters = widget.controller.filters;
+      final index = filters.indexWhere(
         (filter) => filter.field == widget.field,
       );
 
@@ -73,7 +74,7 @@ class _VoleepSearchBarState extends State<VoleepSearchBar> {
         filters.add(filter);
       }
 
-      widget.filterNotifier.value = filters;
+      widget.controller.notifyFilterListeners();
     });
   }
 }

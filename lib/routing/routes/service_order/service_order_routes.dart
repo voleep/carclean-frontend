@@ -11,7 +11,8 @@ import 'package:voleep_carclean_frontend/modules/service_order/presentation/serv
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_list/vehicle_list_page.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 
 class ServiceOrderRoutes {
   final String root;
@@ -55,9 +56,8 @@ class ServiceOrderRoutes {
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectCustomer,
-          builder: (context, state) => const CustomerListPage(
-            selectionMode: true,
-          ),
+          builder: (context, state) =>
+              const CustomerListPage(selection: Selection.single),
         ),
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
@@ -89,14 +89,14 @@ class ServiceOrderRoutes {
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectService,
           builder: (context, state) => const ServiceListPage(
-            selectionMode: SelectionMode.multi,
+            selectionMode: SelectionType.multi,
           ),
         ),
         GoRoute(
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectEmployee,
           builder: (context, state) => EmployeeListPage(
-            selectionMode: SelectionMode.single,
+            selectionMode: SelectionType.single,
           ),
         ),
         GoRoute(

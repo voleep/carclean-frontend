@@ -45,9 +45,9 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
     GoRouter.of(context)
         .push(Routes.app.serviceOrder.selectCustomer)
         .then((value) {
-      if (value != null && value is CustomerModel) {
-        //customer.value = selectedCustomer;
-        customerNameController.text = value.dsName;
+      if (value != null && value is List<CustomerModel>) {
+        // customer.value = selectedCustomer;
+        // customerNameController.text = value.dsName;
       }
     });
   }

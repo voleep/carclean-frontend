@@ -3,48 +3,71 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/repositories/customer_repository.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
+import 'package:voleep_carclean_frontend/modules/customer/presentation/widgets/customer_list_tile.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/models/filter.dart';
+import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_search_bar/voleep_search_bar.dart';
 
 class CustomerListPage extends ConsumerStatefulWidget {
-  const CustomerListPage({Key? key, this.selectionMode = false})
+  const CustomerListPage({Key? key, this.selection = Selection.none})
       : super(key: key);
 
-  final bool selectionMode;
+  final Selection selection;
 
   @override
   ConsumerState<CustomerListPage> createState() => _CustomerListPageState();
 }
 
 class _CustomerListPageState extends ConsumerState<CustomerListPage> {
-  final filterVN = ValueNotifier<List<Filter>>([]);
+  late final ListController<CustomerModel> listController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    listController = ListController<CustomerModel>(selection: widget.selection);
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScaffoldWithList<CustomerModel, String>(
       headerSliver: VoleepSearchBar(
         field: "dsName",
-        filterNotifier: filterVN,
+        controller: listController,
       ),
-      filterNotifier: filterVN,
+      controller: listController,
       selectId: (item) => item.customerId,
-      onGetItem: ref.read(customerRepositoryProvider).findById,
       onGetPage: ref.read(customerRepositoryProvider).getPage,
       itemBuilder: (context, index, item) {
-        return ListTile(title: Text(item.dsName));
+        return CustomerListTile(
+          item: item,
+          controller: listController,
+          onEdit: () => goToUpdate(item),
+        );
       },
-      onTab: (item, index) async {
-        await context.push(Routes.app.customer.update(item.customerId));
-        return true;
-      },
+      onNew: goToNew,
+      onDone: () => context.pop(listController.selected),
     );
+  }
+
+  Future<void> goToUpdate(CustomerModel item) async {
+    await context.push(Routes.app.customer.update(item.customerId));
+    await listController.setFuture(
+      () => ref.read(customerRepositoryProvider).findById(item.customerId),
+      replacing: item,
+    );
+  }
+
+  Future<void> goToNew() async {
+    await context.push(Routes.app.customer.create);
+    listController.notifyFilterListeners();
   }
 
   @override
   void dispose() {
-    filterVN.dispose();
+    listController.dispose();
 
     super.dispose();
   }

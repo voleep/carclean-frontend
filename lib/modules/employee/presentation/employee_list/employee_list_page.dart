@@ -6,7 +6,7 @@ import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
@@ -15,9 +15,9 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
 
 class EmployeeListPage extends ConsumerWidget {
-  EmployeeListPage({super.key, this.selectionMode = SelectionMode.none});
+  EmployeeListPage({super.key, this.selectionMode = SelectionType.none});
 
-  final SelectionMode selectionMode;
+  final SelectionType selectionMode;
 
   final _searchConfig = SearchConfig(
       endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee",
@@ -80,7 +80,7 @@ class EmployeeListPage extends ConsumerWidget {
             ),
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
-              if (selectionMode == SelectionMode.single) {
+              if (selectionMode == SelectionType.single) {
                 return context.pop(item);
               }
 

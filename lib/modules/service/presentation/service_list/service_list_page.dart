@@ -5,7 +5,7 @@ import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_mode.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/fab_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
@@ -15,9 +15,9 @@ import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_search_tile/voleep_search_tile.dart';
 
 class ServiceListPage extends ConsumerStatefulWidget {
-  const ServiceListPage({super.key, this.selectionMode = SelectionMode.none});
+  const ServiceListPage({super.key, this.selectionMode = SelectionType.none});
 
-  final SelectionMode selectionMode;
+  final SelectionType selectionMode;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>

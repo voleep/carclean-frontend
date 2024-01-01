@@ -19,7 +19,7 @@ mixin _$SearchConfig {
   String get endpoint => throw _privateConstructorUsedError;
   String get orderField => throw _privateConstructorUsedError;
   bool get filterOnInit => throw _privateConstructorUsedError;
-  SelectionMode get selectionMode => throw _privateConstructorUsedError;
+  SelectionType get selectionMode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchConfigCopyWith<SearchConfig> get copyWith =>
@@ -36,7 +36,7 @@ abstract class $SearchConfigCopyWith<$Res> {
       {String endpoint,
       String orderField,
       bool filterOnInit,
-      SelectionMode selectionMode});
+      SelectionType selectionMode});
 }
 
 /// @nodoc
@@ -73,7 +73,7 @@ class _$SearchConfigCopyWithImpl<$Res, $Val extends SearchConfig>
       selectionMode: null == selectionMode
           ? _value.selectionMode
           : selectionMode // ignore: cast_nullable_to_non_nullable
-              as SelectionMode,
+              as SelectionType,
     ) as $Val);
   }
 }
@@ -90,7 +90,7 @@ abstract class _$$_SearchConfigCopyWith<$Res>
       {String endpoint,
       String orderField,
       bool filterOnInit,
-      SelectionMode selectionMode});
+      SelectionType selectionMode});
 }
 
 /// @nodoc
@@ -125,7 +125,7 @@ class __$$_SearchConfigCopyWithImpl<$Res>
       selectionMode: null == selectionMode
           ? _value.selectionMode
           : selectionMode // ignore: cast_nullable_to_non_nullable
-              as SelectionMode,
+              as SelectionType,
     ));
   }
 }
@@ -137,7 +137,7 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
       {required this.endpoint,
       required this.orderField,
       required this.filterOnInit,
-      this.selectionMode = SelectionMode.none});
+      this.selectionMode = SelectionType.none});
 
   @override
   final String endpoint;
@@ -147,7 +147,7 @@ class _$_SearchConfig with DiagnosticableTreeMixin implements _SearchConfig {
   final bool filterOnInit;
   @override
   @JsonKey()
-  final SelectionMode selectionMode;
+  final SelectionType selectionMode;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -196,7 +196,7 @@ abstract class _SearchConfig implements SearchConfig {
       {required final String endpoint,
       required final String orderField,
       required final bool filterOnInit,
-      final SelectionMode selectionMode}) = _$_SearchConfig;
+      final SelectionType selectionMode}) = _$_SearchConfig;
 
   @override
   String get endpoint;
@@ -205,7 +205,7 @@ abstract class _SearchConfig implements SearchConfig {
   @override
   bool get filterOnInit;
   @override
-  SelectionMode get selectionMode;
+  SelectionType get selectionMode;
   @override
   @JsonKey(ignore: true)
   _$$_SearchConfigCopyWith<_$_SearchConfig> get copyWith =>

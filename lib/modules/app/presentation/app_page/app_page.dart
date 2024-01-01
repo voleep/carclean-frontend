@@ -28,7 +28,12 @@ class AppPage extends StatelessWidget {
       children: [
         Column(
           children: [
-            Expanded(child: navigationShell),
+            Expanded(
+              child: MediaQuery(
+                data: MediaQuery.of(context).removePadding(removeBottom: true),
+                child: navigationShell,
+              ),
+            ),
             Consumer(builder: (_, ref, child) {
               ref.listen<bool>(
                 isLoadingProvider,
