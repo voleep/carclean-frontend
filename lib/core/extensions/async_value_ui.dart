@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
-import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
 
 extension AsyncValueUI<T> on AsyncValue<T> {
   bool get isLoading => this is AsyncLoading<T>;
@@ -16,13 +16,7 @@ extension AsyncValueUI<T> on AsyncValue<T> {
           }
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(errorMessage),
-              behavior: SnackBarBehavior.floating,
-              margin: Responsive.isDesktop(context)
-                  ? const EdgeInsets.symmetric(vertical: 10, horizontal: 180)
-                  : null,
-            ),
+            SnackBar(content: Text(errorMessage)),
           );
         },
       );
@@ -36,13 +30,10 @@ extension AsyncValueUI<T> on AsyncValue<T> {
         },
       );
 
-  void onFormSaved(BuildContext context) => whenOrNull(
+  void popOnData(BuildContext context) => whenOrNull(
         data: (_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Salvo com sucesso!'),
-              behavior: SnackBarBehavior.floating,
-            ),
+          listScaffoldMessengerKey.currentState?.showSnackBar(
+            const SnackBar(content: Text('Salvo com sucesso!')),
           );
           context.pop();
         },

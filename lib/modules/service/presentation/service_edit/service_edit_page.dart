@@ -122,7 +122,7 @@ class _ServiceEditPageState extends ConsumerState<ServiceEditPage> {
         );
 
     if (context.mounted) {
-      ref.read(viewModel).onFormSaved(context);
+      ref.read(viewModel).popOnData(context);
     }
   }
 

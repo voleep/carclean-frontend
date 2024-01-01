@@ -104,7 +104,7 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
         );
 
     if (context.mounted) {
-      ref.read(viewModel).onFormSaved(context);
+      ref.read(viewModel).popOnData(context);
     }
   }
 

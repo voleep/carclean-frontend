@@ -109,7 +109,7 @@ class _VehicleEditPageState extends ConsumerState<VehicleEditPage> {
     );
 
     if (context.mounted) {
-      ref.read(vehicleEditVmProvider(widget.vehicleId)).onFormSaved(context);
+      ref.read(vehicleEditVmProvider(widget.vehicleId)).popOnData(context);
     }
   }
 

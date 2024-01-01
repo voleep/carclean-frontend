@@ -8,8 +8,11 @@ import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart'
 import 'package:voleep_carclean_frontend/shared/responsive/responsive.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
+final appScaffoldState = GlobalKey<ScaffoldState>();
+
 class AppPage extends StatelessWidget {
-  const AppPage({Key? key, required this.navigationShell}) : super(key: key ?? const ValueKey('AppPage'));
+  const AppPage({Key? key, required this.navigationShell})
+      : super(key: key ?? const ValueKey('AppPage'));
 
   final StatefulNavigationShell navigationShell;
 
@@ -24,6 +27,7 @@ class AppPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = Responsive.isMobile(context);
     return Scaffold(
+      key: appScaffoldState,
       backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
       extendBodyBehindAppBar: true,
       body: navigationShell,

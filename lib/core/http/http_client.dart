@@ -37,7 +37,7 @@ class HttpClient {
 
   Future<Either<HttpException, GenericResponse<T>>> get<T>(
     String path, {
-    T Function(Map<String, dynamic>)? fromJsonT,
+    T Function(Map<String, dynamic> json)? fromJsonT,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
   }) async {

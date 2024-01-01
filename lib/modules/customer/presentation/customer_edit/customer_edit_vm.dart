@@ -26,9 +26,7 @@ class CustomerEditVm extends _$CustomerEditVm {
       );
     }
 
-    final getResult = await ref.read(customerRepositoryProvider).findById(
-          customerId: id,
-        );
+    final getResult = await ref.read(customerRepositoryProvider).findById(id);
 
     return switch (getResult) {
       Success(:final value) => value,

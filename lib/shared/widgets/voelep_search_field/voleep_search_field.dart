@@ -23,7 +23,10 @@ class VoleepSearchField extends StatelessWidget {
       child: TextField(
         textInputAction: TextInputAction.search,
         decoration: const InputDecoration(
-          hintStyle: TextStyle(fontSize: 17),
+          hintStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
           iconColor: Colors.black87,
           border: InputBorder.none,
           hintText: 'Pesquisar',

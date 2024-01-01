@@ -138,7 +138,7 @@ class _ProductEditPageState extends ConsumerState<ProductEditPage> {
         );
 
     if (context.mounted) {
-      ref.read(viewModel).onFormSaved(context);
+      ref.read(viewModel).popOnData(context);
     }
   }
 

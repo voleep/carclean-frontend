@@ -126,7 +126,7 @@ class _CustomerFormPageState extends ConsumerState<CustomerEditPage> {
         );
 
     if (context.mounted) {
-      ref.read(customerViewModel).onFormSaved(context);
+      ref.read(customerViewModel).popOnData(context);
     }
   }
 

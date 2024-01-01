@@ -10,11 +10,6 @@ final _lightAppBarTheme = AppBarTheme(
     color: _lightColorScheme.primary,
     fontWeight: FontWeight.w500,
   ),
-  systemOverlayStyle: const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.light,
-  ),
 );
 
 final _darkAppBarTheme = AppBarTheme(
@@ -26,10 +21,5 @@ final _darkAppBarTheme = AppBarTheme(
     fontSize: 20,
     color: _darkColorScheme.primary,
     fontWeight: FontWeight.w500,
-  ),
-  systemOverlayStyle: const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    statusBarBrightness: Brightness.dark,
   ),
 );
