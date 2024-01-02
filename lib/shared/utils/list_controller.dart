@@ -8,15 +8,18 @@ import 'package:voleep_carclean_frontend/shared/utils/selection_controller.dart'
 
 class ListController<T> extends ValueNotifier<List<T>>
     implements SelectionController<T> {
-  ListController({required this.selectId, Selection selection = Selection.none})
-      : _selection = selection,
-        _selectionController = SelectionController(type: selection),
+  ListController({
+    Selection selection = Selection.none,
+    required String Function(T item) selectionKey,
+  })  : _selection = selection,
+        _selectionController = SelectionController(
+          type: selection,
+          selectionKey: selectionKey,
+        ),
         _filterController = ValueNotifier([]),
         super([]);
 
   final Selection _selection;
-
-  final String Function(T item) selectId;
 
   bool get selection => _selection != Selection.none;
 
@@ -24,11 +27,9 @@ class ListController<T> extends ValueNotifier<List<T>>
 
   Listenable get selectionListenable => _selectionController;
 
-  List<T> get selected => value
-      .where((item) => _selectionController.value.contains(selectId(item)))
-      .toList();
+  List<T> get selected => _selectionController.value;
 
-  final SelectionController<String> _selectionController;
+  final SelectionController<T> _selectionController;
 
   Listenable get filterListenable => _filterController;
 
@@ -71,30 +72,31 @@ class ListController<T> extends ValueNotifier<List<T>>
   void dispose() {
     _selectionController.dispose();
     _filterController.dispose();
+
     super.dispose();
   }
 
   @override
   bool isSelected(T item) {
     if (!selection) return false;
-    return _selectionController.isSelected(selectId(item));
+    return _selectionController.isSelected(item);
   }
 
   @override
   void select(T item, {bool notify = true}) {
     if (!selection) return;
-    _selectionController.select(selectId(item), notify: notify);
+    _selectionController.select(item, notify: notify);
   }
 
   @override
   void toggle(T item) {
     if (!selection) return;
-    _selectionController.toggle(selectId(item));
+    _selectionController.toggle(item);
   }
 
   @override
   void unselect(T item, {bool notify = true}) {
     if (!selection) return;
-    _selectionController.unselect(selectId(item), notify: notify);
+    _selectionController.unselect(item, notify: notify);
   }
 }

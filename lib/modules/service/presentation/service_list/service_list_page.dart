@@ -29,7 +29,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
 
     listController = ListController(
       selection: widget.selection,
-      selectId: (item) => item.serviceId,
+      selectionKey: (item) => item.serviceId,
     );
   }
 

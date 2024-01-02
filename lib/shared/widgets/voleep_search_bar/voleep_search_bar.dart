@@ -7,7 +7,7 @@ import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voelep_search_field/voleep_search_field.dart';
 
-class VoleepSearchBar extends StatefulWidget {
+class VoleepSearchBar<T> extends StatefulWidget {
   const VoleepSearchBar({
     super.key,
     required this.field,
@@ -16,13 +16,13 @@ class VoleepSearchBar extends StatefulWidget {
 
   final String field;
 
-  final ListController controller;
+  final ListController<T> controller;
 
   @override
-  State<VoleepSearchBar> createState() => _VoleepSearchBarState();
+  State<VoleepSearchBar<T>> createState() => _VoleepSearchBarState<T>();
 }
 
-class _VoleepSearchBarState<T> extends State<VoleepSearchBar> {
+class _VoleepSearchBarState<T> extends State<VoleepSearchBar<T>> {
   final debounceTime = DebounceTime(milliseconds: 500);
 
   @override
