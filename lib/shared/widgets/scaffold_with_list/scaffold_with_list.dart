@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/models/page_response.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/error_view.dart';
 
 class ScaffoldWithList<T, ID> extends StatefulWidget {
   const ScaffoldWithList({
@@ -39,6 +41,7 @@ class ScaffoldWithList<T, ID> extends StatefulWidget {
 
 class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
   final isLoadingVN = ValueNotifier(false);
+  final errorVN = ValueNotifier<String?>(null);
 
   int currentPage = 1;
 
@@ -85,9 +88,23 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
                             ),
                           ),
                         ),
-                        Offstage(
-                          offstage: !isLoadingVN.value,
-                          child: const CircularProgressIndicator(),
+                        ValueListenableBuilder(
+                          valueListenable: isLoadingVN,
+                          builder: (context, value, child) => value
+                              ? const CircularProgressIndicator()
+                              : const SizedBox.shrink(),
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: errorVN,
+                          builder: (context, value, child) {
+                            final hasError = value != null;
+                            return hasError
+                                ? ErrorView(
+                                    message: value,
+                                    onTap: onTryAgain,
+                                  )
+                                : const SizedBox.shrink();
+                          },
                         )
                       ],
                     );
@@ -141,10 +158,16 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
           ..addAll(value.pageData);
         currentPage++;
 
-      case Failure():
+      case Failure(:final exception):
+        errorVN.value = exception.message;
     }
 
     isLoadingVN.value = false;
+  }
+
+  void onTryAgain() {
+    errorVN.value = null;
+    loadNextPage();
   }
 
   void onFilterChanged() {
@@ -168,6 +191,7 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
   @override
   void dispose() {
     isLoadingVN.dispose();
+    errorVN.dispose();
     widget.controller.filterListenable.removeListener(onFilterChanged);
 
     super.dispose();
