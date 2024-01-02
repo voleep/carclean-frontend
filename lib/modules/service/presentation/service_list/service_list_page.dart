@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/modules/customer/presentation/voleep_list_tile/voleep_list_tile.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/repositories/service_repository.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
@@ -27,7 +27,10 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   void initState() {
     super.initState();
 
-    listController = ListController(selection: widget.selection);
+    listController = ListController(
+      selection: widget.selection,
+      selectId: (item) => item.serviceId,
+    );
   }
 
   @override

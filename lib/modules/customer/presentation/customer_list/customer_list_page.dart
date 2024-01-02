@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/repositories/customer_repository.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
-import 'package:voleep_carclean_frontend/modules/customer/presentation/voleep_list_tile/voleep_list_tile.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
@@ -27,12 +27,15 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   void initState() {
     super.initState();
 
-    listController = ListController<CustomerModel>(selection: widget.selection);
+    listController = ListController(
+      selection: widget.selection,
+      selectId: (item) => item.customerId,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWithList<CustomerModel, String>(
+    return ScaffoldWithList<CustomerModel>(
       headerSliver: VoleepSearchBar(
         field: "dsName",
         controller: listController,

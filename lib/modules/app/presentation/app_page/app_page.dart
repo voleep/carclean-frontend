@@ -3,13 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
 import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer.dart';
-import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
-import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/widgets/bottom_nav_bar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
 final drawerKey = GlobalKey<DrawerControllerState>();
 
-class AppPage extends StatelessWidget {
+class AppPage extends ConsumerWidget {
   const AppPage({Key? key, required this.navigationShell})
       : super(key: key ?? const ValueKey('AppPage'));
 
@@ -23,61 +22,33 @@ class AppPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<bool>(
+      isLoadingProvider,
+      (_, isLoading) {
+        if (isLoading) {
+          LoadingScreen.instance().show(context: context);
+        } else {
+          LoadingScreen.instance().hide();
+        }
+      },
+    );
+
     return Stack(
       children: [
-        Column(
+        Flex(
+          direction: Axis.vertical,
           children: [
-            Expanded(
-              child: MediaQuery(
-                data: MediaQuery.of(context).removePadding(removeBottom: true),
+            Flexible(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeBottom: true,
                 child: navigationShell,
               ),
             ),
-            Consumer(builder: (_, ref, child) {
-              ref.listen<bool>(
-                isLoadingProvider,
-                (_, isLoading) {
-                  if (isLoading) {
-                    LoadingScreen.instance().show(context: context);
-                  } else {
-                    LoadingScreen.instance().hide();
-                  }
-                },
-              );
-
-              int selectedIndex = ref.watch(selectedMenuIndexProvider);
-              int menuLenght = 4;
-
-              final menuList = ref.watch(menuListProvider);
-
-              final destinations = menuList.sublist(0, menuLenght).toList();
-
-              final hasSelectedFromRoot = selectedIndex >= menuLenght;
-              if (hasSelectedFromRoot) {
-                destinations.removeLast();
-                destinations.add(menuList[selectedIndex]);
-                selectedIndex = menuLenght - 1;
-              }
-
-              MediaQueryData data =
-                  MediaQuery.of(context).removePadding(removeTop: true);
-
-              return MediaQuery(
-                  data: data,
-                  child: NavigationBar(
-                    selectedIndex: selectedIndex,
-                    destinations: destinations
-                        .map(
-                          (menu) => NavigationDestination(
-                            icon: Icon(menu.icon),
-                            label: menu.label,
-                          ),
-                        )
-                        .toList(),
-                    onDestinationSelected: _goBranch,
-                  ));
-            }),
+            BottomNavBar(
+              onDestinationSelected: _goBranch,
+            )
           ],
         ),
         DrawerController(

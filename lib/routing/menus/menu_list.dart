@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
@@ -35,7 +36,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
         navigatorKey: _shellNavigatorHomeKey,
         label: 'Início',
         icon: Icons.home_rounded,
-        child: const CustomerListPage(),
+        child: const HomeView(),
       ),
       MenuModel(
         group: MenuGroup.home,

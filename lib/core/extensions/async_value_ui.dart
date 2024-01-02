@@ -16,7 +16,10 @@ extension AsyncValueUI<T> on AsyncValue<T> {
             errorMessage = error.message;
           }
 
-          messengerKey.currentState?.showMessage(errorMessage);
+          Future.delayed(
+            const Duration(milliseconds: 200),
+            () => messengerKey.currentState?.showMessage(errorMessage),
+          );
         },
       );
 
@@ -31,8 +34,11 @@ extension AsyncValueUI<T> on AsyncValue<T> {
 
   void popOnData(BuildContext context) => whenOrNull(
         data: (_) {
-          messengerKey.currentState?.showSaveSuccessMessage();
           context.pop();
+          Future.delayed(
+            const Duration(milliseconds: 200),
+            messengerKey.currentState?.showSaveSuccessMessage,
+          );
         },
       );
 

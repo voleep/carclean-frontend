@@ -33,7 +33,7 @@ class VoleepListTile<T> extends StatelessWidget {
               .bodyLarge
               ?.copyWith(fontWeight: FontWeight.w500)),
       subtitle: hasSubtitle ? Text(subtitle!) : null,
-      contentPadding: const EdgeInsets.only(left: 10, right: 3),
+      contentPadding: const EdgeInsets.only(left: 10, right: 16),
       leading: controller.selection
           ? ListenableBuilder(
               listenable: controller.selectionListenable,
@@ -45,9 +45,11 @@ class VoleepListTile<T> extends StatelessWidget {
           : null,
       trailing: controller.selection
           ? IconButton(
+              iconSize: 20,
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(
-                    Theme.of(context).colorScheme.surfaceVariant),
+                  Theme.of(context).colorScheme.onInverseSurface,
+                ),
               ),
               icon: const Icon(Icons.edit),
               onPressed: () => onEdit(item),

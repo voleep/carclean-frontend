@@ -9,7 +9,7 @@ import 'package:voleep_carclean_frontend/shared/models/page_response.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/error_view.dart';
 
-class ScaffoldWithList<T, ID> extends StatefulWidget {
+class ScaffoldWithList<T> extends StatefulWidget {
   const ScaffoldWithList({
     super.key,
     required this.controller,
@@ -34,12 +34,14 @@ class ScaffoldWithList<T, ID> extends StatefulWidget {
   final Widget? headerSliver;
 
   @override
-  State<ScaffoldWithList> createState() => _ScaffoldWithListState<T, ID>();
+  State<ScaffoldWithList> createState() => _ScaffoldWithListState<T>();
 }
 
-class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
-  final isLoadingVN = ValueNotifier(false);
-  final errorVN = ValueNotifier<String?>(null);
+class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
+  final firstPageLoading = ValueNotifier(false);
+  final firstPageError = ValueNotifier<String?>(null);
+  final nextPageLoading = ValueNotifier(false);
+  final nextPageError = ValueNotifier<String?>(null);
 
   int currentPage = 1;
 
@@ -54,18 +56,18 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             if (widget.headerSliver == null) return [];
             return [widget.headerSliver!];
           },
-          body: RefreshIndicator(
-            onRefresh: onRefresh,
-            child: Scrollbar(
-              child: NotificationListener<ScrollEndNotification>(
-                onNotification: onScroll,
+          body: NotificationListener<ScrollEndNotification>(
+            onNotification: onScroll,
+            child: RefreshIndicator(
+              onRefresh: onRefresh,
+              child: Scrollbar(
                 child: ValueListenableBuilder(
                   valueListenable: widget.controller,
                   builder: (context, data, child) {
@@ -76,7 +78,7 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
                         }).toList()
                           ..add(SizedBox(height: data.isEmpty ? 350 : 0)),
                         ValueListenableBuilder(
-                          valueListenable: isLoadingVN,
+                          valueListenable: nextPageLoading,
                           builder: (context, value, child) => SizedBox(
                             height: 60,
                             child: Visibility(
@@ -88,7 +90,7 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
                           ),
                         ),
                         ValueListenableBuilder(
-                          valueListenable: errorVN,
+                          valueListenable: nextPageError,
                           builder: (context, value, child) {
                             final hasError = value != null;
                             return Visibility(
@@ -109,40 +111,46 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            mini: widget.controller.selection,
-            onPressed: widget.onNew,
-            child: const Icon(Icons.add_rounded),
-          ),
-          Offstage(
-            offstage: !widget.controller.selection,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: FloatingActionButton.extended(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.primaryContainer,
-                icon: const Icon(Icons.done),
-                label: const Text(
-                  "Confirmar",
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: () => widget.onDone?.call(),
-              ),
-            ),
-          )
-        ],
+      floatingActionButton: buildFloatingAction(),
+    );
+  }
+
+  Widget buildFloatingAction() {
+    final isSelection = widget.controller.selection;
+
+    final children = <Widget>[
+      FloatingActionButton(
+        mini: isSelection,
+        onPressed: widget.onNew,
+        child: const Icon(Icons.add_rounded),
       ),
+    ];
+
+    if (isSelection) {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: FloatingActionButton.extended(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.primaryContainer,
+            label: const Text("Confirmar"),
+            onPressed: () => widget.onDone?.call(),
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: children,
     );
   }
 
   Future<void> loadNextPage() async {
-    if (isLoadingVN.value) return;
+    if (nextPageLoading.value) return;
 
-    isLoadingVN.value = true;
+    nextPageLoading.value = true;
     final filters = widget.controller.filters;
     final result = await widget.onGetPage(currentPage, filters);
 
@@ -153,14 +161,14 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
         currentPage++;
 
       case Failure(:final exception):
-        errorVN.value = exception.message;
+        nextPageError.value = exception.message;
     }
 
-    isLoadingVN.value = false;
+    nextPageLoading.value = false;
   }
 
   void onTryAgain() {
-    errorVN.value = null;
+    nextPageError.value = null;
     loadNextPage();
   }
 
@@ -184,8 +192,10 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
 
   @override
   void dispose() {
-    isLoadingVN.dispose();
-    errorVN.dispose();
+    firstPageLoading.dispose();
+    firstPageError.dispose();
+    nextPageLoading.dispose();
+    nextPageError.dispose();
     widget.controller.filterListenable.removeListener(onFilterChanged);
 
     super.dispose();

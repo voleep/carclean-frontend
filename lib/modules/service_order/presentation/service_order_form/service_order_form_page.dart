@@ -80,101 +80,106 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
         title: Text("Ordem de serviço"),
       ),
       body: ScrollableView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              RowWrap(
-                children: [
-                  VoleepFormField(
-                    minWidth: 550,
-                    controller: customerNameController,
-                    readOnly: true,
-                    placeholder: "Cliente",
-                    icon: Icons.person_rounded,
-                    onTap: handleCustomerClick,
-                  ),
-                  VoleepFormField(
-                    minWidth: 550,
-                    controller: vehicleNameController,
-                    readOnly: true,
-                    placeholder: "Veículo",
-                    icon: Icons.drive_eta_rounded,
-                    onTap: handleVehicleClick,
-                  ),
-                ],
-              ),
-              VoleepExpansionPanel("Itens", initiallyExpanded: true, children: [
-                VoleepFormTile(
-                  icon: Icons.playlist_add_rounded,
-                  title: "Serviços",
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(serviceTotal.toString()),
-                      const Icon(
-                        Icons.navigate_next_rounded,
-                      )
-                    ],
-                  ),
-                  onTap: handleServiceClick,
-                ),
-                VoleepFormTile(
-                  icon: Icons.add_shopping_cart_rounded,
-                  title: "Produtos",
-                  trailing: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("0.0"),
-                      Icon(
-                        Icons.navigate_next_rounded,
-                      )
-                    ],
-                  ),
-                  onTap: () =>
-                      context.push(Routes.app.serviceOrder.productList),
-                ),
-                VoleepFormTile(
-                  icon: Icons.percent_rounded,
-                  title: "Desconto",
-                  trailing: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("0"),
-                      Icon(
-                        Icons.navigate_next_rounded,
-                      )
-                    ],
-                  ),
-                  onTap: () {},
-                ),
-              ]),
-              VoleepExpansionPanel("Detalhes",
-                  initiallyExpanded: true,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                RowWrap(
                   children: [
-                    VoleepFormTile(
-                      icon: Icons.attach_money_rounded,
-                      title: "Meio de pagamento",
-                      trailing: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.navigate_next_rounded,
-                          )
-                        ],
-                      ),
-                      onTap: () {},
+                    VoleepFormField(
+                      minWidth: 550,
+                      controller: customerNameController,
+                      readOnly: true,
+                      placeholder: "Cliente",
+                      icon: Icons.person_rounded,
+                      onTap: handleCustomerClick,
                     ),
-                  ])
-            ],
+                    VoleepFormField(
+                      minWidth: 550,
+                      controller: vehicleNameController,
+                      readOnly: true,
+                      placeholder: "Veículo",
+                      icon: Icons.drive_eta_rounded,
+                      onTap: handleVehicleClick,
+                    ),
+                  ],
+                ),
+                VoleepExpansionPanel("Itens",
+                    initiallyExpanded: true,
+                    children: [
+                      VoleepFormTile(
+                        icon: Icons.playlist_add_rounded,
+                        title: "Serviços",
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(serviceTotal.toString()),
+                            const Icon(
+                              Icons.navigate_next_rounded,
+                            )
+                          ],
+                        ),
+                        onTap: handleServiceClick,
+                      ),
+                      VoleepFormTile(
+                        icon: Icons.add_shopping_cart_rounded,
+                        title: "Produtos",
+                        trailing: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("0.0"),
+                            Icon(
+                              Icons.navigate_next_rounded,
+                            )
+                          ],
+                        ),
+                        onTap: () =>
+                            context.push(Routes.app.serviceOrder.productList),
+                      ),
+                      VoleepFormTile(
+                        icon: Icons.percent_rounded,
+                        title: "Desconto",
+                        trailing: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("0"),
+                            Icon(
+                              Icons.navigate_next_rounded,
+                            )
+                          ],
+                        ),
+                        onTap: () {},
+                      ),
+                    ]),
+                VoleepExpansionPanel("Detalhes",
+                    initiallyExpanded: true,
+                    children: [
+                      VoleepFormTile(
+                        icon: Icons.attach_money_rounded,
+                        title: "Meio de pagamento",
+                        trailing: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.navigate_next_rounded,
+                            )
+                          ],
+                        ),
+                        onTap: () {},
+                      ),
+                    ])
+              ],
+            ),
+            onWillPop: () async {
+              final canDeactivate = await showDialog(
+                context: context,
+                builder: (context) => const CanDeactivateDialog(),
+              );
+              return canDeactivate;
+            },
           ),
-          onWillPop: () async {
-            final canDeactivate = await showDialog(
-              context: context,
-              builder: (context) => const CanDeactivateDialog(),
-            );
-            return canDeactivate;
-          },
         ),
       ),
     );
