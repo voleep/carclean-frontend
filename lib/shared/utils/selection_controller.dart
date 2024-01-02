@@ -15,7 +15,7 @@ class SelectionController<T> extends ValueNotifier<List<T>> {
 
   void unselect(T item, {bool notify = true}) {
     if (!isSelected(item)) return;
-    value.remove(item);
+    value.removeWhere((it) => _selectionKey(it) == _selectionKey(item));
     if (notify) notifyListeners();
   }
 
