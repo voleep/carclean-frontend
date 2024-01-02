@@ -1,26 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 
-class CustomerListTile extends StatelessWidget {
-  const CustomerListTile({
+class VoleepListTile<T> extends StatelessWidget {
+  const VoleepListTile({
     super.key,
+    required this.title,
     required this.item,
     required this.controller,
     required this.onEdit,
+    this.subtitle,
   });
 
-  final CustomerModel item;
+  final String title;
 
-  final ListController<CustomerModel> controller;
+  final T item;
+
+  final ListController<T> controller;
 
   final FutureOr<void> Function() onEdit;
 
+  final String? subtitle;
+
   @override
   Widget build(BuildContext context) {
+    final hasSubtitle = subtitle != null;
     return ListTile(
+      title: Text(title,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge
+              ?.copyWith(fontWeight: FontWeight.w500)),
+      subtitle: hasSubtitle ? Text(subtitle!) : null,
+      contentPadding: const EdgeInsets.only(left: 10, right: 3),
       leading: controller.selection
           ? ListenableBuilder(
               listenable: controller.selectionListenable,
@@ -33,13 +46,13 @@ class CustomerListTile extends StatelessWidget {
       trailing: controller.selection
           ? IconButton(
               style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.surfaceVariant)),
+                backgroundColor: MaterialStatePropertyAll(
+                    Theme.of(context).colorScheme.surfaceVariant),
+              ),
               icon: const Icon(Icons.edit),
               onPressed: onEdit,
             )
           : null,
-      title: Text(item.dsName),
       onTap: () => controller.selection ? controller.toggle(item) : onEdit(),
     );
   }

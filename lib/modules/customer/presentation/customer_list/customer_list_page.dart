@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/repositories/customer_repository.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
-import 'package:voleep_carclean_frontend/modules/customer/presentation/widgets/customer_list_tile.dart';
+import 'package:voleep_carclean_frontend/modules/customer/presentation/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
@@ -41,7 +41,10 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
       selectId: (item) => item.customerId,
       onGetPage: ref.read(customerRepositoryProvider).getPage,
       itemBuilder: (context, index, item) {
-        return CustomerListTile(
+        return VoleepListTile(
+          title: item.dsName,
+          subtitle:
+              "${item.dsTelephone ?? 'sem telefone'} - ${item.dsEmail ?? 'sem e-mail'}",
           item: item,
           controller: listController,
           onEdit: () => goToUpdate(item),

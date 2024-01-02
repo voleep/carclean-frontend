@@ -27,6 +27,8 @@ class _VoleepSearchBarState<T> extends State<VoleepSearchBar<T>> {
 
   @override
   Widget build(BuildContext context) {
+    final showMenu =
+        ModalRoute.of(drawerKey.currentContext!)?.isCurrent ?? false;
     return SliverAppBar(
       floating: true,
       snap: true,
@@ -39,9 +41,13 @@ class _VoleepSearchBarState<T> extends State<VoleepSearchBar<T>> {
         onSubmitted: onSearch,
       ),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.menu_rounded, size: 27),
-          onPressed: () => drawerKey.currentState?.open(),
+        Visibility(
+          visible: showMenu,
+          replacement: const SizedBox(width: 17),
+          child: IconButton(
+            icon: const Icon(Icons.menu_rounded, size: 27),
+            onPressed: () => drawerKey.currentState?.open(),
+          ),
         ),
       ],
       bottom: PreferredSize(

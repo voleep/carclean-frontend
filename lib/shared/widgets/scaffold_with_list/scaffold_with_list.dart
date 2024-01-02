@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
@@ -70,42 +71,38 @@ class _ScaffoldWithListState<T, ID> extends State<ScaffoldWithList<T, ID>> {
                 onNotification: onScroll,
                 child: ValueListenableBuilder(
                   valueListenable: widget.controller,
-                  builder: (context, value, child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  builder: (context, data, child) {
+                    return ListView(
                       children: [
-                        Visibility(
-                          visible: currentPage > 1,
-                          replacement: const SizedBox(width: double.infinity),
-                          child: Expanded(
-                            child: ListView.builder(
-                              padding: const EdgeInsets.only(top: 12),
-                              itemCount: widget.controller.value.length,
-                              itemBuilder: (context, index) {
-                                final item = widget.controller.value[index];
-                                return widget.itemBuilder(context, index, item);
-                              },
-                            ),
-                          ),
-                        ),
+                        ...data.mapIndexed((index, item) {
+                          return widget.itemBuilder(context, index, item);
+                        }).toList()
+                          ..add(SizedBox(height: data.isEmpty ? 350 : 0)),
                         ValueListenableBuilder(
                           valueListenable: isLoadingVN,
-                          builder: (context, value, child) => value
-                              ? const CircularProgressIndicator()
-                              : const SizedBox.shrink(),
+                          builder: (context, value, child) => SizedBox(
+                            height: 60,
+                            child: Visibility(
+                              visible: value,
+                              child: const Align(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          ),
                         ),
                         ValueListenableBuilder(
                           valueListenable: errorVN,
                           builder: (context, value, child) {
                             final hasError = value != null;
-                            return hasError
-                                ? ErrorView(
-                                    message: value,
-                                    onTap: onTryAgain,
-                                  )
-                                : const SizedBox.shrink();
+                            return Visibility(
+                              visible: hasError,
+                              child: ErrorView(
+                                message: value ?? '',
+                                onTap: onTryAgain,
+                              ),
+                            );
                           },
-                        )
+                        ),
                       ],
                     );
                   },
