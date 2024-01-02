@@ -16,5 +16,6 @@ class ServiceOrderItemModel with _$ServiceOrderItemModel {
     required double price,
   }) = _ServiceOrderItemModel;
 
-  factory ServiceOrderItemModel.fromJson(Map<String, dynamic> json) => _$ServiceOrderItemModelFromJson(json);
+  factory ServiceOrderItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ServiceOrderItemModelFromJson(json);
 }

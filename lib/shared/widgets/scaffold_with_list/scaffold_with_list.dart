@@ -12,7 +12,6 @@ import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/error
 class ScaffoldWithList<T, ID> extends StatefulWidget {
   const ScaffoldWithList({
     super.key,
-    required this.selectId,
     required this.controller,
     required this.onGetPage,
     required this.itemBuilder,
@@ -20,8 +19,6 @@ class ScaffoldWithList<T, ID> extends StatefulWidget {
     this.headerSliver,
     this.onDone,
   });
-
-  final ID Function(T item) selectId;
 
   final ListController<T> controller;
 

@@ -89,7 +89,7 @@ class ServiceOrderRoutes {
           parentNavigatorKey: Routes.i.navigationkey,
           path: selectService,
           builder: (context, state) => const ServiceListPage(
-            selectionMode: SelectionType.multi,
+            selection: Selection.multiple,
           ),
         ),
         GoRoute(

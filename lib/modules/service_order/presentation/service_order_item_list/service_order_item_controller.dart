@@ -19,13 +19,16 @@ class ServiceOrderItemController extends _$ServiceOrderItemController {
   }
 
   addService(ServiceModel service) {
-    final serviceOrderItem = ServiceOrderItemModel(service: service, price: service.price);
+    final serviceOrderItem =
+        ServiceOrderItemModel(service: service, price: service.price);
     state = [...state, serviceOrderItem];
   }
 
   addServiceList(List<ServiceModel> services) {
-    final serviceOrderItemList =
-        services.map((service) => ServiceOrderItemModel(service: service, price: service.price)).toList();
+    final serviceOrderItemList = services
+        .map((service) =>
+            ServiceOrderItemModel(service: service, price: service.price))
+        .toList();
     state = [...state, ...serviceOrderItemList];
   }
 
@@ -52,7 +55,9 @@ class ServiceOrderItemController extends _$ServiceOrderItemController {
   }
 
   handleSelectEmployee(int index) async {
-    final value = await ref.read(goRouterProvider).push(Routes.app.serviceOrder.selectEmployee);
+    final value = await ref
+        .read(goRouterProvider)
+        .push(Routes.app.serviceOrder.selectEmployee);
     if (value != null && value is EmployeeModel) {
       _handleEmployeeChanged(index, value);
     }

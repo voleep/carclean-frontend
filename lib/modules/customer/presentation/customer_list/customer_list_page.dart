@@ -38,7 +38,6 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
         controller: listController,
       ),
       controller: listController,
-      selectId: (item) => item.customerId,
       onGetPage: ref.read(customerRepositoryProvider).getPage,
       itemBuilder: (context, index, item) {
         return VoleepListTile(
@@ -47,7 +46,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
               "${item.dsTelephone ?? 'sem telefone'} - ${item.dsEmail ?? 'sem e-mail'}",
           item: item,
           controller: listController,
-          onEdit: () => goToUpdate(item),
+          onEdit: goToUpdate,
         );
       },
       onNew: goToNew,

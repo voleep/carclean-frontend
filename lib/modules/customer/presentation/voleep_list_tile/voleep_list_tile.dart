@@ -19,7 +19,7 @@ class VoleepListTile<T> extends StatelessWidget {
 
   final ListController<T> controller;
 
-  final FutureOr<void> Function() onEdit;
+  final FutureOr<void> Function(T item) onEdit;
 
   final String? subtitle;
 
@@ -50,10 +50,11 @@ class VoleepListTile<T> extends StatelessWidget {
                     Theme.of(context).colorScheme.surfaceVariant),
               ),
               icon: const Icon(Icons.edit),
-              onPressed: onEdit,
+              onPressed: () => onEdit(item),
             )
           : null,
-      onTap: () => controller.selection ? controller.toggle(item) : onEdit(),
+      onTap: () =>
+          controller.selection ? controller.toggle(item) : onEdit(item),
     );
   }
 }

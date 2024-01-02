@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -12,6 +14,7 @@ import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/ca
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_button.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
 
 class ServiceOrderItemListPage extends ConsumerStatefulWidget {
   const ServiceOrderItemListPage({super.key, this.modelList = const []});
@@ -30,10 +33,18 @@ class _ServiceOrderItemListPageState
   handleSelectService() async {
     final selectedService =
         await context.push(Routes.app.serviceOrder.selectService);
-    if (selectedService != null && selectedService is List<ServiceModel>) {
-      ref
-          .read(serviceOrderItemControllerProvider.notifier)
-          .addServiceList(selectedService);
+    if (selectedService != null && selectedService is List<Service>) {
+      ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(
+            selectedService
+                .map((e) => ServiceModel(
+                    serviceId: e.serviceId,
+                    code: e.code,
+                    description: e.description,
+                    fullDescription: e.fullDescription,
+                    price: e.price,
+                    pcCommission: e.pcCommission))
+                .toList(),
+          );
     }
   }
 

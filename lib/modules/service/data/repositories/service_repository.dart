@@ -10,7 +10,9 @@ import 'package:voleep_carclean_frontend/modules/service/domain/entities/service
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
+import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
+import 'package:voleep_carclean_frontend/shared/models/page_response.dart';
 
 part 'service_repository.g.dart';
 
@@ -66,6 +68,52 @@ class ServiceRepository {
           RepositoryException(message: Strings.erroAoCarregarDados),
           stackTrace,
         );
+    }
+  }
+
+  FutureOr<Either<RepositoryException, PageResponse<Service>>> getPage(
+      int page, List<Filter> filters) async {
+    final getPageResult = await http.auth.get<PageResponse<ServiceModel>>(
+      endpoint,
+      fromJsonT: (json) => PageResponse.fromJson(json, ServiceModel.fromJson),
+      queryParameters: {
+        "search":
+            "orderDirection:ASC,orderField:description,page:$page,${filters.query}"
+      },
+    );
+
+    switch (getPageResult) {
+      case Success(value: GenericResponse(:final data)):
+        return Success(
+          PageResponse(
+            numberOfItems: data!.numberOfItems,
+            numberOfPages: data.numberOfPages,
+            currentPage: data.currentPage,
+            pageData: data.pageData
+                .map(
+                  (service) => Service(
+                    serviceId: service.serviceId,
+                    code: service.code,
+                    description: service.description,
+                    fullDescription: service.fullDescription,
+                    price: service.price,
+                    pcCommission: service.pcCommission,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      case Failure(:final exception, :final stackTrace):
+        if (exception is HttpBadResponseException) {
+          return Failure(
+              RepositoryException(
+                  message: exception.message ?? Strings.erroAoCarregarDados),
+              stackTrace);
+        }
+
+        return Failure(
+            RepositoryException(message: Strings.erroAoCarregarDados),
+            stackTrace);
     }
   }
 
