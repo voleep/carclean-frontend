@@ -1,9 +1,10 @@
 part of 'themes.dart';
 
 final _lightAppBarTheme = AppBarTheme(
-  surfaceTintColor: _lightColorScheme.background,
-  backgroundColor: _lightColorScheme.background.withOpacity(0.9),
   elevation: 0,
+  systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+    statusBarColor: Colors.transparent,
+  ),
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
     fontSize: 20,
@@ -13,9 +14,10 @@ final _lightAppBarTheme = AppBarTheme(
 );
 
 final _darkAppBarTheme = AppBarTheme(
-  surfaceTintColor: _darkColorScheme.background,
-  backgroundColor: _darkColorScheme.background.withOpacity(0.9),
   elevation: 0,
+  systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: Colors.transparent,
+  ),
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
     fontSize: 20,

@@ -8,7 +8,7 @@ class SignInToCarclean extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const textStyle = TextStyle(
-      fontSize: 25,
+      fontSize: 29,
       fontWeight: FontWeight.w500,
     );
 
@@ -16,9 +16,9 @@ class SignInToCarclean extends StatelessWidget {
       children: [
         Image.asset(
           Images.carCleanLogo,
-          height: 65,
+          height: 75,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -34,15 +34,15 @@ class SignInToCarclean extends StatelessWidget {
             )
           ],
         ),
-        const SizedBox(height: 25),
+        const SizedBox(height: 18),
         Padding(
           padding: const EdgeInsets.only(
             left: 15,
             right: 15,
-            bottom: 50,
+            bottom: 56,
           ),
           child: Text(
-            "Bem vindo(a) ao CarClean! Faça login para acessar suas ferramentas de controle de agendamentos, relatórios e muito mais. Sua eficiência começa aqui!",
+            "Faça login no app para acessar suas ferramentas de controle de agendamentos, relatórios e muito mais. A eficiência do seu negócio começa aqui!",
             textAlign: TextAlign.center,
             style: TextStyle(
               height: 1.3,

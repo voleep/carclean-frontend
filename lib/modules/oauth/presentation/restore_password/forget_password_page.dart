@@ -25,11 +25,6 @@ class _ForgetPasswordState extends State<ForgetPasswordPage> {
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.white70,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-        ),
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(

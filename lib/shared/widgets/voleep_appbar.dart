@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class VoleepAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget title;
@@ -8,7 +7,6 @@ class VoleepAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Color surfaceTintColor;
   final double elevation;
   final double titleSpacing;
-  final SystemUiOverlayStyle systemOverlayStyle;
   final bool showProgressBar;
   final List<Widget>? actions;
 
@@ -21,11 +19,6 @@ class VoleepAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.elevation = 0.0,
     this.titleSpacing = 0.0,
     this.actions,
-    this.systemOverlayStyle = const SystemUiOverlayStyle(
-      statusBarColor: Colors.white70,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light,
-    ),
     this.showProgressBar = false,
   }) : super(key: key);
 
@@ -46,7 +39,6 @@ class _VoleepAppBarState extends State<VoleepAppBar> {
       surfaceTintColor: widget.surfaceTintColor,
       elevation: widget.elevation,
       titleSpacing: widget.titleSpacing,
-      systemOverlayStyle: widget.systemOverlayStyle,
       actions: widget.actions,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(0),
