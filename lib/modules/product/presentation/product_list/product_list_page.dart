@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/typedefs/product_id.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/modules/product/product_routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
@@ -83,7 +83,7 @@ class ProductListPage extends ConsumerWidget {
             trailing: const Icon(Icons.navigate_next_rounded),
             onTap: () async {
               final shouldReload = await context.push(
-                Routes.app.product.update(item.productId),
+                ProductRoutes.edit(item.productId),
               );
               if (shouldReload == true) {
                 ref
@@ -100,8 +100,7 @@ class ProductListPage extends ConsumerWidget {
           child: FloatingActionButton(
               child: const Icon(Icons.add_rounded),
               onPressed: () async {
-                final shouldReload =
-                    await context.push(Routes.app.product.create);
+                final shouldReload = await context.push(ProductRoutes.create);
                 if (shouldReload == true) {
                   ref
                       .read(searchControllerProvider(_searchConfig).notifier)

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
 import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/modules/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
@@ -85,7 +85,7 @@ class EmployeeListPage extends ConsumerWidget {
               }
 
               final shouldReload = await context.push(
-                Routes.app.employee.update(item.employeeId),
+                EmployeeRoutes.edit(item.employeeId),
               );
               if (shouldReload == true) {
                 ref
@@ -102,8 +102,7 @@ class EmployeeListPage extends ConsumerWidget {
           child: FloatingActionButton(
               child: const Icon(Icons.add_rounded),
               onPressed: () async {
-                final shouldReload =
-                    await context.push(Routes.app.employee.create);
+                final shouldReload = await context.push(EmployeeRoutes.create);
                 if (shouldReload == true) {
                   ref
                       .read(searchControllerProvider(_searchConfig).notifier)

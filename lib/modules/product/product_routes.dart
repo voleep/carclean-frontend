@@ -3,10 +3,13 @@ import 'package:voleep_carclean_frontend/modules/product/presentation/product_ed
 
 abstract class ProductRoutes {
   static const list = '/produtos';
-  String edit(String id) => '/produto/$id';
+
+  static const create = '/produto/new';
+
+  static String edit(String id) => '/produto/$id';
 }
 
-List<GoRoute> productRoutes = [
+final productRoutes = <GoRoute>[
   GoRoute(
     path: ":id",
     builder: (context, state) {

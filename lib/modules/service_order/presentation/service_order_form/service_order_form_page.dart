@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voleep_carclean_frontend/modules/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/service_order_routes.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/vehicle_routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/form_mode.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
@@ -43,7 +46,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
 
   handleCustomerClick() {
     GoRouter.of(context)
-        .push(Routes.app.serviceOrder.selectCustomer)
+        .push(CustomerRoutes.select(Selection.single))
         .then((value) {
       if (value != null && value is List<CustomerModel>) {
         // customer.value = selectedCustomer;
@@ -54,7 +57,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
 
   handleVehicleClick() {
     GoRouter.of(context)
-        .push(Routes.app.serviceOrder.selectVehicle)
+        .push(VehicleRoutes.select(Selection.single))
         .then((value) {
       if (value != null && value is Vehicle) {
         //vehicle.value = selectedVehicle;
@@ -65,7 +68,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
 
   handleServiceClick() {
     context
-        .push(Routes.app.serviceOrder.serviceList, extra: serviceItemList)
+        .push(ServiceOrderRoutes.services, extra: serviceItemList)
         .then((value) {
       if (value != null && value is List<ServiceOrderItemModel>) {
         serviceItemList = value;
@@ -135,8 +138,7 @@ class _ServiceOrderFormPageState extends ConsumerState<ServiceOrderFormPage> {
                             )
                           ],
                         ),
-                        onTap: () =>
-                            context.push(Routes.app.serviceOrder.productList),
+                        onTap: () => context.push(ServiceOrderRoutes.products),
                       ),
                       VoleepFormTile(
                         icon: Icons.percent_rounded,

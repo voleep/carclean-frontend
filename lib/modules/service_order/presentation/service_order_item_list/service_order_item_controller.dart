@@ -1,9 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/routing/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
-import 'package:voleep_carclean_frontend/routing/routes/go_router_provider.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
 
 part 'service_order_item_controller.g.dart';
 
@@ -57,7 +58,7 @@ class ServiceOrderItemController extends _$ServiceOrderItemController {
   handleSelectEmployee(int index) async {
     final value = await ref
         .read(goRouterProvider)
-        .push(Routes.app.serviceOrder.selectEmployee);
+        .push(EmployeeRoutes.selection(SelectionType.single));
     if (value != null && value is EmployeeModel) {
       _handleEmployeeChanged(index, value);
     }

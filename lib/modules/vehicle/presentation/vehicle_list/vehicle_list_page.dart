@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/vehicle_routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
@@ -60,7 +60,7 @@ class VehicleListPage extends ConsumerWidget {
                 return context.pop(item);
               }
               final shouldReload = await context.push(
-                Routes.app.vehicle.update(item.vehicleId ?? "new"),
+                VehicleRoutes.edit(item.vehicleId),
               );
               if (shouldReload == true) {
                 ref
@@ -77,8 +77,7 @@ class VehicleListPage extends ConsumerWidget {
           child: FloatingActionButton(
               child: const Icon(Icons.add_rounded),
               onPressed: () async {
-                final shouldReload =
-                    await context.push(Routes.app.vehicle.create);
+                final shouldReload = await context.push(VehicleRoutes.create);
                 if (shouldReload == true) {
                   ref
                       .read(searchControllerProvider(_searchConfig).notifier)

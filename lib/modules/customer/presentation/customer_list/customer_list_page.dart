@@ -5,7 +5,6 @@ import 'package:voleep_carclean_frontend/modules/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/repositories/customer_repository.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
@@ -67,7 +66,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   }
 
   Future<void> goToNew() async {
-    await context.push(Routes.app.customer.create);
+    await context.push(CustomerRoutes.create);
     listController.notifyFilterListeners();
   }
 

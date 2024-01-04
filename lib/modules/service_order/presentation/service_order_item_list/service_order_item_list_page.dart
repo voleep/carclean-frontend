@@ -1,15 +1,14 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/models/service_model.dart';
+import 'package:voleep_carclean_frontend/modules/service/service_routes.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/domain/models/service_order_item_model.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_controller.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/can_deactivate_dialog/can_deactivate_dialog.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
@@ -32,7 +31,7 @@ class _ServiceOrderItemListPageState
 
   handleSelectService() async {
     final selectedService =
-        await context.push(Routes.app.serviceOrder.selectService);
+        await context.push(ServiceRoutes.selection(Selection.multiple));
     if (selectedService != null && selectedService is List<Service>) {
       ref.read(serviceOrderItemControllerProvider.notifier).addServiceList(
             selectedService

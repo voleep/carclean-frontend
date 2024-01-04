@@ -1,1 +1,0 @@
-enum MenuGroup { home, register }

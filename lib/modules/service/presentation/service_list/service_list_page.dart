@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voleep_carclean_frontend/modules/service/service_routes.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/repositories/service_repository.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
-import 'package:voleep_carclean_frontend/routing/routes/routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
@@ -56,12 +56,12 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   }
 
   Future<void> goToNew() async {
-    await context.push(Routes.app.service.create);
+    await context.push(ServiceRoutes.create);
     listController.notifyFilterListeners();
   }
 
   Future<void> goToUpdate(Service item) async {
-    await context.push(Routes.app.service.update(item.serviceId));
+    await context.push(ServiceRoutes.edit(item.serviceId));
     listController.setFuture(
       () => ref.read(serviceRepositoryProvider).findById(item.serviceId),
       replacing: item,
