@@ -1,28 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:voleep_carclean_frontend/core/extensions/go_router_extension.dart';
 import 'package:voleep_carclean_frontend/core/oauth/oauth_session.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/app_page.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/menu_drawer/menu_drawer_divider.dart';
-import 'package:voleep_carclean_frontend/routing/domain/enums/menu_group.dart';
-import 'package:voleep_carclean_frontend/routing/menus/menu_controller.dart';
-import 'package:voleep_carclean_frontend/routing/menus/menu_list.dart';
-import 'package:voleep_carclean_frontend/routing/menus/selected_menu_index.dart';
+import 'package:voleep_carclean_frontend/core/routing/go_router.dart';
+import 'package:voleep_carclean_frontend/core/routing/menu/menu_group.dart';
+import 'package:voleep_carclean_frontend/core/routing/menu/menu_list_extension.dart';
+import 'package:voleep_carclean_frontend/core/routing/user_menus.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/app_page.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/menu_drawer/menu_drawer_divider.dart';
 
 class MenuDrawer extends ConsumerWidget {
-  const MenuDrawer({super.key});
+  const MenuDrawer({
+    super.key,
+    required this.navigationShell,
+  });
+
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final curPath = ref.read(goRouterProvider).currentPath;
+    final menus = ref.watch(userMenusProvider);
+
     return SizedBox(
       width: 280,
       child: NavigationDrawer(
         backgroundColor: Theme.of(context).colorScheme.surface,
         surfaceTintColor: Theme.of(context).colorScheme.surface,
-        selectedIndex: ref.watch(selectedMenuIndexProvider),
-        onDestinationSelected: (selectedIndex) {
-          ref
-              .read(menuControllerProvider.notifier)
-              .onMenuSelected(selectedIndex: selectedIndex);
+        selectedIndex: menus.indexOfPath(curPath),
+        onDestinationSelected: (index) {
+          final menu = menus[index];
+          context.go(menu.path);
           drawerKey.currentState?.close();
         },
         children: [
@@ -36,15 +45,14 @@ class MenuDrawer extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary),
             ),
           ),
-          ...ref
-              .read(menuListProvider)
+          ...menus
               .where((menu) => menu.group == MenuGroup.home)
               .toList()
               .asMap()
               .entries
               .map(
                 (menuEntry) => NavigationDrawerDestination(
-                  label: Text(menuEntry.value.label),
+                  label: Text(menuEntry.value.title),
                   icon: Icon(menuEntry.value.icon),
                   selectedIcon: Icon(
                     menuEntry.value.icon,
@@ -54,15 +62,14 @@ class MenuDrawer extends ConsumerWidget {
               )
               .toList(),
           const MenuDrawerDivider("Cadastro"),
-          ...ref
-              .read(menuListProvider)
-              .where((menu) => menu.group == MenuGroup.register)
+          ...menus
+              .where((menu) => menu.group == MenuGroup.registeration)
               .toList()
               .asMap()
               .entries
               .map(
                 (menuEntry) => NavigationDrawerDestination(
-                  label: Text(menuEntry.value.label),
+                  label: Text(menuEntry.value.title),
                   icon: Icon(menuEntry.value.icon),
                   selectedIcon: Icon(
                     menuEntry.value.icon,

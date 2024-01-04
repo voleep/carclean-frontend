@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:voleep_carclean_frontend/app_routes.dart';
 
 class NewAccount extends StatelessWidget {
   const NewAccount({super.key});
@@ -28,7 +29,7 @@ class NewAccount extends StatelessWidget {
             ),
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
-              context.go("/login/create-account");
+              context.push(AppRoutes.register);
             }),
       ],
     );

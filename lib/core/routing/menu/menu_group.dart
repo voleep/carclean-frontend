@@ -1,0 +1,4 @@
+enum MenuGroup {
+  home,
+  registeration,
+}

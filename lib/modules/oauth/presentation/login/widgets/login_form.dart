@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voleep_carclean_frontend/app_routes.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/viewmodels/login_form_vm.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/widgets/new_account.dart';
@@ -78,7 +79,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               child: const Text("Esqueceu a senha?"),
               onPressed: () {
                 FocusManager.instance.primaryFocus?.unfocus();
-                context.go("/login/forget-password");
+                context.push(AppRoutes.forgetPass);
               },
             ),
           ),

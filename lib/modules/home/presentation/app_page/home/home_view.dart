@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_menu_card.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/home/home_menu_card.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_silver_appbar.dart';
 
 class HomeView extends StatefulWidget {

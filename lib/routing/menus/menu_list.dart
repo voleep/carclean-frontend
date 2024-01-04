@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:voleep_carclean_frontend/modules/app/presentation/app_page/home/home_view.dart';
+import 'package:voleep_carclean_frontend/modules/customer/customer_routes.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/home/home_view.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
@@ -48,7 +49,7 @@ List<MenuModel> menuList(MenuListRef ref) => [
       ),
       MenuModel(
         group: MenuGroup.register,
-        location: Routes.app.customer.root,
+        location: CustomerRoutes.list,
         navigatorKey: _shellNavigatorCustomerKey,
         label: 'Clientes',
         icon: Icons.group_outlined,
