@@ -3,26 +3,26 @@ import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 
 class SelectionController<T> extends ValueNotifier<List<T>> {
   SelectionController({
-    required Selection type,
-    required String Function(T item) selectionKey,
-  })  : _type = type,
-        _selectionKey = selectionKey,
-        super([]);
+    required this.type,
+    required this.key,
+  }) : super([]);
 
-  final Selection _type;
+  final Selection type;
 
-  final String Function(T item) _selectionKey;
+  final String Function(T item) key;
+
+  bool get typeNone => type == Selection.none;
 
   void unselect(T item, {bool notify = true}) {
-    if (!isSelected(item)) return;
-    value.removeWhere((it) => _selectionKey(it) == _selectionKey(item));
+    if (typeNone || !isSelected(item)) return;
+    value.removeWhere((it) => key(it) == key(item));
     if (notify) notifyListeners();
   }
 
   void select(T item, {bool notify = true}) {
-    if (isSelected(item)) return;
+    if (typeNone || isSelected(item)) return;
 
-    switch (_type) {
+    switch (type) {
       case Selection.single:
         value = [item];
       case Selection.multiple:
@@ -37,8 +37,6 @@ class SelectionController<T> extends ValueNotifier<List<T>> {
   void toggle(T item) => isSelected(item) ? unselect(item) : select(item);
 
   bool isSelected(T item) {
-    return value
-        .where((it) => _selectionKey(it) == _selectionKey(item))
-        .isNotEmpty;
+    return value.where((it) => key(it) == key(item)).isNotEmpty;
   }
 }

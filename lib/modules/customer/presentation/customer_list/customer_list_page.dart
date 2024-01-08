@@ -38,7 +38,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   Widget build(BuildContext context) {
     return ScaffoldWithList<CustomerModel>(
       headerSlivers: [
-        VoleepSliverBar(
+        const VoleepSliverBar(
           title: "Clientes",
         ),
         VoleepSliverSearch(
@@ -47,7 +47,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
         )
       ],
       controller: listController,
-      onGetPage: ref.read(customerRepositoryProvider).getPage,
+      onSearch: ref.read(customerRepositoryProvider).search,
       itemBuilder: (context, index, item) {
         return VoleepListTile(
           title: item.dsName,
@@ -73,7 +73,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
 
   Future<void> goToNew() async {
     await context.push(CustomerRoutes.create);
-    listController.notifyFilterListeners();
+    listController.filter.doFilter(listController.filters);
   }
 
   @override

@@ -38,7 +38,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   Widget build(BuildContext context) {
     return ScaffoldWithList(
       headerSlivers: [
-        VoleepSliverBar(
+        const VoleepSliverBar(
           title: 'Serviços',
         ),
         VoleepSliverSearch(
@@ -47,7 +47,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
         )
       ],
       controller: listController,
-      onGetPage: ref.read(serviceRepositoryProvider).getPage,
+      onSearch: ref.read(serviceRepositoryProvider).getPage,
       itemBuilder: (context, index, item) => VoleepListTile(
         title: item.description,
         subtitle:
@@ -63,7 +63,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
 
   Future<void> goToNew() async {
     await context.push(ServiceRoutes.create);
-    listController.notifyFilterListeners();
+    listController.filter.doFilter(listController.filters);
   }
 
   Future<void> goToUpdate(Service item) async {

@@ -55,14 +55,14 @@ class CustomerRepository {
     }
   }
 
-  FutureOr<Either<RepositoryException, PageResponse<CustomerModel>>> getPage(
-      int page, List<Filter> filters) async {
+  FutureOr<Either<RepositoryException, PageResponse<CustomerModel>>> search(
+      List<Filter> filters) async {
+    final String query = filters.query;
     final getPageResult = await http.auth.get<PageResponse<CustomerModel>>(
       endpoint,
       fromJsonT: (json) => PageResponse.fromJson(json, CustomerModel.fromJson),
       queryParameters: {
-        "search":
-            "orderDirection:ASC,orderField:dsName,page:$page,${filters.query}"
+        "search": "orderDirection:ASC,orderField:dsName,$query"
       },
     );
 

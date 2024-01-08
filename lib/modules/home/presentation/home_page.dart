@@ -15,25 +15,15 @@ class _HomePageState extends State<HomePage> {
       resizeToAvoidBottomInset: false,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          VoleepSliverBar(
+          const VoleepSliverBar(
             title: 'CarClean',
-            actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.account_circle),
-              )
-            ],
           ),
         ],
         body: const Scrollbar(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Em desenvolvimento..."),
+              Text("Dev preview by Voleep"),
             ],
           ),
         ),

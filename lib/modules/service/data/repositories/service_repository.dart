@@ -72,13 +72,12 @@ class ServiceRepository {
   }
 
   FutureOr<Either<RepositoryException, PageResponse<Service>>> getPage(
-      int page, List<Filter> filters) async {
+      List<Filter> filters) async {
     final getPageResult = await http.auth.get<PageResponse<ServiceModel>>(
       endpoint,
       fromJsonT: (json) => PageResponse.fromJson(json, ServiceModel.fromJson),
       queryParameters: {
-        "search":
-            "orderDirection:ASC,orderField:description,page:$page,${filters.query}"
+        "search": "orderDirection:ASC,orderField:description,${filters.query}"
       },
     );
 

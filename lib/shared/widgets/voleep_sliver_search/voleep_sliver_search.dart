@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/core/extensions/context_extension.dart';
 import 'package:voleep_carclean_frontend/shared/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voelep_search_field/voleep_search_field.dart';
 
 class VoleepSliverSearch<T> extends StatefulWidget {
   const VoleepSliverSearch({
@@ -82,7 +80,7 @@ class _VoleepSliverSearchState<T> extends State<VoleepSliverSearch<T>> {
         filters.add(filter);
       }
 
-      widget.controller.notifyFilterListeners();
+      widget.controller.filter.doFilter(filters);
     });
   }
 }

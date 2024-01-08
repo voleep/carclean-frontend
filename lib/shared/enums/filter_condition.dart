@@ -8,7 +8,7 @@ enum FilterCondition {
   lower,
   lowerOrEquals;
 
-  String key() {
+  String get key {
     switch (this) {
       case equals:
         return ":";
@@ -29,7 +29,7 @@ enum FilterCondition {
     }
   }
 
-  String label() {
+  String get label {
     switch (this) {
       case equals:
         return "Igual";

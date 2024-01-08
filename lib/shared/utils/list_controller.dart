@@ -1,39 +1,29 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
+import 'package:voleep_carclean_frontend/shared/utils/filter_controller.dart';
 import 'package:voleep_carclean_frontend/shared/utils/selection_controller.dart';
 
-class ListController<T> extends ValueNotifier<List<T>>
-    implements SelectionController<T> {
+class ListController<T> extends ValueNotifier<List<T>> {
   ListController({
     Selection selection = Selection.none,
     required String Function(T item) selectionKey,
-  })  : _selection = selection,
-        _selectionController = SelectionController(
+  })  : selection = SelectionController(
           type: selection,
-          selectionKey: selectionKey,
+          key: selectionKey,
         ),
-        _filterController = ValueNotifier([]),
         super([]);
 
-  final Selection _selection;
+  final FilterController filter = FilterController();
 
-  bool get selection => _selection != Selection.none;
+  List<Filter> get filters => filter.filters;
 
-  final ValueNotifier<List<Filter>> _filterController;
+  final SelectionController<T> selection;
 
-  Listenable get selectionListenable => _selectionController;
-
-  List<T> get selected => _selectionController.value;
-
-  final SelectionController<T> _selectionController;
-
-  Listenable get filterListenable => _filterController;
-
-  List<Filter> get filters => _filterController.value;
+  List<T> get selected => selection.value;
 
   Future<void> setFuture(
     FutureOr<Either<Exception, T>> Function() item, {
@@ -52,9 +42,11 @@ class ListController<T> extends ValueNotifier<List<T>>
             value.add(newItem);
           }
 
-          if (selection && replacing != null && isSelected(replacing)) {
-            unselect(replacing, notify: false);
-            select(newItem, notify: false);
+          final updateSelection = !selection.typeNone && replacing != null;
+
+          if (updateSelection && selection.isSelected(replacing)) {
+            selection.unselect(replacing, notify: false);
+            selection.select(newItem, notify: false);
           }
 
           notifyListeners();
@@ -64,39 +56,10 @@ class ListController<T> extends ValueNotifier<List<T>>
     }
   }
 
-  void notifyFilterListeners() {
-    _filterController.notifyListeners();
-  }
-
   @override
   void dispose() {
-    _selectionController.dispose();
-    _filterController.dispose();
-
+    filter.dispose();
+    selection.dispose();
     super.dispose();
-  }
-
-  @override
-  bool isSelected(T item) {
-    if (!selection) return false;
-    return _selectionController.isSelected(item);
-  }
-
-  @override
-  void select(T item, {bool notify = true}) {
-    if (!selection) return;
-    _selectionController.select(item, notify: notify);
-  }
-
-  @override
-  void toggle(T item) {
-    if (!selection) return;
-    _selectionController.toggle(item);
-  }
-
-  @override
-  void unselect(T item, {bool notify = true}) {
-    if (!selection) return;
-    _selectionController.unselect(item, notify: notify);
   }
 }

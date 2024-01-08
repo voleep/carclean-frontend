@@ -7,16 +7,16 @@ class Filter {
 
   const Filter({
     required this.field,
-    required this.condition,
     required this.value,
+    this.condition = FilterCondition.equals,
   });
 
   @override
   String toString() {
-    return field + condition.key() + value;
+    return "$field${condition.key}$value";
   }
 }
 
 extension FilterExtension on List<Filter> {
-  String get query => map((filter) => first.toString()).join(",");
+  String get query => map((filter) => filter.toString()).join(",");
 }

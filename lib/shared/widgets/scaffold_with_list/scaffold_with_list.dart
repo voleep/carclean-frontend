@@ -13,7 +13,7 @@ class ScaffoldWithList<T> extends StatefulWidget {
   const ScaffoldWithList({
     super.key,
     required this.controller,
-    required this.onGetPage,
+    required this.onSearch,
     required this.itemBuilder,
     required this.onNew,
     this.headerSlivers,
@@ -23,7 +23,7 @@ class ScaffoldWithList<T> extends StatefulWidget {
   final ListController<T> controller;
 
   final FutureOr<Either<Exception, PageResponse<T>>> Function(
-      int page, List<Filter> filters) onGetPage;
+      List<Filter> filters) onSearch;
 
   final Widget Function(BuildContext context, int index, T item) itemBuilder;
 
@@ -48,7 +48,9 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
   @override
   void initState() {
     loadNextPage();
-    widget.controller.filterListenable.addListener(onFilterChanged);
+    widget.controller.filter.onFilter().listen((event) {
+      refresh();
+    });
 
     super.initState();
   }
@@ -64,7 +66,7 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
           body: NotificationListener<ScrollEndNotification>(
             onNotification: onScroll,
             child: RefreshIndicator(
-              onRefresh: onRefresh,
+              onRefresh: refresh,
               child: Scrollbar(
                 child: ValueListenableBuilder(
                   valueListenable: widget.controller,
@@ -114,7 +116,7 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
   }
 
   Widget buildFloatingAction() {
-    final isSelection = widget.controller.selection;
+    final isSelection = !widget.controller.selection.typeNone;
 
     final children = <Widget>[
       FloatingActionButton(
@@ -129,8 +131,6 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
         Padding(
           padding: const EdgeInsets.only(top: 4),
           child: FloatingActionButton.extended(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.primaryContainer,
             label: const Text("Confirmar"),
             onPressed: () => widget.onDone?.call(),
           ),
@@ -149,8 +149,11 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
     if (nextPageLoading.value) return;
 
     nextPageLoading.value = true;
+
     final filters = widget.controller.filters;
-    final result = await widget.onGetPage(currentPage, filters);
+    filters.add(Filter(field: 'page', value: currentPage));
+
+    final result = await widget.onSearch(filters);
 
     switch (result) {
       case Success(:final value):
@@ -170,11 +173,7 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
     loadNextPage();
   }
 
-  void onFilterChanged() {
-    onRefresh();
-  }
-
-  Future<void> onRefresh() async {
+  Future<void> refresh() async {
     currentPage = 1;
     widget.controller.value = [];
     await loadNextPage();
@@ -194,7 +193,6 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
     firstPageError.dispose();
     nextPageLoading.dispose();
     nextPageError.dispose();
-    widget.controller.filterListenable.removeListener(onFilterChanged);
 
     super.dispose();
   }
