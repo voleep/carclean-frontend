@@ -8,7 +8,8 @@ import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_search_bar/voleep_search_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
 class CustomerListPage extends ConsumerStatefulWidget {
   const CustomerListPage({Key? key, this.selection = Selection.none})
@@ -36,10 +37,15 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWithList<CustomerModel>(
-      headerSliver: VoleepSearchBar(
-        field: "dsName",
-        controller: listController,
-      ),
+      headerSlivers: [
+        const VoleepSliverBar(
+          title: "Clientes",
+        ),
+        VoleepSliverSearch(
+          field: 'dsName',
+          controller: listController,
+        )
+      ],
       controller: listController,
       onGetPage: ref.read(customerRepositoryProvider).getPage,
       itemBuilder: (context, index, item) {

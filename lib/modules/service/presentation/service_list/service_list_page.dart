@@ -8,7 +8,8 @@ import 'package:voleep_carclean_frontend/modules/service/domain/entities/service
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_search_bar/voleep_search_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
 class ServiceListPage extends ConsumerStatefulWidget {
   const ServiceListPage({super.key, this.selection = Selection.none});
@@ -36,10 +37,15 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWithList(
-      headerSliver: VoleepSearchBar(
-        field: 'description',
-        controller: listController,
-      ),
+      headerSlivers: [
+        const VoleepSliverBar(
+          title: 'Serviços',
+        ),
+        VoleepSliverSearch(
+          field: 'description',
+          controller: listController,
+        )
+      ],
       controller: listController,
       onGetPage: ref.read(serviceRepositoryProvider).getPage,
       itemBuilder: (context, index, item) => VoleepListTile(

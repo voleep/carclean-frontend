@@ -16,7 +16,7 @@ class ScaffoldWithList<T> extends StatefulWidget {
     required this.onGetPage,
     required this.itemBuilder,
     required this.onNew,
-    this.headerSliver,
+    this.headerSlivers,
     this.onDone,
   });
 
@@ -31,7 +31,7 @@ class ScaffoldWithList<T> extends StatefulWidget {
 
   final VoidCallback? onDone;
 
-  final Widget? headerSliver;
+  final List<Widget>? headerSlivers;
 
   @override
   State<ScaffoldWithList> createState() => _ScaffoldWithListState<T>();
@@ -59,10 +59,8 @@ class _ScaffoldWithListState<T> extends State<ScaffoldWithList<T>> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            if (widget.headerSliver == null) return [];
-            return [widget.headerSliver!];
-          },
+          headerSliverBuilder: (context, innerBoxIsScrolled) =>
+              widget.headerSlivers ?? [],
           body: NotificationListener<ScrollEndNotification>(
             onNotification: onScroll,
             child: RefreshIndicator(

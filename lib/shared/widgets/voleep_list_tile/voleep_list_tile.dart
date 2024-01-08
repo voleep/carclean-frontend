@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 
 class VoleepListTile<T> extends StatelessWidget {
@@ -33,13 +34,16 @@ class VoleepListTile<T> extends StatelessWidget {
               .bodyLarge
               ?.copyWith(fontWeight: FontWeight.w500)),
       subtitle: hasSubtitle ? Text(subtitle!) : null,
-      contentPadding: const EdgeInsets.only(left: 10, right: 16),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
       leading: controller.selection
           ? ListenableBuilder(
               listenable: controller.selectionListenable,
-              builder: (context, child) => Checkbox(
-                value: controller.isSelected(item),
-                onChanged: (_) => controller.toggle(item),
+              builder: (context, child) => SizedBox(
+                width: 30,
+                child: Checkbox(
+                  value: controller.isSelected(item),
+                  onChanged: (_) => controller.toggle(item),
+                ),
               ),
             )
           : null,
@@ -48,7 +52,7 @@ class VoleepListTile<T> extends StatelessWidget {
               iconSize: 20,
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(
-                  Theme.of(context).colorScheme.onInverseSurface,
+                  Theme.of(context).colorScheme.surface,
                 ),
               ),
               icon: const Icon(Icons.edit),

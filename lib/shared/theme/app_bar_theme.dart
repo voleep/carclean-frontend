@@ -5,9 +5,11 @@ final _lightAppBarTheme = AppBarTheme(
   systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
     statusBarColor: Colors.transparent,
   ),
+  surfaceTintColor: _lightColorScheme.background,
+  shadowColor: _lightColorScheme.shadow,
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
-    fontSize: 20,
+    fontSize: 23,
     color: _lightColorScheme.primary,
     fontWeight: FontWeight.w500,
   ),
@@ -18,9 +20,11 @@ final _darkAppBarTheme = AppBarTheme(
   systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
     statusBarColor: Colors.transparent,
   ),
+  surfaceTintColor: _darkColorScheme.background,
+  shadowColor: _darkColorScheme.shadow,
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
-    fontSize: 20,
+    fontSize: 23,
     color: _darkColorScheme.primary,
     fontWeight: FontWeight.w500,
   ),

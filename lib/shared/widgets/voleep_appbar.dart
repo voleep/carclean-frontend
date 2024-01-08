@@ -34,6 +34,7 @@ class _VoleepAppBarState extends State<VoleepAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: widget.title,
+      centerTitle: false,
       backgroundColor: widget.backgroundColor,
       shadowColor: widget.shadowColor,
       surfaceTintColor: widget.surfaceTintColor,

@@ -46,7 +46,7 @@ class AppPage extends ConsumerWidget {
         ),
         DrawerController(
           key: drawerKey,
-          alignment: DrawerAlignment.end,
+          alignment: DrawerAlignment.start,
           child: MenuDrawer(
             navigationShell: navigationShell,
           ),
