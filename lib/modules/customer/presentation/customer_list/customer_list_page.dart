@@ -38,7 +38,7 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
   Widget build(BuildContext context) {
     return ScaffoldWithList<CustomerModel>(
       headerSlivers: [
-        const VoleepSliverBar(
+        VoleepSliverBar(
           title: "Clientes",
         ),
         VoleepSliverSearch(

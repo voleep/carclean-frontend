@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/home/presentation/menu_drawer/menu_drawer.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/widgets/menu_drawer.dart';
 import 'package:voleep_carclean_frontend/modules/home/presentation/widgets/bottom_nav_bar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/loading/loading_screen.dart';
 
@@ -28,21 +28,23 @@ class AppPage extends ConsumerWidget {
     );
 
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        Flex(
-          direction: Axis.vertical,
-          children: [
-            Flexible(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeBottom: true,
-                child: navigationShell,
+        LayoutBuilder(
+          builder: (context, constraints) => Column(
+            children: [
+              Expanded(
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeBottom: true,
+                  child: navigationShell,
+                ),
               ),
-            ),
-            BottomNavBar(
-              navigationShell: navigationShell,
-            )
-          ],
+              BottomNavBar(
+                navigationShell: navigationShell,
+              ),
+            ],
+          ),
         ),
         DrawerController(
           key: drawerKey,
@@ -50,7 +52,7 @@ class AppPage extends ConsumerWidget {
           child: MenuDrawer(
             navigationShell: navigationShell,
           ),
-        )
+        ),
       ],
     );
   }

@@ -3,7 +3,7 @@ import 'package:voleep_carclean_frontend/core/extensions/go_router_extension.dar
 import 'package:voleep_carclean_frontend/modules/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/modules/employee/employee_routes.dart';
 import 'package:voleep_carclean_frontend/modules/home/home_branches.dart';
-import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/app_page.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/app_page.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_account/create_account_page.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/create_business/create_business_page.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/presentation/login/login_page.dart';

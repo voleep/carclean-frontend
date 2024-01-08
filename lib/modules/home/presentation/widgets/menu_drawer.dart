@@ -7,8 +7,8 @@ import 'package:voleep_carclean_frontend/core/routing/go_router.dart';
 import 'package:voleep_carclean_frontend/core/routing/menu/menu_group.dart';
 import 'package:voleep_carclean_frontend/core/routing/menu/menu_list_extension.dart';
 import 'package:voleep_carclean_frontend/core/routing/user_menus.dart';
-import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/app_page.dart';
-import 'package:voleep_carclean_frontend/modules/home/presentation/menu_drawer/menu_drawer_divider.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/app_page.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/widgets/menu_drawer_divider.dart';
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({

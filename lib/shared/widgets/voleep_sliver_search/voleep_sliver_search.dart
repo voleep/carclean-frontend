@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/context_extension.dart';
 import 'package:voleep_carclean_frontend/shared/enums/filter_condition.dart';
 import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/utils/debounce_time.dart';
@@ -33,24 +33,25 @@ class _VoleepSliverSearchState<T> extends State<VoleepSliverSearch<T>> {
           padding: const EdgeInsets.all(12),
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: context.colorScheme.surface,
+              color: context.colorScheme.surfaceVariant,
               borderRadius: BorderRadius.circular(27),
             ),
             child: TextFormField(
               decoration: InputDecoration(
                 prefixIcon: const Icon(
                   Icons.search,
-                  size: 28,
+                  size: 24,
                 ),
                 hintText: "Pesquisar",
-                hintStyle: TextStyle(color: context.colorScheme.surfaceVariant),
+                hintStyle: TextStyle(
+                  color: context.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                ),
                 prefixIconConstraints: const BoxConstraints(minWidth: 60),
-                prefixIconColor: context.colorScheme.onSurfaceVariant,
+                prefixIconColor: context.colorScheme.onSecondaryContainer,
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: const EdgeInsets.all(18),
+                contentPadding: const EdgeInsets.all(14),
               ),
-              style: const TextStyle(fontSize: 18),
               onChanged: onSearch,
               onFieldSubmitted: onSearch,
             ),

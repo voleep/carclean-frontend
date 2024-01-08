@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/customer/presentation/customer_list/customer_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/home/presentation/app_page/home/home_view.dart';
+import 'package:voleep_carclean_frontend/modules/home/presentation/home_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_list/service_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
@@ -14,7 +14,7 @@ final homeBranches = [
       GoRoute(
         path: '/home',
         pageBuilder: (context, state) => const NoTransitionPage(
-          child: HomeView(),
+          child: HomePage(),
         ),
       ),
     ],

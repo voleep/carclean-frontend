@@ -38,7 +38,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
   Widget build(BuildContext context) {
     return ScaffoldWithList(
       headerSlivers: [
-        const VoleepSliverBar(
+        VoleepSliverBar(
           title: 'Serviços',
         ),
         VoleepSliverSearch(

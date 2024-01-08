@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voleep_carclean_frontend/core/constants/images.dart';
 import 'package:voleep_carclean_frontend/core/extensions/responsive_extension.dart';
-import 'package:voleep_carclean_frontend/core/extensions/theme_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/context_extension.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scrollable_view/scrollable_view.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_appbar.dart';
 

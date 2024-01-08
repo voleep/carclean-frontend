@@ -9,7 +9,7 @@ final _lightAppBarTheme = AppBarTheme(
   shadowColor: _lightColorScheme.shadow,
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
-    fontSize: 23,
+    fontSize: 21,
     color: _lightColorScheme.primary,
     fontWeight: FontWeight.w500,
   ),
@@ -24,7 +24,7 @@ final _darkAppBarTheme = AppBarTheme(
   shadowColor: _darkColorScheme.shadow,
   titleTextStyle: TextStyle(
     fontFamily: 'RobotoSans',
-    fontSize: 23,
+    fontSize: 21,
     color: _darkColorScheme.primary,
     fontWeight: FontWeight.w500,
   ),
