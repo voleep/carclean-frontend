@@ -38,7 +38,7 @@ class EmployeeRepository {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
-            RepositoryException(message: Strings.colaboradorNaoEncontrado),
+            RepositoryException(Strings.colaboradorNaoEncontrado),
             StackTrace.current,
           );
         }
@@ -57,13 +57,13 @@ class EmployeeRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
             RepositoryException(
-                message: exception.message ?? Strings.erroAoCarregarDados),
+                exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoCarregarDados),
+          RepositoryException(Strings.erroAoCarregarDados),
           stackTrace,
         );
     }
@@ -82,7 +82,7 @@ class EmployeeRepository {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
-            RepositoryException(message: Strings.erroAoSalvarDados),
+            RepositoryException(Strings.erroAoSalvarDados),
             StackTrace.current,
           );
         }
@@ -100,14 +100,13 @@ class EmployeeRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
+          RepositoryException(Strings.erroAoSalvarDados),
           stackTrace,
         );
     }

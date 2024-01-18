@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/models/create_vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/create_vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/repositories/vehicle_repository.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_edit/vehicle_edit_vm.dart';
 
 import '../../../../provider_container.dart';
@@ -31,7 +31,7 @@ void main() {
       await expectLater(
         container.read(VehicleEditVmProvider('new').future),
         completion(
-          predicate<Vehicle>((vehicle) {
+          predicate<VehicleModel>((vehicle) {
             expect(vehicle.description, '');
             expect(vehicle.licensePlate, '');
             return true;
@@ -46,7 +46,7 @@ void main() {
       const expectedPlate = '1234-56';
       final expectedYear = DateTime.now().toIso8601String();
 
-      final expectedVehicle = Vehicle(
+      final expectedVehicle = VehicleModel(
         vehicleId: expectedId,
         licensePlate: expectedPlate,
         description: expectedDescription,
@@ -60,7 +60,7 @@ void main() {
       await expectLater(
         container.read(VehicleEditVmProvider(expectedId).future),
         completion(
-          predicate<Vehicle>((vehicle) {
+          predicate<VehicleModel>((vehicle) {
             expect(vehicle.vehicleId, expectedId);
             expect(vehicle.description, expectedDescription);
             expect(vehicle.licensePlate, expectedPlate);
@@ -76,8 +76,7 @@ void main() {
       const expectedId = 'my_vehicle_id';
 
       when(() => repository.findById(expectedId)).thenAnswer(
-        (_) async =>
-            Failure(RepositoryException(message: ''), StackTrace.current),
+        (_) async => Failure(RepositoryException(''), StackTrace.current),
       );
 
       await expectLater(
@@ -108,7 +107,7 @@ void main() {
       when(() => repository.save(any(), true)).thenAnswer((invocation) async {
         final CreateVehicleModel model = invocation.positionalArguments[0];
         return Success(
-          Vehicle(
+          VehicleModel(
             vehicleId: model.vehicleId!,
             licensePlate: model.licensePlate,
             description: model.description,
@@ -144,8 +143,8 @@ void main() {
 
     registerFallbackValue(vehicleModel);
 
-    when(() => repository.save(any(), true)).thenAnswer((_) async =>
-        Failure(RepositoryException(message: ''), StackTrace.current));
+    when(() => repository.save(any(), true)).thenAnswer(
+        (_) async => Failure(RepositoryException(''), StackTrace.current));
 
     await container.read(VehicleEditVmProvider('new').future);
 

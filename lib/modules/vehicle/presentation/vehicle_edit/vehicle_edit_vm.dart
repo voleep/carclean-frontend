@@ -6,9 +6,9 @@ import 'package:voleep_carclean_frontend/core/extensions/async_value_extension.d
 import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/models/create_vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/create_vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/data/repositories/vehicle_repository.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/license_plate.dart';
 
 part 'vehicle_edit_vm.g.dart';
@@ -18,9 +18,9 @@ class VehicleEditVm extends _$VehicleEditVm {
   bool get isNew => id == 'new';
 
   @override
-  FutureOr<Vehicle> build(String id) async {
+  FutureOr<VehicleModel> build(String id) async {
     if (isNew) {
-      return Vehicle(
+      return VehicleModel(
         vehicleId: const Uuid().v1(),
         licensePlate: '',
         description: '',

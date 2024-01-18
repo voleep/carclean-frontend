@@ -5,7 +5,6 @@ import 'package:voleep_carclean_frontend/modules/product/data/models/product_mod
 import 'package:voleep_carclean_frontend/modules/service_order/domain/typedefs/service_order_typedefs.dart';
 
 part 'service_order_product_model.freezed.dart';
-part 'service_order_product_model.g.dart';
 
 @freezed
 class ServiceOrderProductModel with _$ServiceOrderProductModel {
@@ -16,6 +15,4 @@ class ServiceOrderProductModel with _$ServiceOrderProductModel {
     required double quantity,
     required double price,
   }) = _ServiceOrderProductModel;
-
-  factory ServiceOrderProductModel.fromJson(Map<String, dynamic> json) => _$ServiceOrderProductModelFromJson(json);
 }

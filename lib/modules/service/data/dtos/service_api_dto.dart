@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
-part 'service_model.g.dart';
+part 'service_api_dto.g.dart';
 
 @JsonSerializable()
-class ServiceModel {
+class ServiceApiDto {
   final ServiceId serviceId;
 
   final int code;
@@ -17,7 +17,7 @@ class ServiceModel {
 
   final double pcCommission;
 
-  const ServiceModel({
+  const ServiceApiDto({
     required this.serviceId,
     required this.code,
     required this.description,
@@ -26,7 +26,8 @@ class ServiceModel {
     required this.pcCommission,
   });
 
-  factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);
+  factory ServiceApiDto.fromJson(Map<String, dynamic> json) =>
+      _$ServiceApiDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ServiceModelToJson(this);
+  Map<String, dynamic> toJson() => _$ServiceApiDtoToJson(this);
 }

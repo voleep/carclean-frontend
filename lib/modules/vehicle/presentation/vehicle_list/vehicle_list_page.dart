@@ -1,91 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/core/config/api_config.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_model.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
+import 'package:go_router/go_router.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/application/vehicle_service.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/vehicle_routes.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
+import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
-class VehicleListPage extends ConsumerWidget {
-  VehicleListPage({super.key, this.selectionMode = false});
+class VehicleListPage extends ConsumerStatefulWidget {
+  const VehicleListPage({super.key, this.selection = Selection.none});
 
-  final bool selectionMode;
-
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/vehicle",
-      orderField: "description",
-      filterOnInit: true);
+  final Selection selection;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      children: [
-        CarCleanSearch<VehicleModel, VehicleId>(
-          config: _searchConfig,
-          selectId: (item) => item.vehicleId,
-          searchBarFilter: const FilterOption(
-            title: "Veículo",
-            field: "description",
-            type: FilterType.text,
-          ),
-          filterOptions: const [
-            FilterOption(
-              title: "Veículo",
-              field: "description",
-              type: FilterType.text,
-            ),
-            FilterOption(
-              title: "Placa",
-              field: "licensePlate",
-              type: FilterType.text,
-            ),
-            FilterOption(
-              title: "Ano",
-              field: "modelYear",
-              type: FilterType.text,
-            ),
-          ],
-          itemBuilder: (context, index, item, selected) => ListTile(
-            title: Text(item.description),
-            subtitle: Text(
-                "Placa: ${item.licensePlate} ${item.modelYear != null ? '- Ano: ${item.modelYear}' : ''}"),
-            trailing: const Icon(Icons.navigate_next_rounded),
-            onTap: () async {
-              if (selectionMode) {
-                return context.pop(item);
-              }
-              final shouldReload = await context.push(
-                VehicleRoutes.edit(item.vehicleId),
-              );
-              if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
-              }
-            },
-          ),
-          fromJsonT: VehicleModel.fromJson,
+  ConsumerState<VehicleListPage> createState() => _VehicleListPageState();
+}
+
+class _VehicleListPageState extends ConsumerState<VehicleListPage> {
+  late final ListController<VehicleModel> listController;
+
+  @override
+  void initState() {
+    listController = ListController(
+      selection: widget.selection,
+      selectionKey: (item) => item.vehicleId,
+    );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithList(
+      headerSlivers: [
+        const VoleepSliverBar(
+          title: "Veículos",
         ),
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: FloatingActionButton(
-              child: const Icon(Icons.add_rounded),
-              onPressed: () async {
-                final shouldReload = await context.push(VehicleRoutes.create);
-                if (shouldReload == true) {
-                  ref
-                      .read(searchControllerProvider(_searchConfig).notifier)
-                      .refresh();
-                }
-              }),
+        VoleepSliverSearch(
+          field: 'description',
+          controller: listController,
         ),
       ],
+      controller: listController,
+      onSearch: ref.read(vehicleServiceProvider).getPage,
+      itemBuilder: (context, index, item) {
+        return VoleepListTile(
+          title: item.description,
+          subtitle:
+              "Placa: ${item.licensePlate} - Ano: ${item.modelYear ?? 'não cadastrado'}",
+          item: item,
+          controller: listController,
+          onEdit: goToUpdate,
+        );
+      },
+      onDone: () => context.pop(listController.selected),
+      onNew: goToNew,
     );
+  }
+
+  goToNew() async {
+    context.push(VehicleRoutes.create);
+  }
+
+  goToUpdate(VehicleModel vehicle) async {
+    context.push(VehicleRoutes.edit(vehicle.vehicleId));
+  }
+
+  @override
+  void dispose() {
+    listController.dispose();
+
+    super.dispose();
   }
 }

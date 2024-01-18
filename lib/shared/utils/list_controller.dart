@@ -10,7 +10,7 @@ import 'package:voleep_carclean_frontend/shared/utils/selection_controller.dart'
 class ListController<T> extends ValueNotifier<List<T>> {
   ListController({
     Selection selection = Selection.none,
-    required String Function(T item) selectionKey,
+    dynamic Function(T item)? selectionKey,
   })  : selection = SelectionController(
           type: selection,
           key: selectionKey,

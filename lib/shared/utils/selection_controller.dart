@@ -4,12 +4,13 @@ import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 class SelectionController<T> extends ValueNotifier<List<T>> {
   SelectionController({
     required this.type,
-    required this.key,
-  }) : super([]);
+    dynamic Function(T item)? key,
+  })  : key = key ?? ((item) => item),
+        super([]);
 
   final Selection type;
 
-  final String Function(T item) key;
+  final dynamic Function(T item) key;
 
   bool get typeNone => type == Selection.none;
 
@@ -25,7 +26,7 @@ class SelectionController<T> extends ValueNotifier<List<T>> {
     switch (type) {
       case Selection.single:
         value = [item];
-      case Selection.multiple:
+      case Selection.multi:
         value.add(item);
       default:
         return;

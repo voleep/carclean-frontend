@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
-import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/entities/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_edit/service_edit_vm.dart';
 import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
@@ -96,7 +96,7 @@ class _ServiceEditPageState extends ConsumerState<ServiceEditPage> {
     );
   }
 
-  void setData(Service service) {
+  void setData(ServiceModel service) {
     codeEC.text = service.code.toString();
     descriptionEC.text = service.description;
     fullDescriptionEC.text = service.fullDescription;

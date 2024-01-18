@@ -1,10 +1,10 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:voleep_carclean_frontend/core/config/api_config.dart';
+import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
-import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/data/dtos/create_business_dto.dart';
 import 'package:voleep_carclean_frontend/modules/oauth/domain/models/auth_model.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
@@ -30,7 +30,7 @@ class BusinessRepository {
     switch (postResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(RepositoryException(message: Strings.erroCriarEmpresa),
+          return Failure(RepositoryException(Strings.erroCriarEmpresa),
               StackTrace.current);
         }
 
@@ -39,12 +39,12 @@ class BusinessRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
               RepositoryException(
-                  message: exception.message ?? Strings.erroCriarEmpresa),
+                  exception.message ?? Strings.erroCriarEmpresa),
               stackTrace);
         }
 
         return Failure(
-            RepositoryException(message: Strings.erroCriarEmpresa), stackTrace);
+            RepositoryException(Strings.erroCriarEmpresa), stackTrace);
     }
   }
 }

@@ -8,8 +8,9 @@ abstract class VehicleRoutes {
 
   static const create = '/veiculo/new';
 
-  static String select(Selection selection) =>
-      '/veiculo/selecionar/${selection.name}';
+  static final singleSelection = '/veiculo/selecionar/${Selection.single.name}';
+
+  static final multiSelection = '/veiculo/selecionar/${Selection.multi.name}';
 
   static String edit(String id) => '/veiculo/$id';
 }
@@ -18,8 +19,9 @@ final vehicleRoutes = <GoRoute>[
   GoRoute(
     path: "selecionar/:selection",
     builder: (context, state) {
+      final selection = state.pathParameters['selection']!;
       return VehicleListPage(
-        selectionMode: true,
+        selection: Selection.values.byName(selection),
       );
     },
   ),

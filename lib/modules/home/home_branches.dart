@@ -4,7 +4,7 @@ import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_
 import 'package:voleep_carclean_frontend/modules/home/presentation/home_page.dart';
 import 'package:voleep_carclean_frontend/modules/product/presentation/product_list/product_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/service/presentation/service_list/service_list_page.dart';
-import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_search/service_order_search_page.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_list/service_order_list_page.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/presentation/vehicle_list/vehicle_list_page.dart';
 
 final homeBranches = [
@@ -24,7 +24,7 @@ final homeBranches = [
       GoRoute(
         path: '/ordem-servicos',
         pageBuilder: (context, state) => const NoTransitionPage(
-          child: ServiceOrderSearchPage(),
+          child: ServiceOrderListPage(),
         ),
       ),
     ],

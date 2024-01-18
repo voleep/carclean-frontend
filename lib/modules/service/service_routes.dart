@@ -8,8 +8,9 @@ abstract class ServiceRoutes {
 
   static const create = '/servico/new';
 
-  static String selection(Selection selection) =>
-      '/servico/selecionar/${selection.name}';
+  static final selectSingle = '/servico/selecionar/${Selection.single.name}';
+
+  static final selectMulti = '/servico/selecionar/${Selection.multi.name}';
 
   static String edit(String id) => '/servico/$id';
 }

@@ -4,7 +4,7 @@ import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/license
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
 
 @immutable
-class Vehicle {
+class VehicleModel {
   final VehicleId vehicleId;
 
   final LicensePlate licensePlate;
@@ -15,7 +15,7 @@ class Vehicle {
 
   final CustomerModel? customer;
 
-  const Vehicle({
+  const VehicleModel({
     required this.vehicleId,
     required this.licensePlate,
     required this.description,

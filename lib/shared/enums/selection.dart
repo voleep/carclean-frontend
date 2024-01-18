@@ -1,5 +1,5 @@
 enum Selection {
   none,
   single,
-  multiple,
+  multi,
 }

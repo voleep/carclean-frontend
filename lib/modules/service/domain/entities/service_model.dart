@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart' show immutable;
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
 @immutable
-class Service {
+class ServiceModel {
   final ServiceId serviceId;
 
   final int code;
@@ -15,7 +15,7 @@ class Service {
 
   final double pcCommission;
 
-  const Service({
+  const ServiceModel({
     required this.serviceId,
     required this.code,
     required this.description,

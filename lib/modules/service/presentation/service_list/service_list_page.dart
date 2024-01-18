@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/modules/service/service_routes.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
+import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/repositories/service_repository.dart';
-import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/entities/service_model.dart';
+import 'package:voleep_carclean_frontend/modules/service/service_routes.dart';
 import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
@@ -22,7 +22,7 @@ class ServiceListPage extends ConsumerStatefulWidget {
 }
 
 class _ServiceListPageState extends ConsumerState<ServiceListPage> {
-  late final ListController<Service> listController;
+  late final ListController<ServiceModel> listController;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _ServiceListPageState extends ConsumerState<ServiceListPage> {
     listController.filter.doFilter(listController.filters);
   }
 
-  Future<void> goToUpdate(Service item) async {
+  Future<void> goToUpdate(ServiceModel item) async {
     await context.push(ServiceRoutes.edit(item.serviceId));
     listController.setFuture(
       () => ref.read(serviceRepositoryProvider).findById(item.serviceId),

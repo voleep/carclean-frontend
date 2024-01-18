@@ -23,4 +23,13 @@ class PageResponse<T> {
             .map((item) => fromJsonT(item))
             .toList());
   }
+
+  PageResponse<D> copyWithData<D>(List<D> data) {
+    return PageResponse(
+      numberOfItems: numberOfItems,
+      numberOfPages: numberOfPages,
+      currentPage: currentPage,
+      pageData: data,
+    );
+  }
 }

@@ -11,7 +11,8 @@ import 'package:voleep_carclean_frontend/shared/models/pagination_model.dart';
 part 'search_repository.g.dart';
 
 @riverpod
-SearchRepository searchRepository(SearchRepositoryRef ref, String endpoint) => SearchRepository(
+SearchRepository searchRepository(SearchRepositoryRef ref, String endpoint) =>
+    SearchRepository(
       http: ref.watch(httpClientProvider),
       endpoint: endpoint,
     );
@@ -22,7 +23,8 @@ class SearchRepository {
   final HttpClient http;
   final String endpoint;
 
-  Future<Either<RepositoryException, PaginationModel<Map<String, dynamic>>>> listAll({
+  Future<Either<RepositoryException, PaginationModel<Map<String, dynamic>>>>
+      listAll({
     required int page,
     required String orderField,
     String searchQuery = "",
@@ -34,16 +36,22 @@ class SearchRepository {
     switch (getPageResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null || data is! Map<String, dynamic>) {
-          return Failure(RepositoryException(message: Strings.erroAoCarregarDados), StackTrace.current);
+          return Failure(RepositoryException(Strings.erroAoCarregarDados),
+              StackTrace.current);
         }
 
-        return Success(PaginationModel.fromJson(data!, (json) => json as Map<String, dynamic>));
+        return Success(PaginationModel.fromJson(
+            data!, (json) => json as Map<String, dynamic>));
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
-          return Failure(RepositoryException(message: exception.message ?? Strings.erroAoCarregarDados), stackTrace);
+          return Failure(
+              RepositoryException(
+                  exception.message ?? Strings.erroAoCarregarDados),
+              stackTrace);
         }
 
-        return Failure(RepositoryException(message: Strings.erroAoCarregarDados), stackTrace);
+        return Failure(
+            RepositoryException(Strings.erroAoCarregarDados), stackTrace);
     }
   }
 }

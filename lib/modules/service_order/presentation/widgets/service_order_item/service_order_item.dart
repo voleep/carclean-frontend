@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voleep_carclean_frontend/modules/service_order/presentation/service_order_item_list/service_order_item_controller.dart';
+import 'package:voleep_carclean_frontend/core/extensions/text_editing_controller_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/widget_ref_extension.dart';
+import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/presentation/widgets/service_order_item/service_order_item_params.dart';
+import 'package:voleep_carclean_frontend/modules/service_order/presentation/widgets/service_order_item/service_order_item_vm.dart';
 import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
-import 'package:voleep_carclean_frontend/shared/utils/field_util.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
 
 class ServiceOrderItem extends ConsumerStatefulWidget {
-  const ServiceOrderItem({super.key, required this.index});
-
-  final int index;
+  const ServiceOrderItem({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -19,17 +20,19 @@ class ServiceOrderItem extends ConsumerStatefulWidget {
 }
 
 class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
-  final _employeeController = TextEditingController();
-  final _priceController = TextEditingController();
+  final employeeEC = TextEditingController();
+  final priceEC = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    ref.listenManual(
-        serviceOrderItemControllerProvider
-            .select((value) => value[widget.index]), (prev, current) {
-      _employeeController.text = current.employee?.name ?? '';
-      _priceController.text = current.price.toString();
-    }, fireImmediately: true);
+    final params = serviceOrderItemParamsProvider;
+    final uuid = ref.watch(params.select((p) => p.uuid));
+    final soUuid = ref.watch(params.select((p) => p.soUuid));
+    final provider = serviceOrderItemVmProvider(uuid, soUuid);
+    final notifier = provider.notifier;
+
+    ref.observe(provider.select((s) => s.employee), changeEmployee);
+    ref.observe(provider.select((s) => s.price), changePrice);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -38,20 +41,20 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
         child: Material(
           child: ExpansionTile(
             title: Consumer(builder: (context, ref, _) {
-              final service = ref.watch(serviceOrderItemControllerProvider
-                  .select((value) => value[widget.index]));
+              final state = ref.watch(provider);
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.service.description,
+                    state.service.description,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  Text("Valor: ${service.price}")
+                  Text("Valor: ${state.price}")
                 ],
               );
             }),
@@ -71,7 +74,7 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Text(
-                "${widget.index + 1}",
+                "#",
                 style: TextStyle(
                     fontSize: 15,
                     color: Theme.of(context).colorScheme.primary,
@@ -89,42 +92,30 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                   child: RowWrap(children: [
                     VoleepFormField(
                       minWidth: 300,
-                      controller: _employeeController,
+                      controller: employeeEC,
                       readOnly: true,
                       placeholder: "Colaborador",
-                      suffixIcon: _employeeController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear_rounded),
-                              onPressed: () => ref
-                                  .read(serviceOrderItemControllerProvider
-                                      .notifier)
-                                  .handleRemoveEmployee(widget.index),
-                            )
-                          : null,
-                      onTap: () => ref
-                          .read(serviceOrderItemControllerProvider.notifier)
-                          .handleSelectEmployee(widget.index),
+                      // suffixIcon: employeeEC.text.isNotEmpty
+                      //     ? IconButton(
+                      //         icon: const Icon(Icons.clear_rounded),
+                      //         onPressed: () => ref.read(provider.notifier),
+                      //       )
+                      //     : null,
+                      onTap: () => ref.read(notifier).selectEmployee(context),
                     ),
                     SizedBox(
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: VoleepFormField(
                           minWidth: 120,
-                          controller: _priceController,
+                          controller: priceEC,
                           placeholder: "Valor",
                           validator: Validators.required(),
                           formatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             RealInputFormatter(moeda: true),
                           ],
-                          onChanged: (value) {
-                            final price =
-                                FieldUtil.realToDouble(_priceController.text);
-                            ref
-                                .read(
-                                    serviceOrderItemControllerProvider.notifier)
-                                .handlePriceChanged(widget.index, price);
-                          },
+                          onChanged: ref.read(notifier).changePrice,
                         ),
                       ),
                     ),
@@ -133,10 +124,7 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: IconButton(
-                            onPressed: () => ref
-                                .read(
-                                    serviceOrderItemControllerProvider.notifier)
-                                .removeService(widget.index),
+                            onPressed: ref.read(notifier).removeSelf,
                             icon: Icon(
                               Icons.delete_rounded,
                               color: Theme.of(context).colorScheme.error,
@@ -151,5 +139,21 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
         ),
       ),
     );
+  }
+
+  changeEmployee(EmployeeModel? employee) {
+    employeeEC.textOrEmpty = employee?.name;
+  }
+
+  changePrice(double price) {
+    priceEC.textOrEmpty = price.toString();
+  }
+
+  @override
+  void dispose() {
+    employeeEC.dispose();
+    priceEC.dispose();
+
+    super.dispose();
   }
 }

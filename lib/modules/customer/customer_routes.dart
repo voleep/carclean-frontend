@@ -8,8 +8,9 @@ abstract class CustomerRoutes {
 
   static const create = '/cliente/new';
 
-  static String select(Selection selection) =>
-      '/cliente/selecionar/${selection.name}';
+  static final singleSelection = '/cliente/selecionar/${Selection.single.name}';
+
+  static final multiSelection = '/cliente/selecionar/${Selection.multi.name}';
 
   static String edit(String id) => '/cliente/$id';
 }

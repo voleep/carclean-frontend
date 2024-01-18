@@ -34,8 +34,7 @@ class CustomerRepository {
     switch (getCustomerResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(
-              RepositoryException(message: Strings.clienteNaoEncontrado),
+          return Failure(RepositoryException(Strings.clienteNaoEncontrado),
               StackTrace.current);
         }
 
@@ -44,14 +43,13 @@ class CustomerRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
               RepositoryException(
-                message: exception.message ?? Strings.erroCarregarCliente,
+                exception.message ?? Strings.erroCarregarCliente,
               ),
               stackTrace);
         }
 
         return Failure(
-            RepositoryException(message: Strings.erroCarregarCliente),
-            stackTrace);
+            RepositoryException(Strings.erroCarregarCliente), stackTrace);
     }
   }
 
@@ -73,13 +71,12 @@ class CustomerRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
               RepositoryException(
-                  message: exception.message ?? Strings.erroAoCarregarDados),
+                  exception.message ?? Strings.erroAoCarregarDados),
               stackTrace);
         }
 
         return Failure(
-            RepositoryException(message: Strings.erroAoCarregarDados),
-            stackTrace);
+            RepositoryException(Strings.erroAoCarregarDados), stackTrace);
     }
   }
 
@@ -94,8 +91,7 @@ class CustomerRepository {
     switch (saveResponse) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(
-              RepositoryException(message: Strings.erroSalvarDadosCliente),
+          return Failure(RepositoryException(Strings.erroSalvarDadosCliente),
               StackTrace.current);
         }
 
@@ -104,13 +100,12 @@ class CustomerRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
               RepositoryException(
-                  message: exception.message ?? Strings.erroSalvarDadosCliente),
+                  exception.message ?? Strings.erroSalvarDadosCliente),
               stackTrace);
         }
 
         return Failure(
-            RepositoryException(message: Strings.erroSalvarDadosCliente),
-            stackTrace);
+            RepositoryException(Strings.erroSalvarDadosCliente), stackTrace);
     }
   }
 }

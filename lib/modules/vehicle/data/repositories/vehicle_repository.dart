@@ -3,49 +3,69 @@ import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
+import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/models/create_vehicle_model.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/data/models/vehicle_model.dart';
-import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/create_vehicle_model.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/data/dtos/vehicle_api_dto.dart';
+import 'package:voleep_carclean_frontend/modules/vehicle/domain/models/vehicle_model.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/license_plate.dart';
 import 'package:voleep_carclean_frontend/modules/vehicle/domain/typedefs/vehicle_id.dart';
 import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
+import 'package:voleep_carclean_frontend/shared/models/filter.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
+import 'package:voleep_carclean_frontend/shared/models/page_response.dart';
 
 part 'vehicle_repository.g.dart';
 
 @riverpod
-VehicleRepository vehicleRepository(VehicleRepositoryRef ref) =>
-    VehicleRepository(
-      http: ref.read(httpClientProvider),
-    );
+VehicleRepository vehicleRepository(VehicleRepositoryRef ref) {
+  final http = ref.read(httpClientProvider);
+  return VehicleRepository(http: http);
+}
 
 class VehicleRepository {
-  final HttpClient http;
+  final endpoint = "${ApiConfig.CARCLEAN_API_URL}/vehicle";
 
-  final String endpoint = "${ApiConfig.CARCLEAN_API_URL}/vehicle";
+  final HttpClient http;
 
   VehicleRepository({required this.http});
 
-  Future<Either<RepositoryException, Vehicle>> findById(
+  Future<Either<RepositoryException, PageResponse<VehicleApiDto>>> getPage(
+      List<Filter> query) async {
+    final response = await http.get<PageResponse<VehicleApiDto>>(
+      endpoint,
+      fromJsonT: (json) => PageResponse.fromJson(json, VehicleApiDto.fromJson),
+      queryParameters: {"search": query},
+    );
+
+    return switch (response) {
+      Success(value: final page) => Success(page.data!),
+      Failure(:final exception, :final stackTrace) => Failure(
+          RepositoryException(exception.message),
+          stackTrace,
+        ),
+    };
+  }
+
+  Future<Either<RepositoryException, VehicleModel>> findById(
       VehicleId vehicleId) async {
-    final getResponse = await http.get<VehicleModel>(
+    final getResponse = await http.get<VehicleApiDto>(
       "$endpoint/$vehicleId",
-      fromJsonT: VehicleModel.fromJson,
+      fromJsonT: VehicleApiDto.fromJson,
     );
 
     switch (getResponse) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
-            RepositoryException(message: Strings.veiculoNaoEncontrado),
+            RepositoryException(Strings.veiculoNaoEncontrado),
             StackTrace.current,
           );
         }
 
         return Success(
-          Vehicle(
+          VehicleModel(
             vehicleId: data.vehicleId,
             licensePlate: data.licensePlate,
             description: data.description,
@@ -55,38 +75,38 @@ class VehicleRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
             RepositoryException(
-                message: exception.message ?? Strings.erroAoCarregarDados),
+                exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoCarregarDados),
+          RepositoryException(Strings.erroAoCarregarDados),
           stackTrace,
         );
     }
   }
 
-  Future<Either<RepositoryException, Vehicle>> save(
+  Future<Either<RepositoryException, VehicleModel>> save(
       CreateVehicleModel createVehicleModel, bool isNew) async {
-    final saveResponse = await http.request<VehicleModel>(
+    final saveResponse = await http.request<VehicleApiDto>(
       endpoint,
       method: isNew ? HttpMethod.post : HttpMethod.put,
       data: createVehicleModel.toJson(),
-      fromJsonT: VehicleModel.fromJson,
+      fromJsonT: VehicleApiDto.fromJson,
     );
 
     switch (saveResponse) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
           return Failure(
-            RepositoryException(message: Strings.erroAoSalvarDados),
+            RepositoryException(Strings.erroAoSalvarDados),
             StackTrace.current,
           );
         }
 
         return Success(
-          Vehicle(
+          VehicleModel(
             vehicleId: data.vehicleId,
             licensePlate: data.licensePlate,
             description: data.description,
@@ -95,14 +115,13 @@ class VehicleRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
+          RepositoryException(Strings.erroAoSalvarDados),
           stackTrace,
         );
     }
@@ -124,14 +143,13 @@ class VehicleRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
             RepositoryException(
-                message:
-                    exception.message ?? Strings.erroVerificarDuplicidadePlaca),
+                exception.message ?? Strings.erroVerificarDuplicidadePlaca),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroVerificarDuplicidadePlaca),
+          RepositoryException(Strings.erroVerificarDuplicidadePlaca),
           stackTrace,
         );
     }

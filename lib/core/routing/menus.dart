@@ -22,7 +22,7 @@ List<Menu> menus(MenusRef ref) => [
       ),
       Menu(
         path: ServiceOrderRoutes.list,
-        title: 'OS',
+        title: 'Ordem serviço',
         icon: Icons.construction_rounded,
         group: MenuGroup.home,
       ),

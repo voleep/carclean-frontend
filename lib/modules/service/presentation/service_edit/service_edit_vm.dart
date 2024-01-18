@@ -3,9 +3,9 @@ import 'package:uuid/uuid.dart';
 import 'package:voleep_carclean_frontend/core/extensions/async_value_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/service/data/models/create_service_model.dart';
+import 'package:voleep_carclean_frontend/modules/service/data/dtos/create_service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/data/repositories/service_repository.dart';
-import 'package:voleep_carclean_frontend/modules/service/domain/entities/service.dart';
+import 'package:voleep_carclean_frontend/modules/service/domain/entities/service_model.dart';
 import 'package:voleep_carclean_frontend/modules/service/domain/typedefs/service_types.dart';
 
 part 'service_edit_vm.g.dart';
@@ -15,9 +15,9 @@ class ServiceEditVm extends _$ServiceEditVm {
   bool get isNew => id == 'new';
 
   @override
-  FutureOr<Service> build(ServiceId id) async {
+  FutureOr<ServiceModel> build(ServiceId id) async {
     if (isNew) {
-      return Service(
+      return ServiceModel(
         serviceId: const Uuid().v1(),
         code: 0,
         description: '',

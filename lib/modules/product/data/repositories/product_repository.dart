@@ -1,13 +1,13 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/core/constants/strings.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/http_exception.dart';
 import 'package:voleep_carclean_frontend/core/exceptions/repository_exception.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
 import 'package:voleep_carclean_frontend/core/http/http_client.dart';
-import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/data/models/create_product_model.dart';
+import 'package:voleep_carclean_frontend/modules/product/data/models/product_model.dart';
 import 'package:voleep_carclean_frontend/modules/product/domain/entities/product.dart';
-import 'package:voleep_carclean_frontend/core/config/api_config.dart';
 import 'package:voleep_carclean_frontend/shared/enums/http_method.dart';
 import 'package:voleep_carclean_frontend/shared/models/generic_response_model.dart';
 
@@ -36,8 +36,7 @@ class ProductRepository {
     switch (getProductResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(
-              RepositoryException(message: Strings.produtoNaoEncontrado),
+          return Failure(RepositoryException(Strings.produtoNaoEncontrado),
               StackTrace.current);
         }
 
@@ -57,13 +56,13 @@ class ProductRepository {
         if (exception is HttpBadResponseException) {
           return Failure(
             RepositoryException(
-                message: exception.message ?? Strings.erroAoCarregarDados),
+                exception.message ?? Strings.erroAoCarregarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoCarregarDados),
+          RepositoryException(Strings.erroAoCarregarDados),
           stackTrace,
         );
     }
@@ -81,8 +80,7 @@ class ProductRepository {
     switch (saveResult) {
       case Success(value: GenericResponse(:final data)):
         if (data == null) {
-          return Failure(
-              RepositoryException(message: Strings.erroAoSalvarDados),
+          return Failure(RepositoryException(Strings.erroAoSalvarDados),
               StackTrace.current);
         }
 
@@ -101,14 +99,13 @@ class ProductRepository {
       case Failure(:final exception, :final stackTrace):
         if (exception is HttpBadResponseException) {
           return Failure(
-            RepositoryException(
-                message: exception.message ?? Strings.erroAoSalvarDados),
+            RepositoryException(exception.message ?? Strings.erroAoSalvarDados),
             stackTrace,
           );
         }
 
         return Failure(
-          RepositoryException(message: Strings.erroAoSalvarDados),
+          RepositoryException(Strings.erroAoSalvarDados),
           stackTrace,
         );
     }

@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ServiceOrderModel _$ServiceOrderModelFromJson(Map<String, dynamic> json) {
-  return _ServiceOrderModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$ServiceOrderModel {
   CustomerModel get customer => throw _privateConstructorUsedError;
@@ -32,7 +28,6 @@ mixin _$ServiceOrderModel {
   List<ServiceOrderProductModel> get serviceOrderProductList =>
       throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ServiceOrderModelCopyWith<ServiceOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -204,7 +199,7 @@ class __$$_ServiceOrderModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_ServiceOrderModel
     with DiagnosticableTreeMixin
     implements _ServiceOrderModel {
@@ -219,9 +214,6 @@ class _$_ServiceOrderModel
       required final List<ServiceOrderProductModel> serviceOrderProductList})
       : _serviceOrderItemList = serviceOrderItemList,
         _serviceOrderProductList = serviceOrderProductList;
-
-  factory _$_ServiceOrderModel.fromJson(Map<String, dynamic> json) =>
-      _$$_ServiceOrderModelFromJson(json);
 
   @override
   final CustomerModel customer;
@@ -297,7 +289,6 @@ class _$_ServiceOrderModel
                 other._serviceOrderProductList, _serviceOrderProductList));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -316,13 +307,6 @@ class _$_ServiceOrderModel
   _$$_ServiceOrderModelCopyWith<_$_ServiceOrderModel> get copyWith =>
       __$$_ServiceOrderModelCopyWithImpl<_$_ServiceOrderModel>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_ServiceOrderModelToJson(
-      this,
-    );
-  }
 }
 
 abstract class _ServiceOrderModel implements ServiceOrderModel {
@@ -336,9 +320,6 @@ abstract class _ServiceOrderModel implements ServiceOrderModel {
       required final List<ServiceOrderItemModel> serviceOrderItemList,
       required final List<ServiceOrderProductModel>
           serviceOrderProductList}) = _$_ServiceOrderModel;
-
-  factory _ServiceOrderModel.fromJson(Map<String, dynamic> json) =
-      _$_ServiceOrderModel.fromJson;
 
   @override
   CustomerModel get customer;

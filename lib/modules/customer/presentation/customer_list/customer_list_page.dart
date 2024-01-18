@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/customer/customer_routes.dart';
 import 'package:voleep_carclean_frontend/modules/customer/data/repositories/customer_repository.dart';
 import 'package:voleep_carclean_frontend/modules/customer/domain/models/customer_model.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
-import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
@@ -58,8 +58,8 @@ class _CustomerListPageState extends ConsumerState<CustomerListPage> {
           onEdit: goToUpdate,
         );
       },
-      onNew: goToNew,
       onDone: () => context.pop(listController.selected),
+      onNew: goToNew,
     );
   }
 
