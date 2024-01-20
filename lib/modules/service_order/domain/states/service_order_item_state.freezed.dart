@@ -20,7 +20,7 @@ mixin _$ServiceOrderItemState {
   int get number => throw _privateConstructorUsedError;
   ServiceModel get service => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
-  EmployeeModel? get employee => throw _privateConstructorUsedError;
+  Employee? get employee => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ServiceOrderItemStateCopyWith<ServiceOrderItemState> get copyWith =>
@@ -38,7 +38,9 @@ abstract class $ServiceOrderItemStateCopyWith<$Res> {
       int number,
       ServiceModel service,
       double price,
-      EmployeeModel? employee});
+      Employee? employee});
+
+  $EmployeeCopyWith<$Res>? get employee;
 }
 
 /// @nodoc
@@ -81,8 +83,20 @@ class _$ServiceOrderItemStateCopyWithImpl<$Res,
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as Employee?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $EmployeeCopyWith<$Res>? get employee {
+    if (_value.employee == null) {
+      return null;
+    }
+
+    return $EmployeeCopyWith<$Res>(_value.employee!, (value) {
+      return _then(_value.copyWith(employee: value) as $Val);
+    });
   }
 }
 
@@ -99,7 +113,10 @@ abstract class _$$_ServiceOrderItemStateCopyWith<$Res>
       int number,
       ServiceModel service,
       double price,
-      EmployeeModel? employee});
+      Employee? employee});
+
+  @override
+  $EmployeeCopyWith<$Res>? get employee;
 }
 
 /// @nodoc
@@ -139,7 +156,7 @@ class __$$_ServiceOrderItemStateCopyWithImpl<$Res>
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as Employee?,
     ));
   }
 }
@@ -163,7 +180,7 @@ class _$_ServiceOrderItemState implements _ServiceOrderItemState {
   @override
   final double price;
   @override
-  final EmployeeModel? employee;
+  final Employee? employee;
 
   @override
   String toString() {
@@ -201,7 +218,7 @@ abstract class _ServiceOrderItemState implements ServiceOrderItemState {
       required final int number,
       required final ServiceModel service,
       required final double price,
-      final EmployeeModel? employee}) = _$_ServiceOrderItemState;
+      final Employee? employee}) = _$_ServiceOrderItemState;
 
   @override
   String get uuid;
@@ -212,7 +229,7 @@ abstract class _ServiceOrderItemState implements ServiceOrderItemState {
   @override
   double get price;
   @override
-  EmployeeModel? get employee;
+  Employee? get employee;
   @override
   @JsonKey(ignore: true)
   _$$_ServiceOrderItemStateCopyWith<_$_ServiceOrderItemState> get copyWith =>

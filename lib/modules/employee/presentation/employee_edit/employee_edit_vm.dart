@@ -1,12 +1,14 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:uuid/uuid.dart';
-import 'package:voleep_carclean_frontend/core/extensions/async_value_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/bool_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/exception_extension.dart';
+import 'package:voleep_carclean_frontend/core/extensions/inline_extension.dart';
 import 'package:voleep_carclean_frontend/core/fp/either.dart';
+import 'package:voleep_carclean_frontend/core/providers/uuid.dart';
 import 'package:voleep_carclean_frontend/core/states/providers/is_loading.dart';
-import 'package:voleep_carclean_frontend/modules/employee/data/models/create_employee_model.dart';
-import 'package:voleep_carclean_frontend/modules/employee/data/repositories/employee_repository.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
-import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/commands/create_employee_command.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee_status.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/states/employee_state.dart';
+import 'package:voleep_carclean_frontend/modules/employee/infra/employee_provider.dart';
 
 part 'employee_edit_vm.g.dart';
 
@@ -15,49 +17,74 @@ class EmployeeEditVm extends _$EmployeeEditVm {
   bool get isNew => id == 'new';
 
   @override
-  FutureOr<Employee> build(String id) async {
-    if (isNew) {
-      return Employee(
-        employeeId: const Uuid().v1(),
-        name: '',
-        registrationDate: DateTime.now(),
-        situation: DisabledEnabled.enabled,
-      );
+  EmployeeState build(String id) {
+    if (!isNew) {
+      _loadById();
     }
 
-    final getResult = await ref.read(employeeRepositoryProvider).findById(id);
-
-    return switch (getResult) {
-      Success(:final value) => value,
-      Failure(:final exception) => throw exception
-    };
+    return EmployeeState(
+      id: ref.read(uuidProvider).v4(),
+      name: '',
+      registrationDate: DateTime.now(),
+      status: EmployeeStatus.enabled,
+    );
   }
 
-  Future<void> save({
-    required String name,
-    required DisabledEnabled situation,
-    String? telephone,
-  }) async {
+  changeName(String name) {
+    state = state.copyWith(name: name);
+  }
+
+  changePhone(String phone) {
+    state = state.copyWith(phone: phone);
+  }
+
+  changeStatus(bool status) {
+    final employeeStatus = EmployeeStatus.from(status);
+    state = state.copyWith(status: employeeStatus);
+  }
+
+  Future<void> save() async {
     final showProgress = ref.read(isLoadingProvider.notifier);
     showProgress.state = true;
 
-    final createEmployeeModel = CreateEmployeeModel(
-      employeeId: state.value?.employeeId,
-      name: name,
-      telephone: telephone,
-      situation: situation,
+    final saveResult = await isNew.ifTrueElse(
+      () {
+        final command = CreateEmployeeCommand.from(state);
+        return ref.read(createEmployeeUseCaseProvider).execute(command);
+      },
+      () {
+        final command = CreateEmployeeCommand.from(state);
+        return ref.read(createEmployeeUseCaseProvider).execute(command);
+      },
     );
 
-    final saveResult = await ref
-        .read(employeeRepositoryProvider)
-        .save(createEmployeeModel, isNew);
-
-    state = switch (saveResult) {
-      Success(:final value) => AsyncValue.data(value),
-      Failure(:final exception, :final stackTrace) =>
-        state.mergeWith(AsyncError(exception, stackTrace))
-    };
+    switch (saveResult) {
+      case Failure(:final exception):
+        {
+          state = state.copyWith(saveFeedback: exception.message);
+        }
+      default:
+    }
 
     showProgress.state = false;
+  }
+
+  _loadById() async {
+    final result = await ref.read(getEmployeeByIdUseCaseProvider).execute(id);
+
+    switch (result) {
+      case Success(:final value):
+        {
+          if (value.isNull) {
+            state = state.copyWith(getFeedback: "Colaborador não encontrado");
+            return;
+          }
+          state = EmployeeState.from(value!);
+        }
+      case Failure(:final exception):
+        {
+          state = state.copyWith(saveFeedback: exception.message);
+        }
+    }
   }
 }

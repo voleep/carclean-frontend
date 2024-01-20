@@ -1,15 +1,16 @@
 import 'package:go_router/go_router.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_edit/employee_edit_page.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_list/employee_list_page.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
 
 abstract class EmployeeRoutes {
   static const list = '/colaboradores';
 
   static const create = '/colaborador/new';
 
-  static String selection(SelectionType selection) =>
-      '/colaborador/selecionar/${selection.name}';
+  static final singleSelection = '/colaborador/selecionar/${Selection.single}';
+
+  static final multiSelection = '/colaborador/selecionar/${Selection.multi}';
 
   static String edit(String id) => '/colaborador/$id';
 }
@@ -20,7 +21,7 @@ final employeeRoutes = <GoRoute>[
     builder: (context, state) {
       final selection = state.pathParameters['selection']!;
       return EmployeeListPage(
-        selectionMode: SelectionType.values.byName(selection),
+        selection: Selection.byName(selection),
       );
     },
   ),

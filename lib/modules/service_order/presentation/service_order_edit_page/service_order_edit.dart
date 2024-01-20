@@ -37,8 +37,8 @@ class _ServiceOrderEditPageState extends ConsumerState<ServiceOrderEditPage> {
     final provider = serviceOrderEditVmProvider(widget.id);
     final notifier = provider.notifier;
 
-    ref.observe(provider.select((s) => s.customer), changeCustomer);
-    ref.observe(provider.select((s) => s.vehicle), changeVehicle);
+    ref.changed(provider.select((s) => s.customer), changeCustomer);
+    ref.changed(provider.select((s) => s.vehicle), changeVehicle);
 
     return ScaffoldWithForm(
       title: "Ordem de serviço",

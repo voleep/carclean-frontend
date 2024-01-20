@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ServiceOrderItemModel {
   String? get serviceOrderItemId => throw _privateConstructorUsedError;
   ServiceModel get service => throw _privateConstructorUsedError;
-  EmployeeModel? get employee => throw _privateConstructorUsedError;
+  Employee? get employee => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -35,8 +35,10 @@ abstract class $ServiceOrderItemModelCopyWith<$Res> {
   $Res call(
       {String? serviceOrderItemId,
       ServiceModel service,
-      EmployeeModel? employee,
+      Employee? employee,
       double price});
+
+  $EmployeeCopyWith<$Res>? get employee;
 }
 
 /// @nodoc
@@ -70,12 +72,24 @@ class _$ServiceOrderItemModelCopyWithImpl<$Res,
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as Employee?,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as double,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $EmployeeCopyWith<$Res>? get employee {
+    if (_value.employee == null) {
+      return null;
+    }
+
+    return $EmployeeCopyWith<$Res>(_value.employee!, (value) {
+      return _then(_value.copyWith(employee: value) as $Val);
+    });
   }
 }
 
@@ -90,8 +104,11 @@ abstract class _$$_ServiceOrderItemModelCopyWith<$Res>
   $Res call(
       {String? serviceOrderItemId,
       ServiceModel service,
-      EmployeeModel? employee,
+      Employee? employee,
       double price});
+
+  @override
+  $EmployeeCopyWith<$Res>? get employee;
 }
 
 /// @nodoc
@@ -122,7 +139,7 @@ class __$$_ServiceOrderItemModelCopyWithImpl<$Res>
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as Employee?,
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -147,7 +164,7 @@ class _$_ServiceOrderItemModel
   @override
   final ServiceModel service;
   @override
-  final EmployeeModel? employee;
+  final Employee? employee;
   @override
   final double price;
 
@@ -196,7 +213,7 @@ abstract class _ServiceOrderItemModel implements ServiceOrderItemModel {
   const factory _ServiceOrderItemModel(
       {final String? serviceOrderItemId,
       required final ServiceModel service,
-      final EmployeeModel? employee,
+      final Employee? employee,
       required final double price}) = _$_ServiceOrderItemModel;
 
   @override
@@ -204,7 +221,7 @@ abstract class _ServiceOrderItemModel implements ServiceOrderItemModel {
   @override
   ServiceModel get service;
   @override
-  EmployeeModel? get employee;
+  Employee? get employee;
   @override
   double get price;
   @override

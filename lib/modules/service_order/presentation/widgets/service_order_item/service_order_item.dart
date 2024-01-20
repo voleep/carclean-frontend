@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voleep_carclean_frontend/core/extensions/text_editing_controller_extension.dart';
 import 'package:voleep_carclean_frontend/core/extensions/widget_ref_extension.dart';
-import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/widgets/service_order_item/service_order_item_params.dart';
 import 'package:voleep_carclean_frontend/modules/service_order/presentation/widgets/service_order_item/service_order_item_vm.dart';
 import 'package:voleep_carclean_frontend/shared/formatters/real_input_formatter.dart';
@@ -31,8 +31,8 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
     final provider = serviceOrderItemVmProvider(uuid, soUuid);
     final notifier = provider.notifier;
 
-    ref.observe(provider.select((s) => s.employee), changeEmployee);
-    ref.observe(provider.select((s) => s.price), changePrice);
+    ref.changed(provider.select((s) => s.employee), changeEmployee);
+    ref.changed(provider.select((s) => s.price), changePrice);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -141,7 +141,7 @@ class _ServiceOrderItemState extends ConsumerState<ServiceOrderItem> {
     );
   }
 
-  changeEmployee(EmployeeModel? employee) {
+  changeEmployee(Employee? employee) {
     employeeEC.textOrEmpty = employee?.name;
   }
 

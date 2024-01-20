@@ -1,5 +1,14 @@
 enum Selection {
   none,
   single,
-  multi,
+  multi;
+
+  static Selection byName(String name) {
+    return Selection.values.byName(name);
+  }
+
+  @override
+  toString() {
+    return name;
+  }
 }

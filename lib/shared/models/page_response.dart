@@ -24,12 +24,12 @@ class PageResponse<T> {
             .toList());
   }
 
-  PageResponse<D> copyWithData<D>(List<D> data) {
+  PageResponse<D> copyWithData<D>(Iterable<D> data) {
     return PageResponse(
       numberOfItems: numberOfItems,
       numberOfPages: numberOfPages,
       currentPage: currentPage,
-      pageData: data,
+      pageData: data.toList(),
     );
   }
 }

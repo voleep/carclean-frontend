@@ -1,10 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 extension RefExtension on WidgetRef {
-  observe<T>(ProviderListenable<T> listenable, void Function(T value) call) {
+  changed<T>(ProviderListenable<T> listenable, void Function(T value) block) {
     listenManual(
       listenable,
-      (previous, next) => call(next),
+      (previous, next) {
+        if (previous != next) {
+          block(next);
+        }
+      },
       fireImmediately: true,
     );
   }

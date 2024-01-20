@@ -5,11 +5,14 @@ class VoleepSwitch extends StatelessWidget {
     super.key,
     required this.title,
     required this.valueNotifier,
+    this.onChanged,
   });
 
   final String title;
 
   final ValueNotifier<bool> valueNotifier;
+
+  final void Function(bool value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,10 @@ class VoleepSwitch extends StatelessWidget {
               ),
               Switch(
                 value: situation,
-                onChanged: (value) => valueNotifier.value = value,
+                onChanged: (value) {
+                  valueNotifier.value = value;
+                  onChanged?.call(value);
+                },
               ),
             ],
           ),

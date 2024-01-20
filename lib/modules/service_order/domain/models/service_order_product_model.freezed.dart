@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ServiceOrderProductModel {
   String? get serviceOrderProductId => throw _privateConstructorUsedError;
   ProductModel get product => throw _privateConstructorUsedError;
-  EmployeeModel? get employee => throw _privateConstructorUsedError;
+  EmployeeApiDto? get employee => throw _privateConstructorUsedError;
   double get quantity => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
 
@@ -36,7 +36,7 @@ abstract class $ServiceOrderProductModelCopyWith<$Res> {
   $Res call(
       {String? serviceOrderProductId,
       ProductModel product,
-      EmployeeModel? employee,
+      EmployeeApiDto? employee,
       double quantity,
       double price});
 }
@@ -73,7 +73,7 @@ class _$ServiceOrderProductModelCopyWithImpl<$Res,
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as EmployeeApiDto?,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -98,7 +98,7 @@ abstract class _$$_ServiceOrderProductModelCopyWith<$Res>
   $Res call(
       {String? serviceOrderProductId,
       ProductModel product,
-      EmployeeModel? employee,
+      EmployeeApiDto? employee,
       double quantity,
       double price});
 }
@@ -133,7 +133,7 @@ class __$$_ServiceOrderProductModelCopyWithImpl<$Res>
       employee: freezed == employee
           ? _value.employee
           : employee // ignore: cast_nullable_to_non_nullable
-              as EmployeeModel?,
+              as EmployeeApiDto?,
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
@@ -163,7 +163,7 @@ class _$_ServiceOrderProductModel
   @override
   final ProductModel product;
   @override
-  final EmployeeModel? employee;
+  final EmployeeApiDto? employee;
   @override
   final double quantity;
   @override
@@ -217,7 +217,7 @@ abstract class _ServiceOrderProductModel implements ServiceOrderProductModel {
   const factory _ServiceOrderProductModel(
       {final String? serviceOrderProductId,
       required final ProductModel product,
-      required final EmployeeModel? employee,
+      required final EmployeeApiDto? employee,
       required final double quantity,
       required final double price}) = _$_ServiceOrderProductModel;
 
@@ -226,7 +226,7 @@ abstract class _ServiceOrderProductModel implements ServiceOrderProductModel {
   @override
   ProductModel get product;
   @override
-  EmployeeModel? get employee;
+  EmployeeApiDto? get employee;
   @override
   double get quantity;
   @override

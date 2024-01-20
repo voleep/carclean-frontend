@@ -1,116 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:voleep_carclean_frontend/core/config/api_config.dart';
-import 'package:voleep_carclean_frontend/modules/employee/data/models/employee_model.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/typedefs/employee_id.dart';
+import 'package:go_router/go_router.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
 import 'package:voleep_carclean_frontend/modules/employee/employee_routes.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/selection_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/enums/filter_type.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/enum_option.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/filter_option.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/domain/models/search_config.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/carclean_search.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/search_form/presentation/search_controller.dart';
+import 'package:voleep_carclean_frontend/modules/employee/infra/employee_provider.dart';
+import 'package:voleep_carclean_frontend/shared/enums/selection.dart';
+import 'package:voleep_carclean_frontend/shared/utils/list_controller.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_list/scaffold_with_list.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_list_tile/voleep_list_tile.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_bar/voleep_sliver_bar.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_sliver_search/voleep_sliver_search.dart';
 
-class EmployeeListPage extends ConsumerWidget {
-  EmployeeListPage({super.key, this.selectionMode = SelectionType.none});
+class EmployeeListPage extends ConsumerStatefulWidget {
+  const EmployeeListPage({super.key, this.selection = Selection.none});
 
-  final SelectionType selectionMode;
+  final Selection selection;
 
-  final _searchConfig = SearchConfig(
-      endpoint: "${ApiConfig.CARCLEAN_API_URL}/employee",
-      orderField: "name",
-      filterOnInit: true);
-  final _searchFilter =
-      const FilterOption(title: "Nome", field: "name", type: FilterType.text);
-  final _dateFormat = DateFormat("dd/MM/yyyy");
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Stack(
-      children: [
-        CarCleanSearch<EmployeeModel, EmployeeId>(
-          config: _searchConfig,
-          selectId: (item) => item.employeeId,
-          searchBarFilter: _searchFilter,
-          filterOptions: [
-            _searchFilter,
-            const FilterOption(
-              title: "Data de cadastro",
-              field: "registrationDate",
-              type: FilterType.date,
-            ),
-            const FilterOption(
-              title: "Telefone",
-              field: "telephone",
-              type: FilterType.text,
-            ),
-            const FilterOption(
-              title: "Situação",
-              field: "situation",
-              type: FilterType.enumeration,
-              enumOptions: [
-                EnumOption(title: "Ativo", value: 1),
-                EnumOption(title: "Inativo", value: 0),
-              ],
-            ),
-          ],
-          itemBuilder: (context, index, item, selected) => ListTile(
-            title: Text(item.name),
-            subtitle: Text(
-                "${item.telephone ?? "Sem telefone"} - ${_dateFormat.format(item.registrationDate)}"),
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(50)),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: AlignmentDirectional.center,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .surfaceTint
-                          .withOpacity(0.5),
-                      child: Text(item.name.substring(0, 1).toUpperCase()),
-                    )),
-              ],
-            ),
-            trailing: const Icon(Icons.navigate_next_rounded),
-            onTap: () async {
-              if (selectionMode == SelectionType.single) {
-                return context.pop(item);
-              }
+  ConsumerState<EmployeeListPage> createState() => _EmployeeListPageState();
+}
 
-              final shouldReload = await context.push(
-                EmployeeRoutes.edit(item.employeeId),
-              );
-              if (shouldReload == true) {
-                ref
-                    .read(searchControllerProvider(_searchConfig).notifier)
-                    .refreshByIndex(index);
-              }
-            },
-          ),
-          fromJsonT: EmployeeModel.fromJson,
-        ),
-        Positioned(
-          right: 16,
-          bottom: 16,
-          child: FloatingActionButton(
-              child: const Icon(Icons.add_rounded),
-              onPressed: () async {
-                final shouldReload = await context.push(EmployeeRoutes.create);
-                if (shouldReload == true) {
-                  ref
-                      .read(searchControllerProvider(_searchConfig).notifier)
-                      .refresh();
-                }
-              }),
-        )
-      ],
+class _EmployeeListPageState extends ConsumerState<EmployeeListPage> {
+  late final ListController<Employee> listController;
+
+  @override
+  void initState() {
+    listController = ListController(
+      selection: widget.selection,
+      selectionKey: (item) => item.id,
     );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithList(
+      headerSlivers: [
+        const VoleepSliverBar(
+          title: "Colaboradores",
+        ),
+        VoleepSliverSearch(
+          field: 'name',
+          controller: listController,
+        ),
+      ],
+      controller: listController,
+      onSearch: ref.read(findAllEmployeesUsecaseProvider).execute,
+      itemBuilder: (context, index, item) {
+        return VoleepListTile(
+          title: item.name,
+          item: item,
+          controller: listController,
+          onEdit: goToUpdate,
+        );
+      },
+      onDone: () => context.pop(listController.selected),
+      onNew: goToNew,
+    );
+  }
+
+  goToNew() async {
+    context.push(EmployeeRoutes.create);
+  }
+
+  goToUpdate(Employee employee) async {
+    context.push(EmployeeRoutes.edit(employee.id));
+  }
+
+  @override
+  void dispose() {
+    listController.dispose();
+
+    super.dispose();
   }
 }

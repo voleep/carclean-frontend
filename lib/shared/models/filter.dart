@@ -1,5 +1,7 @@
 import 'package:voleep_carclean_frontend/shared/enums/filter_condition.dart';
 
+typedef Query = List<Filter>;
+
 class Filter {
   final String field;
   final FilterCondition condition;

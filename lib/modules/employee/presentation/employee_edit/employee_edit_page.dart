@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:voleep_carclean_frontend/core/extensions/async_value_ui.dart';
-import 'package:voleep_carclean_frontend/core/extensions/string_extensions.dart';
-import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee.dart';
+import 'package:voleep_carclean_frontend/core/extensions/widget_ref_extension.dart';
+import 'package:voleep_carclean_frontend/modules/employee/domain/entities/employee_status.dart';
 import 'package:voleep_carclean_frontend/modules/employee/presentation/employee_edit/employee_edit_vm.dart';
-import 'package:voleep_carclean_frontend/shared/enums/disabled_enabled.dart';
 import 'package:voleep_carclean_frontend/shared/formatters/telefone_input_formatter.dart';
 import 'package:voleep_carclean_frontend/shared/validators/validators.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/scaffold_with_form/scaffold_with_form.dart';
+import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/voleep_switch/voleep_switch.dart';
 import 'package:voleep_carclean_frontend/shared/widgets/wrap_super/row_wrap.dart';
-import 'package:voleep_carclean_frontend/shared/widgets/voleep_form_field.dart';
 
 class EmployeeEditPage extends ConsumerStatefulWidget {
   const EmployeeEditPage({super.key, required this.id});
@@ -27,21 +25,20 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
   final nameEC = TextEditingController();
   final telephoneEC = TextEditingController();
   final registrationDateEC = TextEditingController();
-  final situationVN = ValueNotifier(false);
+  final statusVN = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
     final viewModel = employeeEditVmProvider(widget.id);
 
-    ref.listen(viewModel, (previous, next) {
-      next.showSnackBarOnError(context);
-      next.popOnFirstError(context, previous);
-      next.runOnData(setData);
-    });
+    ref.changed(viewModel.select((s) => s.name), changeName);
+    ref.changed(viewModel.select((s) => s.phone), changePhone);
+    ref.changed(viewModel.select((s) => s.registrationDate), changeDate);
+    ref.changed(viewModel.select((s) => s.status), changeStatus);
 
     return ScaffoldWithForm(
       title: 'Colaborador',
-      onSubmit: save,
+      onSubmit: ref.read(viewModel.notifier).save,
       child: RowWrap(
         children: [
           VoleepFormField(
@@ -50,6 +47,7 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
             placeholder: "Nome",
             icon: Icons.person_rounded,
             autofocus: ref.read(viewModel.notifier).isNew ? true : false,
+            onChanged: ref.read(viewModel.notifier).changeName,
             validator: [
               Validators.required(),
               Validators.maxLength(100),
@@ -62,6 +60,7 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
             icon: Icons.phone_rounded,
             validator: Validators.maxLength(20),
             keyboardType: TextInputType.phone,
+            onChanged: ref.read(viewModel.notifier).changePhone,
             formatters: [
               FilteringTextInputFormatter.digitsOnly,
               TelefoneInputFormatter()
@@ -78,34 +77,30 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
             ),
           ),
           VoleepSwitch(
-            title: 'Situação',
-            valueNotifier: situationVN,
+            title: 'Status',
+            valueNotifier: statusVN,
+            onChanged: ref.read(viewModel.notifier).changeStatus,
           ),
         ],
       ),
     );
   }
 
-  void setData(Employee employee) {
-    final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
-    nameEC.text = employee.name;
-    telephoneEC.text = employee.telephone ?? "";
-    registrationDateEC.text = dateFormat.format(employee.registrationDate);
-    situationVN.value = employee.situation.boolean;
+  changeName(String name) {
+    nameEC.text = name;
   }
 
-  Future<void> save() async {
-    final viewModel = employeeEditVmProvider(widget.id);
+  changePhone(String? phone) {
+    telephoneEC.text = phone ?? "";
+  }
 
-    await ref.read(viewModel.notifier).save(
-          name: nameEC.text,
-          telephone: telephoneEC.text.notEmptyOrNull,
-          situation: DisabledEnabled.fromBool(situationVN.value),
-        );
+  changeDate(DateTime date) {
+    final dateFormat = DateFormat("dd/MM/yyyy HH:mm");
+    registrationDateEC.text = dateFormat.format(date);
+  }
 
-    if (context.mounted) {
-      ref.read(viewModel).popOnData(context);
-    }
+  changeStatus(EmployeeStatus status) {
+    statusVN.value = status.boolean;
   }
 
   @override
@@ -113,7 +108,7 @@ class _EmployeeEditPageState extends ConsumerState<EmployeeEditPage> {
     nameEC.dispose();
     telephoneEC.dispose();
     registrationDateEC.dispose();
-    situationVN.dispose();
+    statusVN.dispose();
 
     super.dispose();
   }
